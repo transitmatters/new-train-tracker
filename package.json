@@ -1,0 +1,23 @@
+{
+  "name": "new-train-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/transitmatters/new-train-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/transitmatters/new-train-tracker/issues"
+  },
+  "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
+  "dependencies": {
+    "elm": "^0.19.0-bugfix6",
+    "elm-format": "^0.8.1"
+  }
+}
