@@ -16,6 +16,7 @@ Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 
 (Using Python 3.7 and [pipenv](https://pipenv.readthedocs.io/en/latest/))
 
+- Drop your MBTA v3 API key in secrets.py
 - `pipenv install`
 - `pipenv shell`
 - `python server.py`
