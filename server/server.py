@@ -1,5 +1,5 @@
 import flask
-import API
+import MbtaApi
 
 app = flask.Flask(__name__)
 
