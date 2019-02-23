@@ -7,23 +7,49 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
 
 
+type alias Flags =
+    {}
+
+
+type alias Model =
+    { vehicles : List Vehicle
+    }
+
+
+type Msg
+    = ReceiveVehicles (Result Http.Error (List Vehicle))
+
+
+type alias Vehicle =
+    { label : String
+    , route : String
+    , currentStatus : CurrentStatus
+    , stationId : String
+    , newFlag : Bool
+    }
+
+
+type CurrentStatus
+    = InTransitTo
+    | StoppedAt
+
+
 main : Program Flags Model Msg
 main =
     Browser.element
-        { init =
-            \_ ->
-                ( { vehicles = []
-                  }
-                , getNewVehicles
-                )
+        { init = init
         , view = view
         , update = update
         , subscriptions = \_ -> Sub.none
         }
 
 
-type alias Flags =
-    {}
+init : flags -> ( Model, Cmd Msg )
+init _ =
+    ( { vehicles = []
+      }
+    , getNewVehicles
+    )
 
 
 getNewVehicles : Cmd Msg
@@ -61,29 +87,6 @@ vehicleDecoder =
         |> Pipeline.required "new_flag" Decode.bool
 
 
-type alias Model =
-    { vehicles : List Vehicle
-    }
-
-
-type alias Vehicle =
-    { label : String
-    , route : String
-    , currentStatus : CurrentStatus
-    , stationId : String
-    , newFlag : Bool
-    }
-
-
-type CurrentStatus
-    = InTransitTo
-    | StoppedAt
-
-
-type Msg
-    = ReceiveVehicles (Result Http.Error (List Vehicle))
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -104,17 +107,17 @@ update msg model =
                     )
 
 
-renderVehicle : Vehicle -> Html Msg
-renderVehicle vehicle =
-    Html.li []
-        [ Html.text (Debug.toString vehicle)
-        ]
-
-
 view : Model -> Html Msg
 view model =
     Html.div []
         [ Html.text "Vehicles:"
         , Html.ul []
             (List.map renderVehicle model.vehicles)
+        ]
+
+
+renderVehicle : Vehicle -> Html Msg
+renderVehicle vehicle =
+    Html.li []
+        [ Html.text (Debug.toString vehicle)
         ]
