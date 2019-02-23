@@ -13,8 +13,8 @@ Dependencies:
 - [`pipenv`](https://pipenv.readthedocs.io/en/latest/)
 
 Run:
-- Drop your MBTA v3 API key in `server/secrets.py`
 - `npm install`
 - `npm start`
 - visit [http://localhost:5000/](http://localhost:5000/)
 
+To use an API key, put it in `server/secrets.py` or as an environment variable `MBTA_V3_API_KEY`
