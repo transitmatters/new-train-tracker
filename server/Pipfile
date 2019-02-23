@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 flask = "*"
 requests = "*"
+json-api-doc = "*"
 
 [requires]
 python_version = "3.7"
