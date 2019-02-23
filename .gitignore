@@ -1,2 +1,15 @@
+# npm/elm stuff
 node_modules/
 elm/elm-stuff/
+
+# Python stuff
+__pycache__/
+instance/
+.webassets-cache
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
