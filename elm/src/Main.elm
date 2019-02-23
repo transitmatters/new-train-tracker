@@ -6,14 +6,29 @@ import Html exposing (Html)
 
 main =
     Browser.sandbox
-        { init = {}
+        { init = { vehicles = [] }
         , view = view
         , update = update
         }
 
 
 type alias Model =
-    {}
+    { vehicles : List Vehicle
+    }
+
+
+type alias Vehicle =
+    { label : String
+    , route : String
+    , currentStatus : CurrentStatus
+    , stationId : String
+    , newFlag : Bool
+    }
+
+
+type CurrentStatus
+    = InTransitTo
+    | StoppedAt
 
 
 type Msg
