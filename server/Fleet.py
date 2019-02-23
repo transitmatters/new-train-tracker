@@ -29,4 +29,4 @@ def car_array_is_new(route_name, arr, test_mode = False):
     if test_mode:
         return any(map(train_is_new_func_test[route_name], arr))
     else:
-        return any(map(train_is_new_func_test[route_name], arr))
+        return any(map(train_is_new_func[route_name], arr))
