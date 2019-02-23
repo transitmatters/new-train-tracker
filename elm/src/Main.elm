@@ -4,12 +4,23 @@ import Browser
 import Html exposing (Html)
 
 
+main : Program Flags Model Msg
 main =
-    Browser.sandbox
-        { init = { vehicles = vehicles }
+    Browser.element
+        { init =
+            \_ ->
+                ( { vehicles = vehicles
+                  }
+                , Cmd.none
+                )
         , view = view
         , update = update
+        , subscriptions = \_ -> Sub.none
         }
+
+
+type alias Flags =
+    {}
 
 
 vehicles : List Vehicle
@@ -46,9 +57,11 @@ type Msg
     = NoOp
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    model
+    ( model
+    , Cmd.none
+    )
 
 
 renderVehicle : Vehicle -> Html Msg
