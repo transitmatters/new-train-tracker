@@ -1,6 +1,7 @@
 # npm/elm stuff
 node_modules/
 elm/elm-stuff/
+js/elm.js
 
 # Python stuff
 __pycache__/
