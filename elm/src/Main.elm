@@ -6,10 +6,21 @@ import Html exposing (Html)
 
 main =
     Browser.sandbox
-        { init = { vehicles = [] }
+        { init = { vehicles = vehicles }
         , view = view
         , update = update
         }
+
+
+vehicles : List Vehicle
+vehicles =
+    [ { label = "1241"
+      , route = "Orange"
+      , currentStatus = StoppedAt
+      , stationId = "place-ogmnl"
+      , newFlag = False
+      }
+    ]
 
 
 type alias Model =
@@ -40,6 +51,15 @@ update msg model =
     model
 
 
+renderVehicle : Vehicle -> Html Msg
+renderVehicle vehicle =
+    Html.text (Debug.toString vehicle)
+
+
 view : Model -> Html Msg
 view model =
-    Html.text "Hello world"
+    Html.div []
+        [ Html.text "Vehicles:"
+        , Html.ul []
+            (List.map renderVehicle model.vehicles)
+        ]
