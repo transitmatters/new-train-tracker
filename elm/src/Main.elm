@@ -5,6 +5,7 @@ import Html exposing (Html)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
+import Time
 
 
 type alias Flags =
@@ -18,6 +19,7 @@ type alias Model =
 
 type Msg
     = ReceiveVehicles (Result Http.Error (List Vehicle))
+    | Tick Time.Posix
 
 
 type alias Vehicle =
@@ -34,13 +36,18 @@ type CurrentStatus
     | StoppedAt
 
 
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Time.every 30000 Tick
+
+
 main : Program Flags Model Msg
 main =
     Browser.element
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -105,6 +112,11 @@ update msg model =
                     ( model
                     , Cmd.none
                     )
+
+        Tick _ ->
+            ( model
+            , getNewVehicles
+            )
 
 
 view : Model -> Html Msg
