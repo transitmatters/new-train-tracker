@@ -5,6 +5,7 @@ import Html exposing (Html)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
+import Time
 
 
 type alias Flags =
@@ -18,6 +19,7 @@ type alias Model =
 
 type Msg
     = ReceiveVehicles (Result Http.Error (List Vehicle))
+    | Poll Time.Posix
 
 
 type alias Vehicle =
@@ -40,7 +42,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -50,6 +52,11 @@ init _ =
       }
     , getNewVehicles
     )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Time.every 30000 Poll
 
 
 getNewVehicles : Cmd Msg
@@ -105,6 +112,11 @@ update msg model =
                     ( model
                     , Cmd.none
                     )
+
+        Poll _ ->
+            ( model
+            , getNewVehicles
+            )
 
 
 view : Model -> Html Msg
