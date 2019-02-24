@@ -19,7 +19,7 @@ type alias Model =
 
 type Msg
     = ReceiveVehicles (Result Http.Error (List Vehicle))
-    | Tick Time.Posix
+    | Poll Time.Posix
 
 
 type alias Vehicle =
@@ -34,11 +34,6 @@ type alias Vehicle =
 type CurrentStatus
     = InTransitTo
     | StoppedAt
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Time.every 30000 Tick
 
 
 main : Program Flags Model Msg
@@ -57,6 +52,11 @@ init _ =
       }
     , getNewVehicles
     )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Time.every 30000 Poll
 
 
 getNewVehicles : Cmd Msg
@@ -113,7 +113,7 @@ update msg model =
                     , Cmd.none
                     )
 
-        Tick _ ->
+        Poll _ ->
             ( model
             , getNewVehicles
             )
