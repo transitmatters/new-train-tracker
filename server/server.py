@@ -17,9 +17,9 @@ def js(filename):
     return flask.send_from_directory("../js", filename)
 
 # Data routes
-@app.route("/data/Orange")
-def data_orange():
-    return flask.Response(json.dumps(MbtaApi.vehicle_data_for_route('Orange')))
+@app.route("/data/<routes>")
+def data(routes):
+    return flask.Response(json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(','))))
 
 if __name__ == "__main__":
     app.run(debug=True)
