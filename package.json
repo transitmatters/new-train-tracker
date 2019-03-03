@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "cd server && pipenv install",
-    "build": "cd elm && elm make src/Main.elm --output ../js/elm.js",
+    "build-elm": "cd elm && elm make src/Main.elm --output ../js/elm.js",
+    "watch-elm": "chokidar elm/src/ -c 'npm run build-elm'",
     "start-python": "cd server && pipenv run python3 server.py",
-    "start-elm": "elm reactor",
-    "start": "concurrently npm:start-python npm:start-elm",
+    "start": "concurrently npm:start-python npm:watch-elm",
     "format": "cd elm && elm-format . --yes",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
   "dependencies": {
+    "chokidar-cli": "^1.2.2",
     "elm": "^0.19.0-bugfix6",
     "elm-format": "^0.8.1"
   },
