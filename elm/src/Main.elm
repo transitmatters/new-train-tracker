@@ -14,12 +14,20 @@ type alias Flags =
 
 type alias Model =
     { vehicles : List Vehicle
+    , stops : List Stop
     }
 
 
 type Msg
     = ReceiveVehicles (Result Http.Error (List Vehicle))
     | Poll Time.Posix
+    | ReceiveStops (Result Http.Error (List Stop))
+
+
+type alias Stop =
+    { id : String
+    , name : String
+    }
 
 
 type alias Vehicle =
@@ -49,8 +57,12 @@ main =
 init : flags -> ( Model, Cmd Msg )
 init _ =
     ( { vehicles = []
+      , stops = []
       }
-    , getNewVehicles
+    , Cmd.batch
+        [ getNewVehicles
+        , getStops
+        ]
     )
 
 
@@ -64,6 +76,14 @@ getNewVehicles =
     Http.get
         { url = "/data/Orange"
         , expect = Http.expectJson ReceiveVehicles (Decode.list vehicleDecoder)
+        }
+
+
+getStops : Cmd Msg
+getStops =
+    Http.get
+        { url = "/stops/Orange"
+        , expect = Http.expectJson ReceiveStops (Decode.list stopDecoder)
         }
 
 
@@ -94,6 +114,13 @@ vehicleDecoder =
         |> Pipeline.required "new_flag" Decode.bool
 
 
+stopDecoder : Decoder Stop
+stopDecoder =
+    Decode.succeed Stop
+        |> Pipeline.required "id" Decode.string
+        |> Pipeline.required "name" Decode.string
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -101,6 +128,22 @@ update msg model =
             case result of
                 Ok vehicles ->
                     ( { model | vehicles = vehicles }
+                    , Cmd.none
+                    )
+
+                Err e ->
+                    let
+                        _ =
+                            Debug.log "" e
+                    in
+                    ( model
+                    , Cmd.none
+                    )
+
+        ReceiveStops result ->
+            case result of
+                Ok stops ->
+                    ( { model | stops = stops }
                     , Cmd.none
                     )
 
@@ -122,9 +165,19 @@ update msg model =
 view : Model -> Html Msg
 view model =
     Html.div []
-        [ Html.text "Vehicles:"
+        [ Html.text "Stops:"
+        , Html.ul []
+            (List.map renderStop model.stops)
+        , Html.text "Vehicles:"
         , Html.ul []
             (List.map renderVehicle model.vehicles)
+        ]
+
+
+renderStop : Stop -> Html Msg
+renderStop stop =
+    Html.li []
+        [ Html.text (Debug.toString stop)
         ]
 
 
