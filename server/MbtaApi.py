@@ -27,3 +27,12 @@ def vehicle_data_for_routes(routes):
         'new_flag': Fleet.car_array_is_new(vehicle['route']['id'],
                     vehicle['label'].split('-'))
     }, vehicles))
+
+def stops_for_route(route):
+    stops = getV3('stops', {
+        'filter[route]': route,
+    })
+    return list(map(lambda stop: {
+        'id': stop['id'],
+        'name': stop['name'],
+    }, stops))
