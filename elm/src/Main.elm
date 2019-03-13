@@ -1,10 +1,12 @@
 module Main exposing (main)
 
 import Browser
+import Data exposing (..)
 import Html exposing (Html)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
+import Ladder
 import RemoteData exposing (WebData)
 import Time
 
@@ -23,38 +25,6 @@ type Msg
     = ReceiveVehicles (WebData (List Vehicle))
     | Poll Time.Posix
     | ReceiveStops (WebData (List Stop))
-
-
-type alias Stop =
-    { id : String
-    , name : String
-    }
-
-
-type alias Vehicle =
-    { label : String
-    , route : String
-    , direction : Direction
-    , currentStatus : CurrentStatus
-    , stationId : String
-    , newFlag : Bool
-    }
-
-
-{-| The API gives this as 0 or 1, but for us,
-it will be easier to think about them as up and down on the screen.
-For all the Subway lines as we want to draw them,
-0 is Downward (Red/Orange: South, Green: West)
-1 is Upward (Red/Orange: North, Green: East)
--}
-type Direction
-    = Upward
-    | Downward
-
-
-type CurrentStatus
-    = InTransitTo
-    | StoppedAt
 
 
 main : Program Flags Model Msg
@@ -182,14 +152,7 @@ view : Model -> Html Msg
 view model =
     case ( model.stops, model.vehicles ) of
         ( RemoteData.Success stops, RemoteData.Success vehicles ) ->
-            Html.div []
-                [ Html.text "Stops:"
-                , Html.ul []
-                    (List.map renderStop stops)
-                , Html.text "Vehicles:"
-                , Html.ul []
-                    (List.map renderVehicle vehicles)
-                ]
+            viewLadder stops vehicles
 
         ( RemoteData.Loading, _ ) ->
             Html.text "Loading"
@@ -207,15 +170,47 @@ view model =
                 ]
 
 
-renderStop : Stop -> Html Msg
-renderStop stop =
-    Html.li []
-        [ Html.text (Debug.toString stop)
-        ]
+viewLadder : List Stop -> List Vehicle -> Html Msg
+viewLadder stops vehicles =
+    let
+        ladder =
+            Ladder.ladder stops vehicles
+    in
+    Html.div []
+        (List.map viewLadderRow ladder)
 
 
-renderVehicle : Vehicle -> Html Msg
-renderVehicle vehicle =
-    Html.li []
-        [ Html.text (Debug.toString vehicle)
+viewLadderRow : Ladder.LadderRow -> Html msg
+viewLadderRow row =
+    Html.div []
+        [ Html.text
+            (if row.leftTrain then
+                "X"
+
+             else
+                "."
+            )
+        , Html.text
+            (case row.stopName of
+                Nothing ->
+                    "|"
+
+                Just _ ->
+                    "O"
+            )
+        , Html.text
+            (if row.rightTrain then
+                "X"
+
+             else
+                "."
+            )
+        , Html.text
+            (case row.stopName of
+                Nothing ->
+                    "."
+
+                Just name ->
+                    name
+            )
         ]
