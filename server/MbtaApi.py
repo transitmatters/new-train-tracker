@@ -24,6 +24,7 @@ def vehicle_data_for_routes(routes):
     return list(map(lambda vehicle: {
         'label': vehicle['label'],
         'route': vehicle['route']['id'],
+        'direction': vehicle['direction_id'],
         'current_status': vehicle['current_status'],
         'station_id': vehicle['stop']['parent_station']['id'],
         'new_flag': Fleet.car_array_is_new(vehicle['route']['id'],
