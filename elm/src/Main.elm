@@ -25,10 +25,22 @@ type Msg
 type alias Vehicle =
     { label : String
     , route : String
+    , direction : Direction
     , currentStatus : CurrentStatus
     , stationId : String
     , newFlag : Bool
     }
+
+
+{-| The API gives this as 0 or 1, but for us,
+it will be easier to think about them as up and down on the screen.
+For all the Subway lines as we want to draw them,
+0 is Downward (Red/Orange: South, Green: West)
+1 is Upward (Red/Orange: North, Green: East)
+-}
+type Direction
+    = Upward
+    | Downward
 
 
 type CurrentStatus
@@ -72,6 +84,21 @@ vehicleDecoder =
     Decode.succeed Vehicle
         |> Pipeline.required "label" Decode.string
         |> Pipeline.required "route" Decode.string
+        |> Pipeline.required "direction"
+            (Decode.int
+                |> Decode.andThen
+                    (\i ->
+                        case i of
+                            0 ->
+                                Decode.succeed Downward
+
+                            1 ->
+                                Decode.succeed Upward
+
+                            _ ->
+                                Decode.fail ("Unexpected direction " ++ String.fromInt i)
+                    )
+            )
         |> Pipeline.required "current_status"
             (Decode.string
                 |> Decode.andThen
