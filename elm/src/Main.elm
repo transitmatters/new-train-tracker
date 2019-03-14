@@ -5,6 +5,7 @@ import Html exposing (Html)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
+import RemoteData exposing (WebData)
 import Time
 
 
@@ -13,13 +14,21 @@ type alias Flags =
 
 
 type alias Model =
-    { vehicles : List Vehicle
+    { vehicles : WebData (List Vehicle)
+    , stops : WebData (List Stop)
     }
 
 
 type Msg
-    = ReceiveVehicles (Result Http.Error (List Vehicle))
+    = ReceiveVehicles (WebData (List Vehicle))
     | Poll Time.Posix
+    | ReceiveStops (WebData (List Stop))
+
+
+type alias Stop =
+    { id : String
+    , name : String
+    }
 
 
 type alias Vehicle =
@@ -60,9 +69,13 @@ main =
 
 init : flags -> ( Model, Cmd Msg )
 init _ =
-    ( { vehicles = []
+    ( { vehicles = RemoteData.Loading
+      , stops = RemoteData.Loading
       }
-    , getNewVehicles
+    , Cmd.batch
+        [ getNewVehicles
+        , getStops
+        ]
     )
 
 
@@ -75,7 +88,21 @@ getNewVehicles : Cmd Msg
 getNewVehicles =
     Http.get
         { url = "/data/Orange"
-        , expect = Http.expectJson ReceiveVehicles (Decode.list vehicleDecoder)
+        , expect =
+            Http.expectJson
+                (ReceiveVehicles << RemoteData.fromResult)
+                (Decode.list vehicleDecoder)
+        }
+
+
+getStops : Cmd Msg
+getStops =
+    Http.get
+        { url = "/stops/Orange"
+        , expect =
+            Http.expectJson
+                (ReceiveStops << RemoteData.fromResult)
+                (Decode.list stopDecoder)
         }
 
 
@@ -121,24 +148,29 @@ vehicleDecoder =
         |> Pipeline.required "new_flag" Decode.bool
 
 
+stopDecoder : Decoder Stop
+stopDecoder =
+    Decode.succeed Stop
+        |> Pipeline.required "id" Decode.string
+        |> Pipeline.required "name" Decode.string
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ReceiveVehicles result ->
-            case result of
-                Ok vehicles ->
-                    ( { model | vehicles = vehicles }
-                    , Cmd.none
-                    )
+            ( { model
+                | vehicles = result
+              }
+            , Cmd.none
+            )
 
-                Err e ->
-                    let
-                        _ =
-                            Debug.log "" e
-                    in
-                    ( model
-                    , Cmd.none
-                    )
+        ReceiveStops result ->
+            ( { model
+                | stops = result
+              }
+            , Cmd.none
+            )
 
         Poll _ ->
             ( model
@@ -148,10 +180,37 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Html.div []
-        [ Html.text "Vehicles:"
-        , Html.ul []
-            (List.map renderVehicle model.vehicles)
+    case ( model.stops, model.vehicles ) of
+        ( RemoteData.Success stops, RemoteData.Success vehicles ) ->
+            Html.div []
+                [ Html.text "Stops:"
+                , Html.ul []
+                    (List.map renderStop stops)
+                , Html.text "Vehicles:"
+                , Html.ul []
+                    (List.map renderVehicle vehicles)
+                ]
+
+        ( RemoteData.Loading, _ ) ->
+            Html.text "Loading"
+
+        ( _, RemoteData.Loading ) ->
+            Html.text "Loading"
+
+        ( error_stops, error_vehicles ) ->
+            Html.div []
+                [ Html.text "Error"
+                , Html.text "Stops:"
+                , Html.text (Debug.toString error_stops)
+                , Html.text "Vehicles:"
+                , Html.text (Debug.toString error_vehicles)
+                ]
+
+
+renderStop : Stop -> Html Msg
+renderStop stop =
+    Html.li []
+        [ Html.text (Debug.toString stop)
         ]
 
 

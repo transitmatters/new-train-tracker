@@ -21,5 +21,10 @@ def js(filename):
 def data(routes):
     return flask.Response(json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(','))))
 
+@app.route("/stops/<route>")
+def stops(route):
+    return flask.Response(json.dumps(MbtaApi.stops_for_route(route)))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
