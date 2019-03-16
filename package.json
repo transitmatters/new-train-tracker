@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "cd server && pipenv install",
     "build-elm": "cd elm && elm make src/Main.elm --output ../js/elm.js",
-    "watch-elm": "chokidar elm/src/ -c 'npm run build-elm'",
+    "build-elm-debug": "cd elm && elm make src/Main.elm --output ../js/elm.js --debug",
+    "watch-elm": "npm run build-elm-debug; chokidar elm/src/ -c 'npm run build-elm-debug'",
     "start-python": "cd server && pipenv run python3 server.py",
     "start": "concurrently npm:start-python npm:watch-elm",
     "format": "cd elm && elm-format . --yes",
