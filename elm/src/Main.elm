@@ -3,6 +3,7 @@ module Main exposing (main)
 import Browser
 import Data exposing (..)
 import Html exposing (Html)
+import Html.Attributes as Html
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
@@ -148,71 +149,173 @@ update msg model =
             )
 
 
+
+-- View
+
+
 view : Model -> Html Msg
 view model =
-    case ( model.stops, model.vehicles ) of
-        ( RemoteData.Success stops, RemoteData.Success vehicles ) ->
-            viewLadder stops vehicles
+    Html.div
+        []
+        [ header
+        , banner
+        , viewLadder model
+        , footer model.vehicles
+        ]
 
-        ( RemoteData.Loading, _ ) ->
-            Html.text "Loading"
 
-        ( _, RemoteData.Loading ) ->
-            Html.text "Loading"
+header : Html msg
+header =
+    Html.header
+        [ Html.class "header" ]
+        [ Html.img
+            [ Html.class "header-logo"
+            , Html.src "/assets/TM_logo.svg"
+            , Html.alt "Transit Matters"
+            ]
+            []
+        , Html.h1 [] [ Html.text "New Train Tracker" ]
+        ]
 
-        ( error_stops, error_vehicles ) ->
-            Html.div []
+
+banner : Html msg
+banner =
+    Html.div
+        [ Html.class "banner" ]
+        [ Html.h2 [] [ Html.text "Orange Line" ]
+        ]
+
+
+viewLadder : Model -> Html Msg
+viewLadder model =
+    Html.div
+        [ Html.class "ladder" ]
+        (case ( model.stops, model.vehicles ) of
+            ( RemoteData.Success stops, RemoteData.Success vehicles ) ->
+                List.map viewLadderRow (Ladder.ladder stops vehicles)
+
+            ( RemoteData.Loading, _ ) ->
+                [ Html.text "Loading" ]
+
+            ( _, RemoteData.Loading ) ->
+                [ Html.text "Loading" ]
+
+            ( error_stops, error_vehicles ) ->
                 [ Html.text "Error"
                 , Html.text "Stops:"
                 , Html.text (Debug.toString error_stops)
                 , Html.text "Vehicles:"
                 , Html.text (Debug.toString error_vehicles)
                 ]
-
-
-viewLadder : List Stop -> List Vehicle -> Html Msg
-viewLadder stops vehicles =
-    let
-        ladder =
-            Ladder.ladder stops vehicles
-    in
-    Html.div []
-        (List.map viewLadderRow ladder)
+        )
 
 
 viewLadderRow : Ladder.LadderRow -> Html msg
 viewLadderRow row =
-    Html.div []
-        [ Html.text
-            (case row.leftTrains of
-                _ :: _ ->
-                    "X"
+    Html.div
+        [ Html.class "ladder-row" ]
+        [ row.leftTrains
+            |> List.head
+            |> viewTrain
+        , case row.stopName of
+            Nothing ->
+                Html.div
+                    [ Html.class "track track--between" ]
+                    []
 
-                [] ->
-                    "."
-            )
-        , Html.text
-            (case row.stopName of
-                Nothing ->
-                    "|"
+            Just _ ->
+                Html.div
+                    [ Html.class "track track--station" ]
+                    []
+        , row.rightTrains
+            |> List.head
+            |> viewTrain
+        , case row.stopName of
+            Nothing ->
+                emptyHtml
 
-                Just _ ->
-                    "O"
-            )
-        , Html.text
-            (case row.rightTrains of
-                _ :: _ ->
-                    "X"
-
-                [] ->
-                    "."
-            )
-        , Html.text
-            (case row.stopName of
-                Nothing ->
-                    "."
-
-                Just name ->
-                    name
-            )
+            Just name ->
+                Html.div
+                    [ Html.class "station-name" ]
+                    [ Html.text name ]
         ]
+
+
+viewTrain : Maybe Vehicle -> Html msg
+viewTrain maybeVehicle =
+    Html.div
+        [ Html.class "train" ]
+        (case maybeVehicle of
+            Nothing ->
+                []
+
+            Just vehicle ->
+                case vehicle.direction of
+                    Upward ->
+                        [ Html.div [ Html.class "train-arrow train-arrow-up" ] []
+                        , Html.img
+                            [ Html.class "train-upward train-svg"
+                            , Html.src "/assets/train.svg"
+                            , Html.alt "Northbound Orange Line train"
+                            ]
+                            []
+                        , Html.text vehicle.label
+                        ]
+
+                    Downward ->
+                        [ Html.text vehicle.label
+                        , Html.img
+                            [ Html.class "train-svg"
+                            , Html.src "/assets/train.svg"
+                            , Html.alt "Southbound Orange Line train"
+                            ]
+                            []
+                        , Html.div [ Html.class "train-arrow train-arrow-down" ] []
+                        ]
+        )
+
+
+footer : WebData (List Vehicle) -> Html msg
+footer remoteVehicles =
+    let
+        numNewTrainsText =
+            case remoteVehicles of
+                RemoteData.Success vehicles ->
+                    let
+                        numNewTrains =
+                            vehicles
+                                |> List.filter .newFlag
+                                |> List.length
+
+                        trainsPlural =
+                            if numNewTrains == 1 then
+                                ""
+
+                            else
+                                "s"
+                    in
+                    String.concat
+                        [ String.fromInt numNewTrains
+                        , " new train"
+                        , trainsPlural
+                        , " in service"
+                        ]
+
+                _ ->
+                    ""
+    in
+    Html.div
+        [ Html.class "footer" ]
+        [ Html.text numNewTrainsText
+        , Html.img
+            [ Html.class "footer-wordmark"
+            , Html.src "/assets/TM_wordmark.svg"
+            , Html.alt "Transit Matters"
+            ]
+            []
+        ]
+
+
+emptyHtml : Html msg
+emptyHtml =
+    Html.text ""
