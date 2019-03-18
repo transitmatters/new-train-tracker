@@ -6,11 +6,13 @@
   "scripts": {
     "postinstall": "cd server && pipenv install",
     "build-elm": "cd elm && elm make src/Main.elm --output ../js/elm.js",
-    "watch-elm": "chokidar elm/src/ -c 'npm run build-elm'",
+    "build-elm-debug": "cd elm && elm make src/Main.elm --output ../js/elm.js --debug",
+    "watch-elm": "npm run build-elm-debug; chokidar elm/src/ -c 'npm run build-elm-debug'",
     "start-python": "cd server && pipenv run python3 server.py",
     "start": "concurrently npm:start-python npm:watch-elm",
-    "format": "cd elm && elm-format . --yes",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "cd elm/ && elm-format . --yes",
+    "test-elm": "cd elm && elm-format . --validate && elm-test",
+    "test": "npm run test-elm"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "chokidar-cli": "^1.2.2",
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "elm-test": "^0.19.0-rev6"
   }
 }
