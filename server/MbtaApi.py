@@ -35,7 +35,7 @@ def stops_for_route(route):
     stops = getV3('stops', {
         'filter[route]': route,
     })
-    return list(map(lambda stop: {
+    return list(reversed(list(map(lambda stop: {
         'id': stop['id'],
         'name': stop['name'],
-    }, stops))
+    }, stops))))
