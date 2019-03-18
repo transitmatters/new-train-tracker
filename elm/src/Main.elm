@@ -184,11 +184,12 @@ viewLadderRow : Ladder.LadderRow -> Html msg
 viewLadderRow row =
     Html.div []
         [ Html.text
-            (if row.leftTrain then
-                "X"
+            (case row.leftTrains of
+                _ :: _ ->
+                    "X"
 
-             else
-                "."
+                [] ->
+                    "."
             )
         , Html.text
             (case row.stopName of
@@ -199,11 +200,12 @@ viewLadderRow row =
                     "O"
             )
         , Html.text
-            (if row.rightTrain then
-                "X"
+            (case row.rightTrains of
+                _ :: _ ->
+                    "X"
 
-             else
-                "."
+                [] ->
+                    "."
             )
         , Html.text
             (case row.stopName of

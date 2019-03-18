@@ -4,7 +4,6 @@ module Ladder exposing
     , ladder
     )
 
-import AssocList as Dict
 import Data exposing (..)
 
 
@@ -16,8 +15,8 @@ type alias Ladder =
 Stations have a name. Spaces between do not.
 -}
 type alias LadderRow =
-    { leftTrain : Bool
-    , rightTrain : Bool
+    { leftTrains : List Vehicle
+    , rightTrains : List Vehicle
     , stopName : Maybe String
     }
 
@@ -31,24 +30,12 @@ type alias Location =
     }
 
 
-vehicleLocation : Vehicle -> Location
-vehicleLocation vehicle =
-    { direction = vehicle.direction
-    , stationId = vehicle.stationId
-    , currentStatus = vehicle.currentStatus
-    }
-
-
 {-| Stops should be given top-to-bottom
 If there are multiple trains in one location, picks one arbitrarily
 -}
 ladder : List Stop -> List Vehicle -> Ladder
 ladder stops vehicles =
     let
-        vehiclesByLocation : Dict.Dict Location (List Vehicle)
-        vehiclesByLocation =
-            groupBy vehicleLocation vehicles
-
         {- Note the directions and the assymetries between going up and going down:
            foldl vs foldr,
            the order that approachingLocation and stopLocation are accumulated,
@@ -113,12 +100,10 @@ ladder stops vehicles =
     in
     List.map3
         (\downLocation upLocation stopName ->
-            { leftTrain =
-                vehiclesByLocation
-                    |> Dict.member downLocation
-            , rightTrain =
-                vehiclesByLocation
-                    |> Dict.member upLocation
+            { leftTrains =
+                vehiclesAtLocation downLocation vehicles
+            , rightTrains =
+                vehiclesAtLocation upLocation vehicles
             , stopName = stopName
             }
         )
@@ -127,19 +112,14 @@ ladder stops vehicles =
         stopNames
 
 
-groupBy : (v -> k) -> List v -> Dict.Dict k (List v)
-groupBy keyFn elems =
-    List.foldl
-        (\elem dict ->
-            Dict.update
-                (keyFn elem)
-                (\existing ->
-                    existing
-                        |> Maybe.withDefault []
-                        |> (::) elem
-                        |> Just
-                )
-                dict
-        )
-        Dict.empty
-        elems
+vehiclesAtLocation : Location -> List Vehicle -> List Vehicle
+vehiclesAtLocation location vehicles =
+    List.filter (\vehicle -> vehicleLocation vehicle == location) vehicles
+
+
+vehicleLocation : Vehicle -> Location
+vehicleLocation vehicle =
+    { direction = vehicle.direction
+    , stationId = vehicle.stationId
+    , currentStatus = vehicle.currentStatus
+    }

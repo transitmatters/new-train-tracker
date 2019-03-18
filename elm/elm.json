@@ -13,8 +13,7 @@
             "elm/http": "2.0.0",
             "elm/json": "1.1.3",
             "elm/time": "1.0.0",
-            "krisajenkins/remotedata": "6.0.1",
-            "pzp1997/assoc-list": "1.0.0"
+            "krisajenkins/remotedata": "6.0.1"
         },
         "indirect": {
             "elm/bytes": "1.0.8",

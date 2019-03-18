@@ -31,35 +31,25 @@ suite =
                                 )
 
                     vehicles =
-                        [ ( Upward, StoppedAt, "A" )
-                        , ( Upward, InTransitTo, "A" )
-                        , ( Downward, StoppedAt, "B" )
-                        , ( Downward, InTransitTo, "C" )
+                        [ vehicle Upward StoppedAt "A"
+                        , vehicle Upward InTransitTo "A"
+                        , vehicle Downward StoppedAt "B"
+                        , vehicle Downward InTransitTo "C"
                         ]
-                            |> List.map
-                                (\( direction, status, station ) ->
-                                    { label = "label"
-                                    , route = "route"
-                                    , direction = direction
-                                    , currentStatus = status
-                                    , stationId = station
-                                    , newFlag = False
-                                    }
-                                )
 
                     expected =
-                        [ ( False, True, Just "A" )
-                        , ( False, True, Nothing )
-                        , ( True, False, Just "B" )
-                        , ( True, False, Nothing )
-                        , ( False, False, Just "C" )
-                        , ( False, False, Nothing )
-                        , ( False, False, Just "D" )
+                        [ ( [], [ vehicle Upward StoppedAt "A" ], Just "A" )
+                        , ( [], [ vehicle Upward InTransitTo "A" ], Nothing )
+                        , ( [ vehicle Downward StoppedAt "B" ], [], Just "B" )
+                        , ( [ vehicle Downward InTransitTo "C" ], [], Nothing )
+                        , ( [], [], Just "C" )
+                        , ( [], [], Nothing )
+                        , ( [], [], Just "D" )
                         ]
                             |> List.map
                                 (\( left, right, name ) ->
-                                    { leftTrain = left
-                                    , rightTrain = right
+                                    { leftTrains = left
+                                    , rightTrains = right
                                     , stopName = name
                                     }
                                 )
@@ -69,3 +59,14 @@ suite =
                 in
                 Expect.equal actual expected
         ]
+
+
+vehicle : Direction -> CurrentStatus -> String -> Vehicle
+vehicle direction status station =
+    { label = "label"
+    , route = "route"
+    , direction = direction
+    , currentStatus = status
+    , stationId = station
+    , newFlag = False
+    }
