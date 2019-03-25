@@ -12,6 +12,10 @@ def root():
 def static_files(filename):
     return flask.send_from_directory("../static", filename)
 
+@app.route('/assets/<path:filename>')
+def assets(filename):
+    return flask.send_from_directory("../assets", filename)
+
 @app.route('/js/<path:filename>')
 def js(filename):
     return flask.send_from_directory("../js", filename)

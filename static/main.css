@@ -1,0 +1,123 @@
+:root {
+  --color-orange: #ED8B00;
+  --track-width: .5rem;
+  --track-border: var(--track-width) solid #7F481E;
+  --ladder-row-size: 3rem;
+}
+
+body {
+  margin: 0;
+  font-family: Helvetica, sans-serif;
+}
+
+.header {
+  align-items: center;
+  background-color: white;
+  display: flex;
+  height: 5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.header-logo {
+  height: 3rem;
+  margin-right: 1rem;
+  width: 3rem;
+}
+
+.banner {
+  background-color: var(--color-orange);
+  box-sizing: border-box;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.banner h2 {
+  margin: 0;
+}
+
+.ladder {
+  background-color: var(--color-orange);
+  color: white;
+  padding: 1rem 0;
+}
+
+.ladder-row {
+  display: flex;
+  height: var(--ladder-row-size);
+}
+
+.track {
+  flex: 0 0 auto;
+}
+
+.track--between {
+  border-left: var(--track-border);
+  transform: translateX(calc(50% - .5 * var(--track-width)));
+  width: calc(var(--ladder-row-size) - 1 * var(--track-width));
+}
+
+.track--station {
+  border: var(--track-border);
+  border-radius: 50%;
+  height: calc(var(--ladder-row-size) - 2 * var(--track-width));
+  width: calc(var(--ladder-row-size) - 2 * var(--track-width));
+}
+
+.train {
+  flex: 0 0 auto;
+  text-align: center;
+  width: var(--ladder-row-size);
+}
+
+.train-svg {
+  height: 2rem;
+}
+
+.train-arrow {
+	height: 0;
+  margin: auto;
+	width: 0;
+}
+
+.train-arrow-down {
+  border-top: solid var(--track-width) white;
+  border-left: solid var(--track-width) transparent;
+  border-right: solid var(--track-width) transparent;
+}
+
+.train-arrow-up {
+  border-bottom: solid var(--track-width) white;
+  border-left: solid var(--track-width) transparent;
+  border-right: solid var(--track-width) transparent;
+}
+
+.station-name {
+  align-content: center;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  font-size: 1.25rem;
+  font-weight: 700;
+  justify-content : center;
+  text-transform: uppercase;
+}
+
+.footer {
+  box-sizing: border-box;
+  background-color: white;
+  bottom: 0;
+  display: flex;
+  font-size: 1.25rem;
+  justify-content: space-between;
+  padding: .5rem;
+  position: sticky;
+  width: 100%;
+}
+
+.footer-wordmark {
+  height: 1.5rem;
+}
