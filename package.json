@@ -25,11 +25,11 @@
   },
   "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
   "dependencies": {
-    "elm": "^0.19.0-bugfix6",
+    "elm": "^0.19.0-no-deps",
     "elm-format": "^0.8.1"
   },
   "devDependencies": {
-    "chokidar-cli": "^1.2.2",
+    "chokidar-cli": "^2.0.0",
     "concurrently": "^4.1.0",
     "elm-test": "^0.19.0-rev6"
   }
