@@ -18,7 +18,7 @@ def assets(filename):
 
 @application.route('/js/<path:filename>')
 def js(filename):
-    return flask.send_from_directory("../js", filename)
+    return flask.send_from_directory("../build/js", filename)
 
 # Data routes
 @application.route("/data/<routes>")
