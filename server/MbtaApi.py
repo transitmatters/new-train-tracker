@@ -20,17 +20,23 @@ def vehicle_data_for_routes(routes):
         'filter[route]': ','.join(routes),
         'include': 'stop'
     })
+    # Iterate vehicles, only send new ones to the browser
+    new_vehicles = []
+    for vehicle in vehicles:
+        try:
+            if Fleet.car_array_is_new(vehicle['route']['id'], vehicle['label'].split('-')):
+                new_vehicles.append({
+                    'label': vehicle['label'],
+                    'route': vehicle['route']['id'],
+                    'direction': vehicle['direction_id'],
+                    'current_status': vehicle['current_status'],
+                    'station_id': vehicle['stop']['parent_station']['id'],
+                    'new_flag': True
+                })
+        except (KeyError, TypeError):
+            continue
 
-    # Filtering by new trains for now, so only ones with new_flag are sent to browser
-    return list(filter(lambda x: x['new_flag'], map(lambda vehicle: {
-        'label': vehicle['label'],
-        'route': vehicle['route']['id'],
-        'direction': vehicle['direction_id'],
-        'current_status': vehicle['current_status'],
-        'station_id': vehicle['stop']['parent_station']['id'],
-        'new_flag': Fleet.car_array_is_new(vehicle['route']['id'],
-                    vehicle['label'].split('-'))
-    }, vehicles)))
+    return new_vehicles
 
 def stops_for_route(route):
     stops = getV3('stops', {
