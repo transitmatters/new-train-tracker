@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Data exposing (..)
+import Helpers
 import Html exposing (Html)
 import Html.Attributes as Html
 import Http
@@ -62,7 +63,7 @@ getNewVehicles =
         , expect =
             Http.expectJson
                 (ReceiveVehicles << RemoteData.fromResult)
-                (Decode.list vehicleDecoder)
+                (Helpers.robustListDecoder vehicleDecoder)
         }
 
 
@@ -202,13 +203,8 @@ viewLadder model =
             ( _, RemoteData.Loading ) ->
                 [ Html.text "Loading" ]
 
-            ( error_stops, error_vehicles ) ->
-                [ Html.text "Error"
-                , Html.text "Stops:"
-                , Html.text (Debug.toString error_stops)
-                , Html.text "Vehicles:"
-                , Html.text (Debug.toString error_vehicles)
-                ]
+            ( _, _ ) ->
+                [ Html.text "Something went wrong. Try reloading." ]
         )
 
 
