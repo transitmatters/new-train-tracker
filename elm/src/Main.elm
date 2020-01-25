@@ -157,11 +157,10 @@ view : Model -> Html Msg
 view model =
     Html.div
         []
-        [ header,
-        Html.div [Html.class "container"]
-            [
-                banner,
-                viewLadder model
+        [ header
+        , Html.div [ Html.class "container" ]
+            [ banner
+            , viewLadder model
             ]
         , footer model.vehicles
         ]
@@ -310,12 +309,16 @@ footer remoteVehicles =
     Html.div
         [ Html.class "footer" ]
         [ Html.text numNewTrainsText
-        , Html.img
-            [ Html.class "footer-wordmark"
-            , Html.src "/assets/TM_wordmark.svg"
-            , Html.alt "Transit Matters"
+        , Html.a
+            [ Html.href "https://transitmatters.org/"
             ]
-            []
+            [ Html.img
+                [ Html.class "footer-wordmark"
+                , Html.src "/assets/TM_wordmark.svg"
+                , Html.alt "Transit Matters"
+                ]
+                []
+            ]
         ]
 
 
