@@ -157,9 +157,12 @@ view : Model -> Html Msg
 view model =
     Html.div
         []
-        [ header
-        , banner
-        , viewLadder model
+        [ header,
+        Html.div [Html.class "container"]
+            [
+                banner,
+                viewLadder model
+            ]
         , footer model.vehicles
         ]
 

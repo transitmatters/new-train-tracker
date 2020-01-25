@@ -14,7 +14,9 @@ body {
   align-items: center;
   background-color: white;
   display: flex;
-  height: 5rem;
+  position: fixed;
+  z-index: 10;
+  height: 3.4rem;
   justify-content: center;
   width: 100%;
 }
@@ -29,6 +31,8 @@ body {
   background-color: var(--color-orange);
   box-sizing: border-box;
   color: white;
+  position: relative;
+  top: 3.4rem;
   padding: 1rem;
   text-align: center;
   text-transform: uppercase;
@@ -39,8 +43,14 @@ body {
   margin: 0;
 }
 
+.container {
+  margin-bottom: 3.4rem;
+}
+
 .ladder {
   background-color: var(--color-orange);
+  position: relative;
+  top: 3.4rem;
   color: white;
   padding: 1rem 0;
 }
