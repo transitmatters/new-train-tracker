@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "cd server && pipenv install",
-    "build-elm": "cd elm && elm make src/Main.elm --output ../js/elm.js",
+    "build-elm-prod": "cd elm && elm make src/Main.elm --output ../js/elm.js --optimize",
     "build-elm-debug": "cd elm && elm make src/Main.elm --output ../js/elm.js --debug",
     "watch-elm": "npm run build-elm-debug; chokidar elm/src/ -c 'npm run build-elm-debug'",
     "start-python": "cd server && pipenv run python3 application.py",
