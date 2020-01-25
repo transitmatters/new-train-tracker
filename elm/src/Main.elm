@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Data exposing (..)
+import Helpers
 import Html exposing (Html)
 import Html.Attributes as Html
 import Http
@@ -62,7 +63,7 @@ getNewVehicles =
         , expect =
             Http.expectJson
                 (ReceiveVehicles << RemoteData.fromResult)
-                (Decode.list vehicleDecoder)
+                (Helpers.robustListDecoder vehicleDecoder)
         }
 
 
