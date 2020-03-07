@@ -1,0 +1,40 @@
+{
+  "name": "new-train-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "cd server && pipenv install",
+    "start-python": "cd server && pipenv run python3 application.py",
+    "start": "concurrently npm:start-python npm:build-dev",
+    "build-dev": "webpack --watch --mode development",
+    "build-prod": "webpack --mode production",
+    "start-prod": "npm run build-prod && NODE_ENV=production npm run start-python"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/transitmatters/new-train-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/transitmatters/new-train-tracker/issues"
+  },
+  "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
+  "dependencies": {
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-react": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "concurrently": "^5.1.0",
+    "css-loader": "^3.4.2",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^1.1.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
