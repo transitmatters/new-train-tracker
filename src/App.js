@@ -65,7 +65,7 @@ const locateTrain = ({
     train,
     stationsByRoute,
     stationPositions,
-    routeInterpolators,
+    interpolators,
 }) => {
     const { route, stationId, direction } = train;
     const stations = stationsByRoute[route];
@@ -76,26 +76,21 @@ const locateTrain = ({
             ? stations[indexOfStation - 1]
             : stations[indexOfStation + 1];
     if (fromStation) {
+        const interpolator = interpolators[route];
         try {
-            const trainInterpolator = routeInterpolators.reduce(
-                (inter, routeInterpolator) => {
-                    return (
-                        inter ||
-                        routeInterpolator.getInterpolatorBetweenStations(
-                            fromStation,
-                            toStation
-                        )
-                    );
-                },
-                null
+            return interpolator(fromStation, toStation, train);
+        } catch (_) {
+            console.log(
+                'Failed to interpolate train position ' +
+                    `(from=${fromStation.id}, to=${toStation.id}). ` +
+                    'Falling back to station location.'
             );
-            return trainInterpolator(train);
-        } catch (_) {}
+        }
     }
     return stationPositions[stationId];
 };
 
-function App() {
+const App = () => {
     const { stationsByRoute, trainsByRoute } = useMbtaApi([greenLine]);
 
     if (stationsByRoute && trainsByRoute) {
@@ -103,17 +98,17 @@ function App() {
             pathDirective,
             bounds,
             stationPositions,
-            routeInterpolators,
+            interpolators,
         } = prerenderLine(greenLine, stationsByRoute);
 
-        const trainPositions = Object.entries(trainsByRoute)
-            .map(([_, trains]) =>
+        const trainPositions = Object.values(trainsByRoute)
+            .map(trains =>
                 trains.map(train =>
                     locateTrain({
                         train,
                         stationsByRoute,
                         stationPositions,
-                        routeInterpolators,
+                        interpolators,
                     })
                 )
             )
@@ -133,6 +128,6 @@ function App() {
     }
 
     return <div className="app">Loading...</div>;
-}
+};
 
 export default App;

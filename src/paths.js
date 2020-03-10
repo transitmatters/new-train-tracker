@@ -119,11 +119,12 @@ export const wiggle = (length, width, angle = 0) => turtle => {
     };
 };
 
-export const stationRange = ({ start, end, commands }) => {
+export const stationRange = ({ start, end, stations, commands }) => {
     return {
         type: 'stationRange',
         start,
         end,
+        stations,
         commands,
     };
 };

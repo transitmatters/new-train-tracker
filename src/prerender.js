@@ -1,6 +1,6 @@
 import {
-    createRouteInterpolator,
     createInterpolatorForSegments,
+    createInterStationInterpolator,
 } from './interpolation';
 
 const createBounds = () => {
@@ -40,11 +40,37 @@ const createPathBuilder = () => {
     };
 };
 
+const getStationIdsWithinRange = (stationRange, stationIds) => {
+    const { start, end, stations } = stationRange;
+    if (stations) {
+        return stations;
+    }
+    const startIndex = stationIds.indexOf(start);
+    const endIndex = stationIds.indexOf(end);
+    if (startIndex === -1 || endIndex === -1) {
+        throw new Error(
+            `Improper use of {start=${start}, end=${end}} properties for stationRange. ` +
+                'These stations do not exist on retrieved GTFS route -- ' +
+                'consider using stationRange.stations property instead.'
+        );
+    }
+    return stationIds.slice(startIndex, endIndex + 1);
+};
+
+const getStationPositions = (stationOffsets, pathInterpolator) => {
+    const positions = {};
+    Object.entries(stationOffsets).forEach(([stationId, offset]) => {
+        positions[stationId] = pathInterpolator(offset);
+    });
+    return positions;
+};
+
 const prerenderRoute = (shape, stationIds) => {
     const [start, ...entries] = shape;
     const pathBuilder = createPathBuilder();
-    const stationPositions = {};
-    const routeInterpolator = createRouteInterpolator();
+    const segments = [];
+    const stationOffsets = {};
+    let totalLength = 0;
 
     if (start.type !== 'start') {
         throw new Error('Route must begin with a start() command');
@@ -54,7 +80,9 @@ const prerenderRoute = (shape, stationIds) => {
 
     const consumeCommand = command => {
         const segment = command(turtle);
-        const { path, turtle: nextTurtle } = segment;
+        const { path, length, turtle: nextTurtle } = segment;
+        segments.push(segment);
+        totalLength += length;
         turtle = nextTurtle;
         bounds = captureTurtleInBounds(bounds, turtle);
         pathBuilder.add(path);
@@ -63,76 +91,69 @@ const prerenderRoute = (shape, stationIds) => {
 
     entries.forEach(entry => {
         if (entry.type === 'stationRange') {
-            const { start, end, commands } = entry;
+            const initialLength = totalLength;
             const segmentsInRange = [];
-            const stationIdsWithinRange = stationIds.slice(
-                stationIds.indexOf(start),
-                stationIds.indexOf(end) + 1
+            const stationIdsWithinRange = getStationIdsWithinRange(
+                entry,
+                stationIds
             );
 
-            commands.forEach(command => {
+            entry.commands.forEach(command => {
                 const segment = consumeCommand(command);
                 segmentsInRange.push(segment);
             });
 
-            const stationFractions = {};
-            const positionMapper = createInterpolatorForSegments(
-                segmentsInRange
-            );
+            const segmentsLength = totalLength - initialLength;
 
             stationIdsWithinRange.forEach((stationId, index) => {
                 const fraction =
                     stationIdsWithinRange.length === 1
                         ? 0.5
                         : index / (stationIdsWithinRange.length - 1);
-                stationFractions[stationId] = fraction;
-                stationPositions[stationId] = positionMapper(fraction);
+                stationOffsets[stationId] =
+                    initialLength + fraction * segmentsLength;
             });
-
-            routeInterpolator.addStationRange(
-                entry,
-                stationIdsWithinRange,
-                stationFractions,
-                positionMapper
-            );
         } else {
-            const segment = consumeCommand(entry);
-            routeInterpolator.addSegment(segment);
+            consumeCommand(entry);
         }
     });
+
     return {
+        stationOffsets,
         bounds: bounds,
         pathDirective: pathBuilder.get(),
-        stationPositions,
-        routeInterpolator,
+        pathInterpolator: createInterpolatorForSegments(segments),
     };
 };
 
 export const prerenderLine = (line, stationsByRoute) => {
-    const routeInterpolators = [];
-    const totalPathBuilder = createPathBuilder();
-    let totalBounds = createBounds();
-    let totalStationPositions = {};
+    const interpolators = {};
+    const pathBuilder = createPathBuilder();
+    let bounds = createBounds();
+    let stationPositions = {};
     Object.entries(line.routes).forEach(([routeName, { shape }]) => {
         const stationIds = stationsByRoute[routeName].map(s => s.id);
         const {
-            bounds,
+            pathInterpolator,
+            stationOffsets,
             pathDirective,
-            stationPositions,
-            routeInterpolator,
+            bounds: partialBounds,
         } = prerenderRoute(shape, stationIds);
-        routeInterpolators.push(routeInterpolator);
-        totalStationPositions = {
-            ...totalStationPositions,
+        interpolators[routeName] = createInterStationInterpolator(
+            pathInterpolator,
+            stationOffsets
+        );
+        stationPositions = {
             ...stationPositions,
+            ...getStationPositions(stationOffsets, pathInterpolator),
         };
-        totalPathBuilder.add(pathDirective);
-        totalBounds = getUnionForBounds(totalBounds, bounds);
+        pathBuilder.add(pathDirective);
+        bounds = getUnionForBounds(bounds, partialBounds);
     });
     return {
-        routeInterpolators,
-        bounds: totalBounds,
-        pathDirective: totalPathBuilder.get(),
-        stationPositions: totalStationPositions,
+        bounds: bounds,
+        interpolators: interpolators,
+        pathDirective: pathBuilder.get(),
+        stationPositions: stationPositions,
     };
 };

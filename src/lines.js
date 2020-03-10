@@ -1,17 +1,26 @@
 import { start, line, curve, wiggle, stationRange } from './paths';
 
 export const greenShared = [
-    start(90, -90, 90),
+    start(0, 0, 90),
     stationRange({
-        start: 'place-lech',
-        end: 'place-coecl',
+        stations: [
+            'place-lech',
+            'place-spmnl',
+            'place-north',
+            'place-haecl',
+            'place-gover',
+            'place-pktrm',
+            'place-boyls',
+            'place-armnl',
+            'place-coecl',
+        ],
         commands: [line(100), curve(20, 60), line(20)],
     }),
 ];
 
 export const greenBCDTrunk = [
     stationRange({
-        start: 'place-coecl',
+        start: 'place-hymnl',
         end: 'place-kencl',
         commands: [line(20)],
     }),
@@ -20,30 +29,33 @@ export const greenBCDTrunk = [
 export const greenBShape = [
     ...greenShared,
     ...greenBCDTrunk,
+    wiggle(30, -20),
     stationRange({
         start: 'place-bland',
         end: 'place-lake',
-        commands: [wiggle(30, -20), line(100)],
+        commands: [line(100)],
     }),
 ];
 
 export const greenCShape = [
     ...greenShared,
     ...greenBCDTrunk,
+    line(30),
     stationRange({
         start: 'place-smary',
         end: 'place-clmnl',
-        commands: [line(135)],
+        commands: [line(105)],
     }),
 ];
 
 export const greenDShape = [
     ...greenShared,
     ...greenBCDTrunk,
+    wiggle(30, 20),
     stationRange({
         start: 'place-fenwy',
         end: 'place-river',
-        commands: [wiggle(30, 20), line(100)],
+        commands: [line(100)],
     }),
 ];
 
