@@ -6,6 +6,7 @@ body,
     height: 100%;
     width: 100%;
     margin: 0;
+    font-family: monospace;
 }
 
 .app {
@@ -17,8 +18,5 @@ body,
 }
 
 .app > svg {
-    background: #eee;
-    width: 50vw;
-    height: 50vh;
-    margin: 0 auto;
+    stroke-linecap: round;
 }

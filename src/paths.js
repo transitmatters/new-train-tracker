@@ -1,28 +1,43 @@
-const sind = theta => Math.sin(theta * (Math.PI / 180));
-const cosd = theta => Math.cos(theta * (Math.PI / 180));
-const tand = theta => Math.tan(theta * (Math.PI / 180));
+import Bezier from 'bezier-js';
+
+const d2r = degrees => degrees * (Math.PI / 180);
+const r2d = radians => radians * (180 / Math.PI);
+const sind = theta => Math.sin(d2r(theta));
+const cosd = theta => Math.cos(d2r(theta));
+const tand = theta => Math.tan(d2r(theta));
 const round = (x, n = 2) => Math.round(x * Math.pow(10, n)) / Math.pow(10, n);
 
+const bezierParameterizedPosition = bezier => frac => {
+    const { x, y } = bezier.get(frac);
+    const { x: dx, y: dy } = bezier.derivative(frac);
+    return { x, y, theta: r2d(Math.atan2(dy, dx)) };
+};
+
 const path = (strings, ...args) => {
-    const roundedString = (i) => {
+    const roundedString = i => {
         if (args[i] !== undefined) {
             return round(args[i]).toString();
         }
         return '';
-    }
+    };
 
-    return strings.reduce((acc, next, i) => `${acc}${next}${roundedString(i)}`, '');
-}
+    return strings.reduce(
+        (acc, next, i) => `${acc}${next}${roundedString(i)}`,
+        ''
+    );
+};
 
-const start = (x, y, theta) => {
+export const start = (x, y, theta) => {
     return {
         type: 'start',
         path: '',
         turtle: { x, y, theta },
-    }
-}
+        length: 0,
+        get: () => ({ x, y }),
+    };
+};
 
-const line = (length, { exclude = false, id = null } = {}) => (turtle) => {
+export const line = length => turtle => {
     const { x, y, theta } = turtle;
     const x2 = x + length * cosd(theta);
     const y2 = y + length * sind(theta);
@@ -30,11 +45,18 @@ const line = (length, { exclude = false, id = null } = {}) => (turtle) => {
         type: 'line',
         path: path`M ${x} ${y} L ${x2} ${y2}`,
         turtle: { x: x2, y: y2, theta },
-        id,
-    }
-}
+        length: length,
+        get: fraction => {
+            return {
+                x: x + fraction * length * cosd(theta),
+                y: y + fraction * length * sind(theta),
+                theta: theta,
+            };
+        },
+    };
+};
 
-const curve = (length, angle, { exclude = false, id = null } = {}) => (turtle) => {
+export const curve = (length, angle) => turtle => {
     const { x: x1, y: y1, theta } = turtle;
     const nextTheta = theta + angle;
     const x2 = x1 + length * cosd(theta + angle / 2);
@@ -49,94 +71,59 @@ const curve = (length, angle, { exclude = false, id = null } = {}) => (turtle) =
         // tan(theta) = infinity, so the line through (x1, y1) is vertical, and xc = x1
         xc = x1;
         yc = m2 * (xc - x2) + y2;
-
     } else {
         xc = (y1 - x1 * m1 - y2 + x2 * m2) / (m2 - m1);
         yc = m1 * (xc - x1) + y1;
     }
+    const bezier = new Bezier([
+        { x: x1, y: y1 },
+        { x: xc, y: yc },
+        { x: x2, y: y2 },
+    ]);
     return {
         type: 'curve',
         path: path`M ${x1} ${y1} Q ${xc} ${yc} ${x2} ${y2}`,
         turtle: { x: x2, y: y2, theta: nextTheta },
-        exclude,
-        id,
-    }
-}
+        length: bezier.length(),
+        get: bezierParameterizedPosition(bezier),
+    };
+};
 
-const wiggle = (length, width, angle = 0, { exclude = true, id = null } = {}) => (turtle) => {
+export const wiggle = (length, width, angle = 0) => turtle => {
     const { x: x1, y: y1, theta } = turtle;
     const nextTheta = theta + angle;
     const x2 = x1 + length * cosd(theta) + width * cosd(theta - 90);
     const y2 = y1 + length * sind(theta) + width * sind(theta - 90);
     // The first control point is parallel to the turtle's incoming line, and is half the total
     // distance between (x1, y1) and (x2, y2).
-    const halfDist = 0.5 * Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
+    const halfDist =
+        0.5 * Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
     const xp1 = x1 + halfDist * cosd(theta);
     const yp1 = y1 + halfDist * sind(theta);
-    // The second control point is parallel to the turtle's outgoing line, and is also half the 
+    // The second control point is parallel to the turtle's outgoing line, and is also half the
     // total point-point distance.
     const xp2 = x2 - halfDist * cosd(nextTheta);
     const yp2 = y2 - halfDist * sind(nextTheta);
+    const bezier = new Bezier([
+        { x: x1, y: y1 },
+        { x: xp1, y: yp1 },
+        { x: xp2, y: yp2 },
+        { x: x2, y: y2 },
+    ]);
     return {
         type: 'branch',
         path: path`M ${x1} ${y1} C ${xp1} ${yp1} ${xp2} ${yp2} ${x2} ${y2}`,
         turtle: { x: x2, y: y2, theta: nextTheta },
-        exclude,
-        id,
-    }
-}
+        length: bezier.length(),
+        get: bezierParameterizedPosition(bezier),
+    };
+};
 
-export const greenShared = [
-    start(90, -90, 90),
-    line(30),
-    curve(20, 60),
-    line(20),
-];
-
-export const greenBCDTrunk = [
-    line(20)
-]
-
-export const greenB = [
-    ...greenShared,
-    ...greenBCDTrunk,
-    wiggle(30, -20),
-    line(100),
-]
-
-export const greenC = [
-    ...greenShared,
-    ...greenBCDTrunk,
-    line(135)
-]
-
-export const greenD = [
-    ...greenShared,
-    ...greenBCDTrunk,
-    wiggle(30, 20),
-    line(100),
-]
-
-export const greenE = [
-    ...greenShared,
-    wiggle(60, 40),
-    line(40),
-]
-
-export const greenLine = {
-    name: "green",
-    paths: {
-        greenB,
-        greenC,
-        greenD,
-        greenE
-    },
-    servicePathMapping: {
-        'Green-B': {
-            path: 'greenB',
-            segmentation: [
-                ''
-            ]
-        }
-    }
-}
+export const stationRange = ({ start, end, commands }) => {
+    return {
+        type: 'stationRange',
+        start,
+        end,
+        commands,
+    };
+};

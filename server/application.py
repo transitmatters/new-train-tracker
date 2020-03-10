@@ -20,16 +20,19 @@ def static_files(filename):
 
 
 # Data routes
-@application.route("/data/<routes>")
+@application.route("/trains/<routes>")
 def data(routes):
     return flask.Response(
-        json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(",")))
+        json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(","))),
+        mimetype="application/json",
     )
 
 
-@application.route("/stops/<route>")
+@application.route("/stations/<route>")
 def stops(route):
-    return flask.Response(json.dumps(MbtaApi.stops_for_route(route)))
+    return flask.Response(
+        json.dumps(MbtaApi.stops_for_route(route)), mimetype="application/json"
+    )
 
 
 if __name__ == "__main__":
