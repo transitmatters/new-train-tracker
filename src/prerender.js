@@ -1,7 +1,4 @@
-import {
-    createInterpolatorForSegments,
-    createInterStationInterpolator,
-} from './interpolation';
+import { createInterpolatorForSegments } from './interpolation';
 
 const createBounds = () => {
     return { top: 0, bottom: 0, left: 0, right: 0 };
@@ -127,32 +124,42 @@ const prerenderRoute = (shape, stationIds) => {
 };
 
 export const prerenderLine = (line, stationsByRoute) => {
-    const interpolators = {};
     const pathBuilder = createPathBuilder();
     let bounds = createBounds();
+    let routes = {};
     let stationPositions = {};
-    Object.entries(line.routes).forEach(([routeName, { shape }]) => {
-        const stationIds = stationsByRoute[routeName].map(s => s.id);
+    Object.entries(line.routes).forEach(([routeId, { shape }]) => {
+        const stations = stationsByRoute[routeId];
+        const stationIds = stations.map(s => s.id);
         const {
             pathInterpolator,
             stationOffsets,
             pathDirective,
             bounds: partialBounds,
         } = prerenderRoute(shape, stationIds);
-        interpolators[routeName] = createInterStationInterpolator(
-            pathInterpolator,
-            stationOffsets
-        );
+        const route = {
+            id: routeId,
+            pathInterpolator: pathInterpolator,
+            stations: stations.map(station => {
+                return {
+                    id: station.id,
+                    latitude: station.latitude,
+                    longitude: station.longitude,
+                    offset: stationOffsets[station.id],
+                };
+            }),
+        };
         stationPositions = {
             ...stationPositions,
             ...getStationPositions(stationOffsets, pathInterpolator),
         };
+        routes[routeId] = route;
         pathBuilder.add(pathDirective);
         bounds = getUnionForBounds(bounds, partialBounds);
     });
     return {
         bounds: bounds,
-        interpolators: interpolators,
+        routes: routes,
         pathDirective: pathBuilder.get(),
         stationPositions: stationPositions,
     };

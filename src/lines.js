@@ -70,6 +70,7 @@ export const greenEShape = [
 
 export const greenLine = {
     name: 'Green',
+    color: '#159765',
     routes: {
         'Green-B': {
             reversed: true,

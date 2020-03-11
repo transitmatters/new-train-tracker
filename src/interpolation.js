@@ -11,6 +11,36 @@ const getTrainDistanceFraction = (fromStation, toStation, train) => {
     return Math.min(1, trainDistance / totalDistance);
 };
 
+export const interpolateTrainOffset = (train, stations) => {
+    const { stationId, direction, currentStatus } = train;
+    const toStation = stations.find(station => station.id === stationId);
+    if (currentStatus !== 'STOPPED_AT') {
+        
+        const indexOfStation = stations.indexOf(toStation);
+        const fromStation =
+            direction === 0
+                ? stations[indexOfStation - 1]
+                : stations[indexOfStation + 1];
+
+        if (fromStation) {
+            const fromOffset = fromStation.offset;
+            const toOffset = toStation.offset;
+            const offsetDistance = toOffset - fromOffset;
+
+            const trainDistanceFraction = getTrainDistanceFraction(
+                fromStation,
+                toStation,
+                train
+            );
+
+            return offsetDistance > 0
+                ? fromOffset + trainDistanceFraction * offsetDistance
+                : toOffset - trainDistanceFraction * offsetDistance;
+        }
+    }
+    return toStation.offset;
+};
+
 export const createInterpolatorForSegments = segments => {
     return partialLength => {
         let accumulatedLength = 0;
@@ -32,30 +62,5 @@ export const createInterpolatorForSegments = segments => {
         const segment = segments[ptr];
         const overshootWithinSegment = accumulatedLength - partialLength;
         return segment.get(1 - overshootWithinSegment / segment.length);
-    };
-};
-
-export const createInterStationInterpolator = (
-    pathInterpolator,
-    stationOffsets
-) => {
-    return (fromStation, toStation, train) => {
-        const fromOffset = stationOffsets[fromStation.id];
-        const toOffset = stationOffsets[toStation.id];
-        const offsetDistance = toOffset - fromOffset;
-        const trainDistanceFraction = getTrainDistanceFraction(
-            fromStation,
-            toStation,
-            train
-        );
-        if (offsetDistance > 0) {
-            const finalOffset =
-                fromOffset + trainDistanceFraction * offsetDistance;
-            return pathInterpolator(finalOffset);
-        } else {
-            const finalFraction =
-                toOffset - trainDistanceFraction * offsetDistance;
-            return pathInterpolator(finalFraction);
-        }
     };
 };

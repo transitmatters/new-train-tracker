@@ -23,7 +23,7 @@ def static_files(filename):
 @application.route("/trains/<routes>")
 def data(routes):
     return flask.Response(
-        json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(","), new_only=True)),
+        json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(","), new_only=False)),
         mimetype="application/json",
     )
 

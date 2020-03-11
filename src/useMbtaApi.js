@@ -15,6 +15,7 @@ export const useMbtaApi = lines => {
     const routeNamesKey = routeNames.join(',');
     const [stationsByRoute, setStationsByRoute] = useState(null);
     const [trainsByRoute, setTrainsByRoute] = useState(null);
+    const isReady = !!stationsByRoute && !!trainsByRoute;
 
     useEffect(() => {
         const nextStopsByRoute = {};
@@ -40,5 +41,5 @@ export const useMbtaApi = lines => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routeNamesKey]);
 
-    return { stationsByRoute, trainsByRoute };
+    return { stationsByRoute, trainsByRoute, isReady };
 };
