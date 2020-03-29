@@ -13,19 +13,19 @@ train_is_new_func = {
 train_is_new_func_test = {
     'Red': lambda x: int(x) >= 1880,
     'Orange': lambda x: int(x) >= 1300,
-    'Green-B': lambda x: int(x) >= 3894,
-    'Green-C': lambda x: int(x) >= 3894,
-    'Green-D': lambda x: int(x) >= 3894,
-    'Green-E': lambda x: int(x) >= 3894
+    'Green-B': lambda x: int(x) >= 3000,
+    'Green-C': lambda x: int(x) >= 3000,
+    'Green-D': lambda x: int(x) >= 3000,
+    'Green-E': lambda x: int(x) >= 3000
 }
 
-def car_is_new(route_name, car, test_mode = False):
+def car_is_new(route_name, car, test_mode = True):
     if test_mode:
         return train_is_new_func_test[route_name](car)
     else:
         return train_is_new_func[route_name](car)
 
-def car_array_is_new(route_name, arr, test_mode = False):
+def car_array_is_new(route_name, arr, test_mode = True):
     if test_mode:
         return any(map(train_is_new_func_test[route_name], arr))
     else:

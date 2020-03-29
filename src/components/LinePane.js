@@ -25,9 +25,10 @@ const LinePane = props => {
         line,
     } = props;
 
-    const styleProps = {
-        accent: line.color,
-        base: 'white',
+    const colors = {
+        lines: 'white',
+        trains: 'white',
+        background: line.colorBright,
     };
 
     const { pathDirective, bounds, routes, stationPositions } = useMemo(
@@ -39,11 +40,7 @@ const LinePane = props => {
 
     const renderLine = () => {
         return (
-            <path
-                d={pathDirective}
-                stroke={styleProps.base}
-                fill="transparent"
-            />
+            <path d={pathDirective} stroke={colors.lines} fill="transparent" />
         );
     };
 
@@ -54,7 +51,7 @@ const LinePane = props => {
                 cx={pos.x}
                 cy={pos.y}
                 r={1}
-                fill={styleProps.base}
+                fill={colors.lines}
             />
         ));
     };
@@ -68,7 +65,7 @@ const LinePane = props => {
                         key={train.label}
                         train={train}
                         route={route}
-                        styleProps={styleProps}
+                        colors={colors}
                     />
                 ));
             })
@@ -76,7 +73,7 @@ const LinePane = props => {
     };
 
     return (
-        <div className="line-pane" style={{ background: styleProps.accent }}>
+        <div className="line-pane" style={{ background: colors.background }}>
             <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>
                 {renderLine()}
                 {renderStations()}

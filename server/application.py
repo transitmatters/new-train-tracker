@@ -10,7 +10,6 @@ application = flask.Flask(__name__)
 
 @application.route("/")
 def root():
-    print("root!")
     return static_files("index.html")
 
 
@@ -23,7 +22,7 @@ def static_files(filename):
 @application.route("/trains/<routes>")
 def data(routes):
     return flask.Response(
-        json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(","), new_only=False)),
+        json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(","), new_only=True)),
         mimetype="application/json",
     )
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export const getTrainPositions = (...routes) =>
     fetch(`/trains/${routes.join(',')}`).then(res => res.json());
@@ -17,6 +17,17 @@ export const useMbtaApi = lines => {
     const [trainsByRoute, setTrainsByRoute] = useState(null);
     const isReady = !!stationsByRoute && !!trainsByRoute;
 
+    const getTrains = useCallback(() => {
+        const nextTrainsByRoute = {};
+        routeNames.forEach(routeName => {
+            nextTrainsByRoute[routeName] = [];
+        });
+        getTrainPositions(routeNames).then(trains => {
+            trains.forEach(train => nextTrainsByRoute[train.route].push(train));
+            setTrainsByRoute(nextTrainsByRoute);
+        });
+    }, [routeNames]);
+
     useEffect(() => {
         const nextStopsByRoute = {};
         Promise.all(
@@ -29,17 +40,12 @@ export const useMbtaApi = lines => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routeNamesKey]);
 
+    useEffect(getTrains, [routeNamesKey]);
+
     useEffect(() => {
-        const nextTrainsByRoute = {};
-        routeNames.forEach(routeName => {
-            nextTrainsByRoute[routeName] = [];
-        });
-        getTrainPositions(routeNames).then(trains => {
-            trains.forEach(train => nextTrainsByRoute[train.route].push(train));
-            setTrainsByRoute(nextTrainsByRoute);
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [routeNamesKey]);
+        const timeout = setTimeout(getTrains, 5 * 1000);
+        return () => clearTimeout(timeout);
+    }, [getTrains]);
 
     return { stationsByRoute, trainsByRoute, isReady };
 };

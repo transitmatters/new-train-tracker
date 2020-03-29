@@ -14,8 +14,25 @@ const getTrainDistanceFraction = (fromStation, toStation, train) => {
 export const interpolateTrainOffset = (train, stations) => {
     const { stationId, direction, currentStatus } = train;
     const toStation = stations.find(station => station.id === stationId);
+    if (!toStation) {
+        // The train is leaving its specified route; this can happen e.g. when a Green-B train
+        // turns around at Park but is perceived to be moving toward Government Center.
+        const closestStation = stations.reduce(
+            (best, next) => {
+                const distance = geoDistance(train, next);
+                if (distance < best.distance) {
+                    return {
+                        station: next,
+                        distance,
+                    };
+                }
+                return best;
+            },
+            { distance: Infinity }
+        ).station;
+        return closestStation.offset;
+    }
     if (currentStatus !== 'STOPPED_AT') {
-        
         const indexOfStation = stations.indexOf(toStation);
         const fromStation =
             direction === 0
