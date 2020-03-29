@@ -6,11 +6,6 @@ import { Spring } from 'react-spring/renderprops';
 import { interpolateTrainOffset } from '../interpolation';
 import { PopoverContainerContext } from './util';
 
-const d2r = degrees => degrees * (Math.PI / 180);
-const r2d = radians => radians * (180 / Math.PI);
-const sind = theta => Math.sin(d2r(theta));
-const cosd = theta => Math.cos(d2r(theta));
-
 const getBoundingRectWithinParent = (element, parent) => {
     const elementRect = element.getBoundingClientRect();
     const parentRect = parent.getBoundingClientRect();
@@ -33,7 +28,7 @@ const getReadableStatusLabel = status => {
     return '';
 };
 
-const popoverDistance = 10;
+const popoverDistance = 15;
 
 const TrainPopover = props => {
     const {
@@ -131,7 +126,7 @@ const TrainPopover = props => {
 const Train = props => {
     const [containerElement, setContainerElement] = useState(null);
     const { train, route, colors } = props;
-    const { direction } = train;
+    const { direction, isNewTrain } = train;
     const {
         pathInterpolator,
         stations,
@@ -151,6 +146,21 @@ const Train = props => {
         </>
     );
 
+    const renderTrainMarker = () => {
+        const color = isNewTrain ? colors.newTrains : colors.oldTrains;
+        return (
+            <polygon
+                className={classNames(
+                    'train',
+                    isNewTrain ? 'new-train' : 'old-train'
+                )}
+                points="0,-2 4,0 0,2"
+                fill={color}
+                stroke={color}
+            />
+        );
+    };
+
     return (
         <Spring to={{ offset }}>
             {spring => {
@@ -162,30 +172,22 @@ const Train = props => {
                             ref={setContainerElement}
                             transform={`translate(${x}, ${y}) rotate(${correctedTheta})`}
                         >
-                            <circle
-                                cx={0}
-                                cy={0}
-                                r={2}
-                                className="train"
-                                fill={colors.trains}
-                            />
+                            {renderTrainMarker()}
                         </g>
-                        {popoverContainer &&
-                            containerElement &&
-                            train.isNewTrain && (
-                                <TrainPopover
-                                    direction={direction}
-                                    directionName={directionName}
-                                    destinationName={destinationName}
-                                    station={stationString}
-                                    colors={colors}
-                                    container={popoverContainer}
-                                    referenceRect={getBoundingRectWithinParent(
-                                        containerElement,
-                                        popoverContainer
-                                    )}
-                                />
-                            )}
+                        {popoverContainer && containerElement && isNewTrain && (
+                            <TrainPopover
+                                direction={direction}
+                                directionName={directionName}
+                                destinationName={destinationName}
+                                station={stationString}
+                                colors={colors}
+                                container={popoverContainer}
+                                referenceRect={getBoundingRectWithinParent(
+                                    containerElement,
+                                    popoverContainer
+                                )}
+                            />
+                        )}
                     </>
                 );
             }}
