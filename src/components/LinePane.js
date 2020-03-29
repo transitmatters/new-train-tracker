@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import classNames from 'classnames';
 
 import { prerenderLine } from '../prerender';
 import Train from './Train';
+import { PopoverContainerContext } from './util';
 
-const renderViewboxForBounds = (bounds, padding = 20) => {
+const renderViewboxForBounds = (bounds, padding = 5) => {
     const { top, bottom, left, right } = bounds;
     const width = right - left + padding * 2;
     const height = bottom - top + padding * 2;
@@ -21,8 +23,9 @@ const renderRelativeStyles = ({ width, height }) => {
 
 const LinePane = props => {
     const {
-        api: { stationsByRoute, trainsByRoute },
+        api: { stationsByRoute, trainsByRoute, routesInfo },
         line,
+        active,
     } = props;
 
     const colors = {
@@ -31,10 +34,18 @@ const LinePane = props => {
         background: line.colorBright,
     };
 
+    const [container, setContainer] = useState(null);
+
     const { pathDirective, bounds, routes, stationPositions } = useMemo(
-        () => prerenderLine(line, stationsByRoute),
-        [line, stationsByRoute]
+        () => prerenderLine(line, stationsByRoute, routesInfo),
+        [line, stationsByRoute, routesInfo]
     );
+
+    useEffect(() => {
+        if (active) {
+            document.body.style.backgroundColor = colors.background;
+        }
+    }, [active, colors.background]);
 
     const viewbox = renderViewboxForBounds(bounds);
 
@@ -73,12 +84,18 @@ const LinePane = props => {
     };
 
     return (
-        <div className="line-pane" style={{ background: colors.background }}>
-            <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>
-                {renderLine()}
-                {renderStations()}
-                {renderTrains()}
-            </svg>
+        <div
+            ref={setContainer}
+            className={classNames('line-pane', line.name.toLowerCase())}
+            style={{ background: colors.background }}
+        >
+            <PopoverContainerContext.Provider value={container}>
+                <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>
+                    {renderLine()}
+                    {renderStations()}
+                    {renderTrains()}
+                </svg>
+            </PopoverContainerContext.Provider>
         </div>
     );
 };

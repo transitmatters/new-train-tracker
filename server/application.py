@@ -34,5 +34,12 @@ def stops(route):
     )
 
 
+@application.route("/routes/<route_ids>")
+def routes(route_ids):
+    return flask.Response(
+        json.dumps(MbtaApi.routes_info(route_ids)), mimetype="application/json"
+    )
+
+
 if __name__ == "__main__":
     application.run(debug=(os.environ.get("NODE_ENV") != "production"))

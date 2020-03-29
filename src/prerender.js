@@ -123,13 +123,14 @@ const prerenderRoute = (shape, stationIds) => {
     };
 };
 
-export const prerenderLine = (line, stationsByRoute) => {
+export const prerenderLine = (line, stationsByRoute, routesInfo) => {
     const pathBuilder = createPathBuilder();
     let bounds = createBounds();
     let routes = {};
     let stationPositions = {};
     Object.entries(line.routes).forEach(([routeId, { shape }]) => {
         const stations = stationsByRoute[routeId];
+        const routeInfo = routesInfo[routeId];
         const stationIds = stations.map(s => s.id);
         const {
             pathInterpolator,
@@ -138,11 +139,13 @@ export const prerenderLine = (line, stationsByRoute) => {
             bounds: partialBounds,
         } = prerenderRoute(shape, stationIds);
         const route = {
+            ...routeInfo,
             id: routeId,
             pathInterpolator: pathInterpolator,
             stations: stations.map(station => {
                 return {
                     id: station.id,
+                    name: station.name,
                     latitude: station.latitude,
                     longitude: station.longitude,
                     offset: stationOffsets[station.id],

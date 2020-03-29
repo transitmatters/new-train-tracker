@@ -6,6 +6,9 @@ export const getTrainPositions = (...routes) =>
 export const getStationsForRoute = route =>
     fetch(`/stations/${route}`).then(res => res.json());
 
+export const getRoutesInfo = routes =>
+    fetch(`/routes/${routes.join(',')}`).then(res => res.json());
+
 export const useMbtaApi = lines => {
     const routeNames = lines
         .map(line => Object.keys(line.routes))
@@ -13,9 +16,10 @@ export const useMbtaApi = lines => {
         .sort((a, b) => (a > b ? 1 : -1));
 
     const routeNamesKey = routeNames.join(',');
+    const [routesInfoByRoute, setRoutesInfoByRoute] = useState(null);
     const [stationsByRoute, setStationsByRoute] = useState(null);
     const [trainsByRoute, setTrainsByRoute] = useState(null);
-    const isReady = !!stationsByRoute && !!trainsByRoute;
+    const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
 
     const getTrains = useCallback(() => {
         const nextTrainsByRoute = {};
@@ -40,6 +44,17 @@ export const useMbtaApi = lines => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routeNamesKey]);
 
+    useEffect(() => {
+        const nextRoutesInfo = {};
+        getRoutesInfo(routeNames).then(routes => {
+            routes.forEach(route => {
+                nextRoutesInfo[route.id] = route;
+            });
+            setRoutesInfoByRoute(nextRoutesInfo);
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [routeNamesKey]);
+
     useEffect(getTrains, [routeNamesKey]);
 
     useEffect(() => {
@@ -47,5 +62,10 @@ export const useMbtaApi = lines => {
         return () => clearTimeout(timeout);
     }, [getTrains]);
 
-    return { stationsByRoute, trainsByRoute, isReady };
+    return {
+        routesInfo: routesInfoByRoute,
+        stationsByRoute,
+        trainsByRoute,
+        isReady,
+    };
 };

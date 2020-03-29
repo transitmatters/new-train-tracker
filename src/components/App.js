@@ -10,7 +10,7 @@ const App = () => {
 
     const renderInner = () => {
         if (api.isReady) {
-            return <LinePane line={greenLine} api={api} />;
+            return <LinePane active={true} line={greenLine} api={api} />;
         }
     };
 
