@@ -83,10 +83,7 @@ const TrainPopover = props => {
                     ? -1 * (popoverWidth + popoverDistance)
                     : popoverDistance);
 
-            const popoverY = Math.max(
-                popoverHeight / 2,
-                trainY - popoverHeight / 2
-            );
+            const popoverY = trainY - popoverHeight / 2;
 
             setPositionStrategy(nextPositionStrategy);
 

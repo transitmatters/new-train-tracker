@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { greenLine } from '../lines';
 import { useMbtaApi } from '../useMbtaApi';
 
@@ -18,7 +17,9 @@ const App = () => {
         <div className="app">
             <div className="header">
                 <h1>MBTA New Train Tracker</h1>
-                <div className="subtitle">something something TransitMatters</div>
+                <div className="subtitle">
+                    something something TransitMatters
+                </div>
             </div>
             {renderMain()}
         </div>

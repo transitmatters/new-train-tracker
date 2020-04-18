@@ -72,16 +72,14 @@ const LinePane = props => {
         return Object.entries(trainsByRoute)
             .map(([routeId, trains]) => {
                 const route = routes[routeId];
-                return trains
-                    .sort(train => (train.isNewTrain ? 1 : -1))
-                    .map(train => (
-                        <Train
-                            key={train.label}
-                            train={train}
-                            route={route}
-                            colors={colors}
-                        />
-                    ));
+                return trains.map(train => (
+                    <Train
+                        key={train.label}
+                        train={train}
+                        route={route}
+                        colors={colors}
+                    />
+                ));
             })
             .reduce((a, b) => [...a, ...b], []);
     };

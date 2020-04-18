@@ -14,7 +14,7 @@ export const greenShared = [
             'place-armnl',
             'place-coecl',
         ],
-        commands: [line(70)],
+        commands: [line(70), curve(20, 60), line(50)],
     }),
 ];
 
