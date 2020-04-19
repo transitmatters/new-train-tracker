@@ -1,24 +1,37 @@
-import { start, line, curve, wiggle, stationRange } from './paths';
+import { start, line, wiggle, stationRange } from './paths';
+
+const glSharedStations = [
+    'place-lech',
+    'place-spmnl',
+    'place-north',
+    'place-haecl',
+    'place-gover',
+    'place-pktrm',
+    'place-boyls',
+    'place-armnl',
+    'place-coecl',
+];
+
+const labeledGreenLineStations = [
+    ...glSharedStations,
+    'place-hymnl',
+    'place-kencl',
+    'place-hsmnl',
+    'place-river',
+    'place-clmnl',
+    'place-lake',
+];
 
 export const greenShared = [
     start(0, 0, 90),
     stationRange({
-        stations: [
-            'place-lech',
-            'place-spmnl',
-            'place-north',
-            'place-haecl',
-            'place-gover',
-            'place-pktrm',
-            'place-boyls',
-            'place-armnl',
-            'place-coecl',
-        ],
-        commands: [line(70), curve(20, 60), line(50)],
+        stations: glSharedStations,
+        commands: [line(100)],
     }),
 ];
 
 export const greenBCDTrunk = [
+    line(20),
     stationRange({
         start: 'place-hymnl',
         end: 'place-kencl',
@@ -44,7 +57,7 @@ export const greenCShape = [
     stationRange({
         start: 'place-smary',
         end: 'place-clmnl',
-        commands: [line(105)],
+        commands: [line(110)],
     }),
 ];
 
@@ -61,10 +74,11 @@ export const greenDShape = [
 
 export const greenEShape = [
     ...greenShared,
+    wiggle(60, 40),
     stationRange({
         start: 'place-prmnl',
         end: 'place-hsmnl',
-        commands: [wiggle(60, 40), line(40)],
+        commands: [line(100)],
     }),
 ];
 
@@ -72,22 +86,96 @@ export const greenLine = {
     name: 'Green',
     color: '#114529',
     colorBright: '#159765',
+    shouldLabelTrain: ({ stationId }) =>
+        stationId && !labeledGreenLineStations.includes(stationId),
+    getStationLabelPosition: stationId => {
+        if (stationId === 'place-hymnl') {
+            return 'left';
+        }
+        if (labeledGreenLineStations.includes(stationId)) {
+            return 'right';
+        }
+        return false;
+    },
     routes: {
         'Green-B': {
-            reversed: true,
             shape: greenBShape,
         },
         'Green-C': {
-            reversed: true,
             shape: greenCShape,
         },
         'Green-D': {
-            reversed: false,
             shape: greenDShape,
         },
         'Green-E': {
-            reversed: true,
             shape: greenEShape,
+        },
+    },
+};
+
+export const orangeLine = {
+    name: 'Orange',
+    colorBright: '#e65100',
+    color: '#ed8b00',
+    getStationLabelPosition: () => 'right',
+    shouldLabelTrain: () => false,
+    routes: {
+        Orange: {
+            shape: [
+                start(0, 0, 90),
+                stationRange({
+                    start: 'place-forhl',
+                    end: 'place-ogmnl',
+                    commands: [line(200)],
+                }),
+            ],
+        },
+    },
+};
+
+const redShared = [
+    start(0, 0, 90),
+    stationRange({
+        start: 'place-alfcl',
+        end: 'place-jfk',
+        commands: [line(120)],
+    }),
+];
+
+const redA = [
+    ...redShared,
+    wiggle(30, -20),
+    stationRange({
+        start: 'place-shmnl',
+        end: 'place-asmnl',
+        commands: [line(50)],
+    }),
+];
+
+const redB = [
+    ...redShared,
+    wiggle(30, 20),
+    stationRange({
+        start: 'place-nqncy',
+        end: 'place-brntn',
+        commands: [line(90)],
+    }),
+];
+
+export const redLine = {
+    name: 'Red',
+    colorBright: '#DA291C',
+    color: '#EF5350',
+    getStationLabelPosition: () => 'right',
+    shouldLabelTrain: () => false,
+    routes: {
+        'Red-A': {
+            derivedFromRouteId: 'Red',
+            shape: redA,
+        },
+        'Red-B': {
+            derivedFromRouteId: 'Red',
+            shape: redB,
         },
     },
 };

@@ -1,6 +1,10 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+    output: {
+        filename: '[name].[contenthash].bundle.js',
+        chunkFilename: '[name].[contenthash].bundle.js',
+    },
     module: {
         rules: [
             {

@@ -27,6 +27,8 @@ module.exports = {
     ],
     "rules": {
         "prettier/prettier": "error",
+        "react/jsx-no-target-blank": 0,
+        "react/prop-types": 0,
         "react-hooks/rules-of-hooks": 'error',
         "react-hooks/exhaustive-deps": 'warn'
     },

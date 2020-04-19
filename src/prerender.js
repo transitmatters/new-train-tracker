@@ -163,6 +163,17 @@ export const prerenderLine = (line, stationsByRoute, routesInfo) => {
     return {
         bounds: bounds,
         routes: routes,
+        stations: Object.values(routes).reduce((partial, route) => {
+            return {
+                ...partial,
+                ...route.stations.reduce((routePartial, station) => {
+                    return {
+                        ...routePartial,
+                        [station.id]: station,
+                    };
+                }, {}),
+            };
+        }, {}),
         pathDirective: pathBuilder.get(),
         stationPositions: stationPositions,
     };

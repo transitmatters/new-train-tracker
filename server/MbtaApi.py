@@ -7,8 +7,6 @@ import Fleet
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
-ROUTES_TO_REVERSE = ["Green-B", "Green-C", "Green-E"]
-
 
 def getV3(command, params={}):
     """Make a GET request against the MBTA v3 API"""
@@ -23,21 +21,28 @@ def getV3(command, params={}):
 
 def vehicle_data_for_routes(routes, new_only=False):
     """Use getv3 to request real-time vehicle data for a given route set"""
-    vehicles = getV3("vehicles", {"filter[route]": ",".join(routes), "include": "stop"})
+
+    routes = normalize_custom_route_names(routes)
+
+    vehicles = getV3(
+        "vehicles",
+        {"filter[route]": ",".join(routes), "include": "stop,trip.route_pattern"},
+    )
     # Iterate vehicles, only send new ones to the browser
     vehicles_to_display = []
     for vehicle in vehicles:
+        derive_custom_route_name(vehicle)
         try:
-            print(vehicle["stop"]["parent_station"])
             vehicles_to_display.append(
                 {
                     "label": vehicle["label"],
-                    "route": vehicle["route"]["id"],
+                    "route": derive_custom_route_name(vehicle),
                     "direction": vehicle["direction_id"],
                     "latitude": vehicle["latitude"],
                     "longitude": vehicle["longitude"],
                     "currentStatus": vehicle["current_status"],
                     "stationId": vehicle["stop"]["parent_station"]["id"],
+                    "routePatternName": vehicle["trip"]["route_pattern"]["name"],
                     "isNewTrain": Fleet.car_array_is_new(
                         vehicle["route"]["id"], vehicle["label"].split("-")
                     ),
@@ -49,13 +54,14 @@ def vehicle_data_for_routes(routes, new_only=False):
 
 
 def maybe_reverse(stops, route):
-    if route in ROUTES_TO_REVERSE:
+    if route in ["Green-B", "Green-C", "Green-E"]:
         return list(reversed(stops))
     return stops
 
 
-def stops_for_route(route):
-    stops = getV3("stops", {"filter[route]": route, "include": "route"})
+def stops_for_route(route_name):
+    normalized_route_name = normalize_custom_route_name(route_name)
+    stops = getV3("stops", {"filter[route]": normalized_route_name, "include": "route"})
     return maybe_reverse(
         list(
             map(
@@ -66,21 +72,73 @@ def stops_for_route(route):
                     "longitude": stop["longitude"],
                     "route": stop["route"],
                 },
-                stops,
+                filter(
+                    lambda stop: stop_belongs_to_custom_route(
+                        stop["id"], route_name, normalized_route_name
+                    ),
+                    stops,
+                ),
             )
         ),
-        route,
+        route_name,
     )
 
 
-def routes_info(route_ids):
+def routes_info(route_names_string):
     routes_to_return = []
-    for route in getV3("routes", {"filter[id]": route_ids}):
-        routes_to_return.append(
-            {
-                "id": route["id"],
-                "directionDestinations": route["direction_destinations"],
-                "directionNames": route["direction_names"],
-            }
-        )
+    custom_route_names = [s.strip() for s in route_names_string.split(",")]
+    routes_info = getV3(
+        "routes",
+        {"filter[id]": ",".join(normalize_custom_route_names(custom_route_names))},
+    )
+    for custom_route_name in custom_route_names:
+        normalized_route_name = normalize_custom_route_name(custom_route_name)
+        for route in routes_info:
+            print(route["id"], normalized_route_name, custom_route_name)
+            if route["id"] == normalized_route_name:
+                routes_to_return.append(
+                    {
+                        "id": custom_route_name,
+                        "directionDestinations": route["direction_destinations"],
+                        "directionNames": route["direction_names"],
+                    }
+                )
+
     return routes_to_return
+
+
+def derive_custom_route_name(vehicle):
+    default_route_id = vehicle["route"]["id"]
+    if default_route_id == "Red":
+        route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
+        return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
+    return default_route_id
+
+
+def normalize_custom_route_name(route):
+    return "Red" if route in ("Red-A", "Red-B") else route
+
+
+def normalize_custom_route_names(routes):
+    return set(map(normalize_custom_route_name, routes))
+
+
+def stop_belongs_to_custom_route(stop_id, custom_route_name, normalized_route_name):
+    if normalized_route_name != "Red":
+        return True
+    if custom_route_name == "Red-A":
+        return stop_id not in (
+            "place-nqncy",
+            "place-wlsta",
+            "place-qnctr",
+            "place-qamnl",
+            "place-brntn",
+        )
+    if custom_route_name == "Red-B":
+        return stop_id not in (
+            "place-shmnl",
+            "place-fldcr",
+            "place-smmnl",
+            "place-asmnl",
+        )
+    return True
