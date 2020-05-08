@@ -9,7 +9,7 @@ train_is_new_func = {
     "Green-E": lambda x: int(x) >= 3900 and int(x) <= 3924,
 }
 
-green_new_test = lambda x: int(x) % 5 == 0
+green_new_test = lambda x: int(x) >= 3900
 
 # A function that labels some current vehicles as new, for testing
 train_is_new_func_test = {

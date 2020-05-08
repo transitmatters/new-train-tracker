@@ -73,6 +73,9 @@ const LinePane = props => {
 
     useEffect(() => {
         document.body.style.backgroundColor = colors.background;
+        setTimeout(() => {
+            document.body.style.transition = '200ms background ease-out';
+        });
     }, [colors.background]);
 
     useLayoutEffect(() => {

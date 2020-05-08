@@ -40,7 +40,7 @@ const renderStationLabel = (train, route) => {
         <div
             className={classNames('station', isLongStationName && 'long-name')}
         >
-            {getReadableStatusLabel(train.currentStatus)}{' '}
+            {getReadableStatusLabel(train.currentStatus)}&nbsp;
             <b className={classNames(isLongStationName && 'long-station-name')}>
                 {stationName}
             </b>

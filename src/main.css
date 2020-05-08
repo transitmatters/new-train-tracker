@@ -89,9 +89,24 @@ body {
     height: 100vh;
 }
 
-@media screen and (max-height: 750px) {
+@media screen and (max-height: 1200px) {
     .line-pane.green,
     .line-pane.red {
+        height: 125vh;
+    }
+}
+
+@media screen and (max-height: 750px) {
+    .line-pane.green {
+        height: 150vh;
+    }
+    .line-pane.red {
+        height: 125vh;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .line-pane.orange {
         height: 125vh;
     }
 }

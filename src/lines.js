@@ -124,8 +124,8 @@ export const orangeLine = {
             shape: [
                 start(0, 0, 90),
                 stationRange({
-                    start: 'place-forhl',
-                    end: 'place-ogmnl',
+                    start: 'place-ogmnl',
+                    end: 'place-forhl',
                     commands: [line(200)],
                 }),
             ],
@@ -164,8 +164,8 @@ const redB = [
 
 export const redLine = {
     name: 'Red',
-    colorBright: '#DA291C',
-    color: '#EF5350',
+    color: '#DA291C',
+    colorBright: '#EF5350',
     getStationLabelPosition: () => 'right',
     shouldLabelTrain: () => false,
     routes: {

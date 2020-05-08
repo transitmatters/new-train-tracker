@@ -54,7 +54,7 @@ def vehicle_data_for_routes(routes, new_only=False):
 
 
 def maybe_reverse(stops, route):
-    if route in ["Green-B", "Green-C", "Green-E"]:
+    if route in ["Green-B", "Green-C", "Green-E", "Orange"]:
         return list(reversed(stops))
     return stops
 
