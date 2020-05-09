@@ -20,6 +20,7 @@ const labeledGreenLineStations = [
     'place-river',
     'place-clmnl',
     'place-lake',
+    'place-hsmnl',
 ];
 
 export const greenShared = [
@@ -84,6 +85,7 @@ export const greenEShape = [
 
 export const greenLine = {
     name: 'Green',
+    abbreviation: 'GL',
     color: '#114529',
     colorBright: '#159765',
     shouldLabelTrain: ({ stationId }) =>
@@ -115,6 +117,7 @@ export const greenLine = {
 
 export const orangeLine = {
     name: 'Orange',
+    abbreviation: 'OL',
     colorBright: '#e65100',
     color: '#ed8b00',
     getStationLabelPosition: () => 'right',
@@ -164,6 +167,7 @@ const redB = [
 
 export const redLine = {
     name: 'Red',
+    abbreviation: 'RL',
     color: '#DA291C',
     colorBright: '#EF5350',
     getStationLabelPosition: () => 'right',

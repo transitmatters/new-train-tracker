@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
 :root {
     --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    --top-content-height: 0px;
 }
 
 html,
@@ -8,7 +11,7 @@ body {
     width: 100%;
     margin: 0;
     overflow: hidden;
-    font-family: sans-serif;
+    font-family: 'Nunito', sans-serif;
     -webkit-overflow-scrolling: none;
 }
 
@@ -16,77 +19,95 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
-    display: flex;
     overflow-x: hidden;
+    background: var(--line-color);
 }
 
-.header {
-    width: 35vw;
-    min-width: 100px;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 20px;
-    color: white;
-    text-shadow: var(--global-shadow);
-    font-size: 20px;
-}
+@media screen and (max-width: 750px) {
+    :root {
+        --top-content-height: 15vh;
+    }
 
-.header .title {
-    width: 100%;
-    display: inline-block;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.header a,
-.header a:hover {
-    color: white;
-}
-
-.header .title div {
-    text-align: right;
-    font-size: 1.2em;
-}
-
-.header .subtitle {
-    margin-top: 4px;
-    text-align: right;
-    font-size: 0.8em;
-    font-style: italic;
-}
-
-.line-picker {
-    margin-top: 15px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.line-picker .line {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 35px;
-    height: 35px;
-    border-radius: 100px;
-    box-shadow: var(--global-shadow);
-    border-width: 3px;
-    border-style: solid;
-}
-
-.line-picker .line.selected {
-    border-color: white !important;
-}
-
-.line-picker .line:not(:last-child) {
-    margin-right: 7px;
+    .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        font-size: 3.5vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: var(--top-content-height);
+        color: white;
+        text-shadow: var(--global-shadow);
+        background: linear-gradient(var(--line-color) 0 70%, var(--line-color-transparent) 100%);
+    }
 }
 
 .line-pane {
     position: relative;
+    display: flex;
+    justify-content: center;
     height: 100vh;
+    margin-top: var(--top-content-height);
+}
+
+.tab-picker {
+    position: relative;
+    display: flex;
+    margin-top: 5px;
+    border-radius: 100px;
+    transform: translate3d(0, 0, 0);
+}
+
+.tab-picker > .selected-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 100px;
+    transition: 500ms all cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.tab-picker > .tab:focus {
+    outline: none;
+}
+
+@media (pointer: none) {
+    .tab-picker > .tab:focus {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+.tab-picker > .tab {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 4vw;
+    border-radius: 100px;
+    z-index: 1;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.tab-picker > .tab:not(:last-child) {
+    margin-right: 10px;
+}
+
+.tab-picker > .tab > .icon {
+    text-shadow: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100px;
+    background: black;
+    height: 1.5em;
+    width: 2.25em;
+    font-weight: bold;
+}
+
+.tab-picker > .tab > .label {
+    margin: 0px 0.5em;
 }
 
 @media screen and (max-height: 1200px) {

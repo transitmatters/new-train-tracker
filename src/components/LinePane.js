@@ -36,14 +36,6 @@ const renderRelativeStyles = ({ width, height }) => {
     return { height: '100%' };
 };
 
-const renderPaneStyles = ({ headerElement, lineOffset }) => {
-    if (headerElement && lineOffset !== null) {
-        const { width } = headerElement.getBoundingClientRect();
-        return { marginLeft: width - lineOffset };
-    }
-    return {};
-};
-
 const LinePane = props => {
     const { api, line, headerElement } = props;
     const { getStationLabelPosition, shouldLabelTrain } = line;
@@ -71,13 +63,6 @@ const LinePane = props => {
         routesInfo,
     ]);
 
-    useEffect(() => {
-        document.body.style.backgroundColor = colors.background;
-        setTimeout(() => {
-            document.body.style.transition = '200ms background ease-out';
-        });
-    }, [colors.background]);
-
     useLayoutEffect(() => {
         const { current: firstStation } = firstStationRef;
         if (firstStation) {
@@ -87,7 +72,7 @@ const LinePane = props => {
     }, []);
 
     const viewbox = renderViewboxForBounds(bounds, {
-        paddingX: 200,
+        paddingX: 100,
         paddingY: 5,
     });
 
@@ -128,7 +113,7 @@ const LinePane = props => {
                     fontSize={4}
                     fill={colors.lines}
                     textAnchor={labelPosition === 'right' ? 'start' : 'end'}
-                    x={labelPosition === 'right' ? 5 : -5}
+                    x={labelPosition === 'right' ? 4 : -4}
                     y={1.5}
                 >
                     {stationName}
@@ -167,7 +152,6 @@ const LinePane = props => {
         <div
             ref={setContainer}
             className={classNames('line-pane', line.name.toLowerCase())}
-            style={renderPaneStyles({ headerElement, lineOffset })}
         >
             <PopoverContainerContext.Provider value={container}>
                 <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>

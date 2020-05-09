@@ -94,7 +94,6 @@ def routes_info(route_names_string):
     for custom_route_name in custom_route_names:
         normalized_route_name = normalize_custom_route_name(custom_route_name)
         for route in routes_info:
-            print(route["id"], normalized_route_name, custom_route_name)
             if route["id"] == normalized_route_name:
                 routes_to_return.append(
                     {
