@@ -83,13 +83,15 @@ export const greenEShape = [
     }),
 ];
 
+// const shouldLabelGLTrain = ({ stationId }) =>
+//     stationId && !labeledGreenLineStations.includes(stationId);
+
 export const greenLine = {
     name: 'Green',
     abbreviation: 'GL',
     color: '#114529',
     colorSecondary: '#159765',
-    shouldLabelTrain: ({ stationId }) =>
-        stationId && !labeledGreenLineStations.includes(stationId),
+    shouldLabelTrain: () => false,
     getStationLabelPosition: stationId => {
         if (stationId === 'place-hymnl') {
             return 'left';

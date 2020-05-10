@@ -29,6 +29,7 @@ module.exports = {
         "prettier/prettier": "error",
         "react/jsx-no-target-blank": 0,
         "react/prop-types": 0,
+        "react/no-unescaped-entities": 0,
         "react-hooks/rules-of-hooks": 'error',
         "react-hooks/exhaustive-deps": 'warn'
     },

@@ -5,9 +5,7 @@ import classNames from 'classnames';
 const popoverDistance = 15;
 
 const abbreviateDestination = destination =>
-    destination
-        .replace('Government Center', "Gov't Center")
-        .replace('Boston College', 'B.C.');
+    destination.replace('Government Center', "Gov't Center").replace('Boston College', 'B.C.');
 
 const abbreviateStationName = station =>
     station
@@ -45,14 +43,12 @@ const renderStationLabel = (train, route) => {
 
 const renderDestinationLabel = (train, route) => {
     const { directionDestinations } = route;
-    const destinationName = abbreviateDestination(
-        directionDestinations[train.direction]
-    );
+    const destinationName = abbreviateDestination(directionDestinations[train.direction]);
     return <div className="destination">to&nbsp;{destinationName}</div>;
 };
 
 const TrainPopover = props => {
-    const { colors, container, referenceRect, train, route } = props;
+    const { colors, container, referenceRect, train, route, isActive, isVisible } = props;
     const { direction } = train;
 
     const containerWidth = container.getBoundingClientRect().width;
@@ -74,10 +70,8 @@ const TrainPopover = props => {
 
     useLayoutEffect(() => {
         if (popoverWidth && popoverHeight) {
-            const leftPositionLeftExtent =
-                trainX - popoverDistance - popoverWidth;
-            const rightPositionRightExtent =
-                trainX + popoverDistance + popoverWidth;
+            const leftPositionLeftExtent = trainX - popoverDistance - popoverWidth;
+            const rightPositionRightExtent = trainX + popoverDistance + popoverWidth;
 
             const canPositionLeft = leftPositionLeftExtent > 0;
             const canPositionRight = rightPositionRightExtent < containerWidth;
@@ -100,32 +94,35 @@ const TrainPopover = props => {
             const popoverY = trainY - popoverHeight / 2;
 
             setPositionStrategy(nextPositionStrategy);
-
             setPositionStyle({
                 transform: `translate(${popoverX}px, ${popoverY}px)`,
             });
         }
-    }, [
-        containerWidth,
-        direction,
-        popoverWidth,
-        popoverHeight,
-        trainX,
-        trainY,
-    ]);
+    }, [containerWidth, direction, popoverWidth, popoverHeight, trainX, trainY, isVisible]);
 
     return ReactDOM.createPortal(
         <div
+            id={`train-popover-${train.label}`}
             ref={setPopoverElement}
-            className={classNames('train-popover', positionStrategy)}
-            style={{
-                ...positionStyle,
-                backgroundColor: colors.colorSecondary,
-                border: `2px solid ${colors.newTrains}`,
-            }}
+            className={classNames(
+                'train-popover',
+                positionStrategy,
+                isActive && 'active',
+                isVisible && 'visible'
+            )}
+            style={positionStyle}
         >
-            <div className="train-details">
-                {renderStationLabel(train, route)}
+            <div
+                className="scale-container"
+                style={{
+                    backgroundColor: colors.colorSecondary,
+                    border: `2px solid ${colors.newTrains}`,
+                }}
+            >
+                <div className="train-details">
+                    {renderStationLabel(train, route)}
+                    {renderDestinationLabel(train, route)}
+                </div>
             </div>
         </div>,
         container

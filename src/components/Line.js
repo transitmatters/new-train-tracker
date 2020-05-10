@@ -58,7 +58,7 @@ const renderContainerStyles = lineOffset => {
     return {};
 };
 
-const LinePane = props => {
+const Line = props => {
     const { api, line } = props;
     const { getStationLabelPosition, shouldLabelTrain } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
@@ -73,17 +73,10 @@ const LinePane = props => {
 
     const [container, setContainer] = useState(null);
 
-    const {
-        pathDirective,
-        bounds,
-        routes,
-        stationPositions,
-        stations,
-    } = useMemo(() => prerenderLine(line, stationsByRoute, routesInfo), [
-        line,
-        stationsByRoute,
-        routesInfo,
-    ]);
+    const { pathDirective, bounds, routes, stationPositions, stations } = useMemo(
+        () => prerenderLine(line, stationsByRoute, routesInfo),
+        [line, stationsByRoute, routesInfo]
+    );
 
     const trainRoutePairs = getTrainRoutePairsForLine(trainsByRoute, routes);
     const viewbox = renderViewboxForBounds(bounds, {
@@ -100,9 +93,7 @@ const LinePane = props => {
     }, []);
 
     const renderLine = () => {
-        return (
-            <path d={pathDirective} stroke={colors.lines} fill="transparent" />
-        );
+        return <path d={pathDirective} stroke={colors.lines} fill="transparent" />;
     };
 
     const renderStations = () => {
@@ -110,10 +101,8 @@ const LinePane = props => {
         return Object.entries(stationPositions).map(([stationId, pos]) => {
             const labelPosition = getStationLabelPosition(stationId);
             const stationName =
-                stations[stationId] &&
-                abbreviateStationName(stations[stationId].name);
-            const refProps =
-                stationId === closestId ? { ref: firstStationRef } : {};
+                stations[stationId] && abbreviateStationName(stations[stationId].name);
+            const refProps = stationId === closestId ? { ref: firstStationRef } : {};
 
             const label = labelPosition && stationName && (
                 <text
@@ -128,11 +117,7 @@ const LinePane = props => {
             );
 
             return (
-                <g
-                    key={stationId}
-                    transform={`translate(${pos.x}, ${pos.y})`}
-                    {...refProps}
-                >
+                <g key={stationId} transform={`translate(${pos.x}, ${pos.y})`} {...refProps}>
                     <circle cx={0} cy={0} r={1} fill={colors.lines} />
                     {label}
                 </g>
@@ -147,7 +132,7 @@ const LinePane = props => {
                 train={train}
                 route={route}
                 colors={colors}
-                labelTrain={shouldLabelTrain(train)}
+                alwaysLabelTrain={shouldLabelTrain(train)}
             />
         ));
     };
@@ -155,15 +140,14 @@ const LinePane = props => {
     if (trainRoutePairs.length === 0) {
         return (
             <div className="line-pane empty">
-                <div className="empty-notice">
-                    No new trains on the {line.name} Line right now.
-                </div>
+                <div className="empty-notice">No new trains on the {line.name} Line right now.</div>
             </div>
         );
     }
 
     return (
         <div
+            role="list"
             ref={setContainer}
             className={classNames('line-pane', line.name.toLowerCase())}
             style={renderContainerStyles(lineOffset)}
@@ -179,4 +163,4 @@ const LinePane = props => {
     );
 };
 
-export default LinePane;
+export default Line;

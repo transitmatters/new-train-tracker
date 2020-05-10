@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import classNames from 'classnames';
 import { Spring } from 'react-spring/renderprops';
 
 import { interpolateTrainOffset } from '../interpolation';
@@ -30,25 +29,32 @@ const drawEquilateralTriangle = radius =>
         .trim();
 
 const Train = props => {
-    const [containerElement, setContainerElement] = useState(null);
-    const { train, route, colors, labelTrain } = props;
+    const { train, route, colors, alwaysLabelTrain } = props;
     const { direction, isNewTrain } = train;
     const { pathInterpolator, stations } = route;
+
+    const [containerElement, setContainerElement] = useState(null);
+    const [showLabelViaInteraction, setShowLabelViaInteraction] = useState(false);
+
     const offset = interpolateTrainOffset(train, stations);
     const popoverContainer = useContext(PopoverContainerContext);
+    const isLabelShown = alwaysLabelTrain || showLabelViaInteraction;
+
+    const showLabel = () => {
+        setShowLabelViaInteraction(true);
+    };
+
+    const hideLabel = () => {
+        setShowLabelViaInteraction(false);
+    };
 
     const renderTrainMarker = () => {
         const color = isNewTrain ? colors.newTrains : colors.oldTrains;
         return (
-            <g
-                className={classNames(
-                    'train',
-                    isNewTrain ? 'new-train' : 'old-train'
-                )}
-            >
+            <>
                 <circle cx={0} cy={0} r={3.326} fill={color} />
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
-            </g>
+            </>
         );
     };
 
@@ -60,17 +66,25 @@ const Train = props => {
                 return (
                     <>
                         <g
+                            aria-labelledby={`train-popover-${train.label}`}
+                            className="train"
+                            tabIndex="0"
+                            role="listitem"
                             ref={setContainerElement}
                             transform={`translate(${x}, ${y}) rotate(${correctedTheta})`}
+                            onFocus={showLabel}
+                            onBlur={hideLabel}
                         >
                             {renderTrainMarker()}
                         </g>
-                        {popoverContainer && containerElement && labelTrain && (
+                        {popoverContainer && containerElement && (
                             <TrainPopover
                                 train={train}
                                 route={route}
                                 colors={colors}
                                 container={popoverContainer}
+                                isVisible={isLabelShown}
+                                isActive={showLabelViaInteraction}
                                 referenceRect={getBoundingRectWithinParent(
                                     containerElement,
                                     popoverContainer

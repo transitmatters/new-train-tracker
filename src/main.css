@@ -44,12 +44,16 @@ body {
     }
 
     .header .title {
-        font-size: 2.2em;
+        font-size: 1.5em;
+    }
+
+    .header .subtitle {
+        font-size: 0.8em;
     }
 
     .header .logo {
         margin-top: 20px;
-        height: 2.5vh;
+        height: 2vh;
         filter: drop-shadow(var(--global-shadow));
     }
 }
@@ -157,25 +161,63 @@ body {
 }
 
 .line-pane svg {
-    pointer-events: none;
     position: absolute;
     stroke-linecap: round;
     filter: drop-shadow(var(--global-shadow));
 }
 
+.train:focus {
+    outline: none;
+    filter: drop-shadow(0px 0px 0px 2px white);
+}
+
 .train-popover {
     position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.train-popover.visible {
+    pointer-events: all;
+}
+
+.train-popover.visible .scale-container {
+    transform: scale(1);
+}
+
+.train-popover.left .scale-container {
+    transform-origin: right;
+}
+
+.train-popover.right .scale-container {
+    transform-origin: left;
+}
+
+.train-popover .scale-container {
+    transform: scale(0);
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    top: 0;
-    left: 0;
     max-width: 300px;
     border-radius: 4px;
     padding: 0px 3px;
     background: white;
     color: black;
     box-shadow: var(--global-shadow);
+    transition: 500ms transform cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.train-popover.right {
+    transform-origin: right;
+}
+
+.train-popover.left {
+    transform-origin: left;
+}
+
+.train-popover.active {
+    z-index: 1;
 }
 
 .train-popover.right .train-icon {
@@ -206,5 +248,5 @@ body {
 
 .train-popover .train-details .destination {
     font-style: italic;
-    font-size: 7pt;
+    font-size: 8pt;
 }
