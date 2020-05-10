@@ -11,8 +11,8 @@ train_is_new_func = {
 
 green_new_test = lambda x: int(x) % 10 == 0
 train_is_new_func_test = {
-    "Red": lambda x: int(x) % 10 == 0,
-    "Orange": lambda x: int(x) % 2 == 0,
+    "Red": lambda x: False,
+    "Orange": lambda x: int(x) % 1 == 0,
     "Green-B": green_new_test,
     "Green-C": green_new_test,
     "Green-D": green_new_test,

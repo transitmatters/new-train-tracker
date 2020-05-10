@@ -131,7 +131,7 @@ export const orangeLine = {
                 stationRange({
                     start: 'place-ogmnl',
                     end: 'place-forhl',
-                    commands: [line(200)],
+                    commands: [line(175)],
                 }),
             ],
         },

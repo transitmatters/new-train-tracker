@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useLayoutEffect } from 'react';
+import React, { useMemo, useState, useRef, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
 
 import { prerenderLine } from '../prerender';
@@ -21,6 +21,22 @@ const renderViewboxForBounds = bounds => {
     const minX = left - paddingX;
     const minY = top - paddingTop;
     return `${minX} ${minY} ${width} ${height}`;
+};
+
+const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
+    const distanceMap = new Map(
+        pairs.map(pair => {
+            const { train } = pair;
+            const station = stationPositions[train.stationId];
+            if (station) {
+                const { x, y } = station;
+                const distance = Math.sqrt(x ** 2 + y ** 2);
+                return [pair, distance];
+            }
+            return [pair, 0];
+        })
+    );
+    return pairs.sort((a, b) => distanceMap.get(a) - distanceMap.get(b));
 };
 
 const findClosestStationToTop = stationPositions => {
@@ -63,6 +79,7 @@ const Line = props => {
     const { getStationLabelPosition, shouldLabelTrain } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
     const [lineOffset, setLineOffset] = useState(null);
+    const [shouldFocusOnFirstTrain, setShouldFocusOnFirstTrain] = useState(true);
     const firstStationRef = useRef(null);
 
     const colors = {
@@ -79,6 +96,8 @@ const Line = props => {
     );
 
     const trainRoutePairs = getTrainRoutePairsForLine(trainsByRoute, routes);
+    const hasTrains = trainRoutePairs.length > 0;
+
     const viewbox = renderViewboxForBounds(bounds, {
         paddingX: 500,
         paddingY: 5,
@@ -91,6 +110,10 @@ const Line = props => {
             setLineOffset(x);
         }
     }, []);
+
+    useEffect(() => {
+        setShouldFocusOnFirstTrain(!hasTrains);
+    }, [hasTrains]);
 
     const renderLine = () => {
         return <path d={pathDirective} stroke={colors.lines} fill="transparent" />;
@@ -106,6 +129,7 @@ const Line = props => {
 
             const label = labelPosition && stationName && (
                 <text
+                    aria-hidden="true"
                     fontSize={4}
                     fill={colors.lines}
                     textAnchor={labelPosition === 'right' ? 'start' : 'end'}
@@ -126,8 +150,12 @@ const Line = props => {
     };
 
     const renderTrains = () => {
-        return trainRoutePairs.map(({ train, route }) => (
+        return sortTrainRoutePairsByDistance(
+            trainRoutePairs,
+            stationPositions
+        ).map(({ train, route }, index) => (
             <Train
+                focusOnMount={shouldFocusOnFirstTrain && index === 0}
                 key={train.label}
                 train={train}
                 route={route}
@@ -140,7 +168,11 @@ const Line = props => {
     if (trainRoutePairs.length === 0) {
         return (
             <div className="line-pane empty">
-                <div className="empty-notice">No new trains on the {line.name} Line right now.</div>
+                <div className="empty-notice">
+                    {line.name === 'Red'
+                        ? 'New Red Line trains are expected later in 2020.'
+                        : `No new trains on the ${line.name} Line right now.`}
+                </div>
             </div>
         );
     }
@@ -148,6 +180,7 @@ const Line = props => {
     return (
         <div
             role="list"
+            aria-label={`New trains on the ${line.name} Line`}
             ref={setContainer}
             className={classNames('line-pane', line.name.toLowerCase())}
             style={{ ...renderContainerStyles(lineOffset), ...style }}

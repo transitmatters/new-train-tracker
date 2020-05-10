@@ -58,7 +58,7 @@ export const useMbtaApi = lines => {
     useEffect(getTrains, [routeNamesKey]);
 
     useEffect(() => {
-        const timeout = setTimeout(getTrains, 5 * 1000);
+        const timeout = setTimeout(getTrains, 10 * 1000);
         return () => clearTimeout(timeout);
     }, [getTrains]);
 

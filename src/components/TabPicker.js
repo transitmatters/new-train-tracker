@@ -8,6 +8,9 @@ const TabPicker = props => {
     const wrapperRef = useRef(null);
     const selectedIndicatorRef = useRef(null);
 
+    // Used to ensure the size of the selected indicator changes when trains appear.
+    const totalTrainCount = Object.values(trainsByRoute).reduce((a, b) => a + b.length, 0);
+
     useLayoutEffect(() => {
         const { current: wrapper } = wrapperRef;
         const { current: selectedIndicator } = selectedIndicatorRef;
@@ -19,7 +22,7 @@ const TabPicker = props => {
                 selectedIndicator.style.backgroundColor = selectedEl.getAttribute('data-color');
             }
         }
-    }, [tabState.selectedId]);
+    }, [tabState.selectedId, totalTrainCount]);
 
     return (
         <TabList {...tabState} className="tab-picker" aria-label="Select a line" ref={wrapperRef}>

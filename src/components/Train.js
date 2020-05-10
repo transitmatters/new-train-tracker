@@ -1,5 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
+import classNames from 'classnames';
 import { Spring } from 'react-spring/renderprops';
+import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 
 import { interpolateTrainOffset } from '../interpolation';
 import { PopoverContainerContext } from './util';
@@ -29,32 +31,53 @@ const drawEquilateralTriangle = radius =>
         .trim();
 
 const Train = props => {
-    const { train, route, colors, alwaysLabelTrain } = props;
-    const { direction, isNewTrain } = train;
+    const { train, route, colors, alwaysLabelTrain, focusOnMount } = props;
+    const { direction, isNewTrain, latitude, longitude } = train;
     const { pathInterpolator, stations } = route;
 
-    const [containerElement, setContainerElement] = useState(null);
-    const [showLabelViaInteraction, setShowLabelViaInteraction] = useState(false);
+    const [element, setElement] = useState(null);
+    const [isTracked, setIsTracked] = useState(false);
+    const [shouldAutoFocus, setShouldAutoFocus] = useState(focusOnMount);
 
     const offset = interpolateTrainOffset(train, stations);
     const popoverContainer = useContext(PopoverContainerContext);
-    const isLabelShown = alwaysLabelTrain || showLabelViaInteraction;
+    const isLabelShown = alwaysLabelTrain || isTracked;
 
-    const showLabel = () => {
-        setShowLabelViaInteraction(true);
+    const handleFocus = () => {
+        setIsTracked(true);
     };
 
-    const hideLabel = () => {
-        setShowLabelViaInteraction(false);
+    const handleBlur = () => {
+        setIsTracked(false);
     };
+
+    useEffect(() => {
+        if (element && isTracked) {
+            elementScrollIntoView(element, { behavior: 'smooth', block: 'center', duration: 200 });
+        }
+    }, [element, isTracked, latitude, longitude]);
+
+    useEffect(() => {
+        if (element && shouldAutoFocus) {
+            setShouldAutoFocus(false);
+            element.focus();
+            setIsTracked(true);
+        }
+    }, [element, shouldAutoFocus]);
 
     const renderTrainMarker = () => {
         const color = isNewTrain ? colors.newTrains : colors.oldTrains;
         return (
-            <>
-                <circle cx={0} cy={0} r={3.326} fill={color} />
+            <g aria-hidden="true">
+                <circle
+                    cx={0}
+                    cy={0}
+                    r={3.326}
+                    fill={color}
+                    stroke={isTracked ? 'white' : undefined}
+                />
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
-            </>
+            </g>
         );
     };
 
@@ -63,30 +86,32 @@ const Train = props => {
             {spring => {
                 const { x, y, theta } = pathInterpolator(spring.offset);
                 const correctedTheta = direction === 1 ? 180 + theta : theta;
+                const labelId = `train-popover-${train.label}`;
                 return (
                     <>
                         <g
-                            aria-labelledby={`train-popover-${train.label}`}
-                            className="train"
+                            aria-labelledby={labelId}
+                            className={classNames('train', isTracked && 'tracked')}
                             tabIndex="0"
                             role="listitem"
-                            ref={setContainerElement}
+                            ref={setElement}
                             transform={`translate(${x}, ${y}) rotate(${correctedTheta})`}
-                            onFocus={showLabel}
-                            onBlur={hideLabel}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
                         >
                             {renderTrainMarker()}
                         </g>
-                        {popoverContainer && containerElement && (
+                        {popoverContainer && element && (
                             <TrainPopover
+                                id={labelId}
                                 train={train}
                                 route={route}
                                 colors={colors}
                                 container={popoverContainer}
                                 isVisible={isLabelShown}
-                                isActive={showLabelViaInteraction}
+                                isActive={isTracked}
                                 referenceRect={getBoundingRectWithinParent(
-                                    containerElement,
+                                    element,
                                     popoverContainer
                                 )}
                             />

@@ -2,11 +2,7 @@ import React from 'react';
 
 export const PopoverContainerContext = React.createContext(null);
 
-export const getTrainRoutePairsForLine = (
-    trainsByRoute,
-    routes,
-    newOnly = true
-) => {
+export const getTrainRoutePairsForLine = (trainsByRoute, routes, newOnly = true) => {
     const pairs = [];
     Object.entries(trainsByRoute).forEach(([routeId, trains]) => {
         const route = routes[routeId];

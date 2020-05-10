@@ -28,11 +28,16 @@ def vehicle_data_for_routes(routes, new_only=False):
         "vehicles",
         {"filter[route]": ",".join(routes), "include": "stop,trip.route_pattern"},
     )
- 
+
     # Iterate vehicles, only send new ones to the browser
     vehicles_to_display = []
     for vehicle in vehicles:
         try:
+            is_new = Fleet.car_array_is_new(
+                vehicle["route"]["id"], vehicle["label"].split("-"), True
+            )
+            if not is_new:
+                continue
             vehicles_to_display.append(
                 {
                     "label": vehicle["label"],
@@ -43,9 +48,7 @@ def vehicle_data_for_routes(routes, new_only=False):
                     "currentStatus": vehicle["current_status"],
                     "stationId": vehicle["stop"]["parent_station"]["id"],
                     "routePatternName": vehicle["trip"]["route_pattern"]["name"],
-                    "isNewTrain": Fleet.car_array_is_new(
-                        vehicle["route"]["id"], vehicle["label"].split("-")
-                    ),
+                    "isNewTrain": is_new,
                 }
             )
         except (KeyError, TypeError):

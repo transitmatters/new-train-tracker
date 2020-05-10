@@ -13,7 +13,8 @@ const abbreviateStationName = station =>
         .replace('Hynes Convention Center', 'Hynes')
         .replace('Government Center', "Gov't Center")
         .replace('Northeastern University', 'Northeastern')
-        .replace('Museum of Fine Arts', 'MFA');
+        .replace('Museum of Fine Arts', 'MFA')
+        .replace('Massachusetts Avenue', 'Mass Ave');
 
 const getReadableStatusLabel = status => {
     if (status === 'INCOMING_AT' || status === 'IN_TRANSIT_TO') {
@@ -48,7 +49,7 @@ const renderDestinationLabel = (train, route) => {
 };
 
 const TrainPopover = props => {
-    const { colors, container, referenceRect, train, route, isActive, isVisible } = props;
+    const { colors, container, id, isVisible, referenceRect, route, train } = props;
     const { direction } = train;
 
     const containerWidth = container.getBoundingClientRect().width;
@@ -102,14 +103,10 @@ const TrainPopover = props => {
 
     return ReactDOM.createPortal(
         <div
-            id={`train-popover-${train.label}`}
+            aria-hidden="true"
+            id={id}
             ref={setPopoverElement}
-            className={classNames(
-                'train-popover',
-                positionStrategy,
-                isActive && 'active',
-                isVisible && 'visible'
-            )}
+            className={classNames('train-popover', positionStrategy, isVisible && 'visible')}
             style={positionStyle}
         >
             <div

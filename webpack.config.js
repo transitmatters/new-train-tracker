@@ -1,4 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PwaManifestPlugin = require('webpack-pwa-manifest');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     output: {
@@ -25,8 +27,14 @@ module.exports = {
         ],
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: 'static/template.html',
+        }),
+        new PwaManifestPlugin({
+            name: 'TransitMatters New Train Tracker',
+            short_name: 'New Train Tracker',
+            display: 'fullscreen',
         }),
     ],
 };

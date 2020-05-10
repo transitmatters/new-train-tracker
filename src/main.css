@@ -3,7 +3,7 @@
 :root {
     --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     --top-content-height: 0px;
-    --focus-outline-style: none
+    --focus-outline-style: none;
 }
 
 html,
@@ -12,6 +12,7 @@ body {
     width: 100%;
     margin: 0;
     overflow: hidden;
+    -webkit-overflow-scrolling: none;
     font-family: 'Nunito', sans-serif;
     background: var(--line-color);
 }
@@ -106,6 +107,7 @@ body {
 }
 
 .tab-picker > .tab {
+    cursor: pointer;
     display: flex;
     align-items: center;
     color: white;
@@ -169,6 +171,14 @@ body {
     filter: drop-shadow(var(--global-shadow));
 }
 
+.train {
+    cursor: pointer;
+}
+
+.train.tracked {
+    pointer-events: none;
+}
+
 .train-popover {
     position: absolute;
     top: 0;
@@ -200,6 +210,7 @@ body {
     max-width: 300px;
     border-radius: 4px;
     padding: 0px 3px;
+    font-size: 1vw;
     background: white;
     color: black;
     box-shadow: var(--global-shadow);
@@ -212,10 +223,6 @@ body {
 
 .train-popover.left {
     transform-origin: left;
-}
-
-.train-popover.active {
-    z-index: 1;
 }
 
 .train-popover.right .train-icon {
@@ -237,14 +244,14 @@ body {
 }
 
 .train-popover .train-details {
-    padding: 5px;
+    padding: 1em;
 }
 
 .train-popover .train-details .station {
-    font-size: 10pt;
+    font-size: 3.25em;
 }
 
 .train-popover .train-details .destination {
     font-style: italic;
-    font-size: 8pt;
+    font-size: 2.5em;
 }

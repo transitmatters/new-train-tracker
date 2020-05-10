@@ -27,13 +27,8 @@ const App = () => {
     }, [selectedLine]);
 
     useEffect(() => {
-        document.getElementById('root').scrollTo({ top: 0, behavior: 'smooth' });
-    }, [selectedLine]);
-
-    useEffect(() => {
         const listener = evt => {
             if (evt.key === 'Tab') {
-                console.log('heyooo');
                 document.documentElement.style.setProperty(
                     '--focus-outline-style',
                     '0px 0px 0px 2px white'
