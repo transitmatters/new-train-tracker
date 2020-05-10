@@ -59,7 +59,7 @@ const renderContainerStyles = lineOffset => {
 };
 
 const Line = props => {
-    const { api, line } = props;
+    const { api, line, style } = props;
     const { getStationLabelPosition, shouldLabelTrain } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
     const [lineOffset, setLineOffset] = useState(null);
@@ -150,7 +150,7 @@ const Line = props => {
             role="list"
             ref={setContainer}
             className={classNames('line-pane', line.name.toLowerCase())}
-            style={renderContainerStyles(lineOffset)}
+            style={{ ...renderContainerStyles(lineOffset), ...style }}
         >
             <PopoverContainerContext.Provider value={container}>
                 <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>
