@@ -17,7 +17,6 @@ const App = () => {
         ? tabState.items.findIndex(i => i.id === tabState.currentId)
         : 0;
     const selectedLine = lines[tabIndex];
-    console.log(tabIndex, selectedLine);
 
     useEffect(() => {
         document.documentElement.style.setProperty(
@@ -43,12 +42,12 @@ const App = () => {
     if (api.isReady) {
         return (
             <>
+                <Header controls={renderControls()} />
                 <LinePane
                     key={selectedLine.name}
                     line={selectedLine}
                     api={api}
                 />
-                <Header controls={renderControls()} />
             </>
         );
     }

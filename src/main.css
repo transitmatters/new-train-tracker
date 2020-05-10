@@ -11,8 +11,9 @@ body {
     width: 100%;
     margin: 0;
     overflow: hidden;
-    font-family: 'Nunito', sans-;
+    font-family: 'Nunito', sans-serif;
     -webkit-overflow-scrolling: none;
+    background: var(--line-color);
 }
 
 #root {
@@ -20,38 +21,34 @@ body {
     height: 100%;
     overflow: auto;
     overflow-x: hidden;
-    background: var(--line-color);
+    position: relative;
 }
 
 @media screen and (max-width: 750px) {
     :root {
-        --top-content-height: 22vh;
+        font-size: 2vh;
     }
 
     .header {
-        position: fixed;
+        z-index: 1;
+        position: sticky;
         top: 0;
         width: 100%;
-        font-size: 1.8vh;
-        padding-top: 20px;
+        padding-bottom: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: var(--top-content-height);
         color: white;
         text-shadow: var(--global-shadow);
-        background: linear-gradient(var(--line-color) 0 70%, var(--line-color-transparent) 100%);
-    }
-
-    .header > :not(:last-child) {
-        margin-bottom: 5px;
+        background: linear-gradient(var(--line-color) 0 95%, var(--line-color-transparent) 100%);
     }
 
     .header .title {
-        font-size: 2.25em;
+        font-size: 2.2em;
     }
 
     .header .logo {
+        margin-top: 20px;
         height: 2.5vh;
         filter: drop-shadow(var(--global-shadow));
     }
@@ -61,14 +58,20 @@ body {
     position: relative;
     display: flex;
     justify-content: center;
-    height: 100vh;
-    margin-top: var(--top-content-height);
+    color: white;
+    width: 100%;
+}
+
+.line-pane.empty .empty-notice {
+    font-style: italic;
+    padding-top: 25vh;
 }
 
 .tab-picker {
     position: relative;
     display: flex;
-    margin-top: 5px;
+    margin-top: 10px;
+    font-size: 0.9em;
     border-radius: 100px;
     transform: translate3d(0, 0, 0);
 }
@@ -125,23 +128,30 @@ body {
 }
 
 @media screen and (max-height: 1200px) {
-    .line-pane.green,
-    .line-pane.red {
+    .line-pane.green:not(.empty),
+    .line-pane.red:not(.empty) {
         height: 125vh;
+    }
+    .line-pane.orange:not(.empty) {
+        height: 100vh;
     }
 }
 
 @media screen and (max-height: 750px) {
-    .line-pane.green {
+    .line-pane.green:not(.empty) {
         height: 150vh;
     }
-    .line-pane.red {
+    .line-pane.red:not(.empty) {
         height: 125vh;
     }
 }
 
 @media screen and (max-height: 600px) {
-    .line-pane.orange {
+    :root {
+        font-size: 2vh;
+        --top-content-height: 20vh;
+    }
+    .line-pane.orange:not(.empty) {
         height: 125vh;
     }
 }
@@ -164,6 +174,7 @@ body {
     border-radius: 4px;
     padding: 0px 3px;
     background: white;
+    color: black;
     box-shadow: var(--global-shadow);
 }
 
@@ -191,10 +202,6 @@ body {
 
 .train-popover .train-details .station {
     font-size: 10pt;
-}
-
-.train-popover .train-details .station.long-name {
-    font-size: 8pt;
 }
 
 .train-popover .train-details .destination {

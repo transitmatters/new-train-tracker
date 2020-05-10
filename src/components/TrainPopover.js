@@ -34,16 +34,11 @@ const renderStationLabel = (train, route) => {
         return null;
     }
     const stationName = abbreviateStationName(nearStation.name);
-    const isLongStationName = stationName.includes(' ');
 
     return (
-        <div
-            className={classNames('station', isLongStationName && 'long-name')}
-        >
+        <div className="station">
             {getReadableStatusLabel(train.currentStatus)}&nbsp;
-            <b className={classNames(isLongStationName && 'long-station-name')}>
-                {stationName}
-            </b>
+            <b>{stationName}</b>
         </div>
     );
 };

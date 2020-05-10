@@ -1,10 +1,4 @@
-import React, {
-    useMemo,
-    useState,
-    useEffect,
-    useRef,
-    useLayoutEffect,
-} from 'react';
+import React, { useMemo, useState, useRef, useLayoutEffect } from 'react';
 import classNames from 'classnames';
 
 import { prerenderLine } from '../prerender';
@@ -17,16 +11,34 @@ const abbreviateStationName = station =>
         .replace('Hynes Convention Center', 'Hynes')
         .replace('Heath Street', 'Heath');
 
-const renderViewboxForBounds = (
-    bounds,
-    { paddingX = 5, paddingY = 5 } = {}
-) => {
+const renderViewboxForBounds = bounds => {
     const { top, bottom, left, right } = bounds;
+    const paddingTop = 5;
+    const paddingBottom = 10;
+    const paddingX = 50;
     const width = right - left + paddingX * 2;
-    const height = bottom - top + paddingY * 2;
+    const height = bottom - top + paddingTop + paddingBottom;
     const minX = left - paddingX;
-    const minY = top - paddingY;
+    const minY = top - paddingTop;
     return `${minX} ${minY} ${width} ${height}`;
+};
+
+const findClosestStationToTop = stationPositions => {
+    const { closestId } = Object.entries(stationPositions).reduce(
+        ({ closestId, shortestDistance }, [nextId, nextPosition]) => {
+            const { x, y } = nextPosition;
+            const nextDistance = Math.sqrt(x ** 2 + y ** 2);
+            if (nextDistance < shortestDistance) {
+                return {
+                    closestId: nextId,
+                    shortestDistance: nextDistance,
+                };
+            }
+            return { closestId, shortestDistance };
+        },
+        { closestId: null, shortestDistance: Infinity }
+    );
+    return closestId;
 };
 
 const renderRelativeStyles = ({ width, height }) => {
@@ -38,7 +50,6 @@ const renderRelativeStyles = ({ width, height }) => {
 
 const renderContainerStyles = lineOffset => {
     if (lineOffset !== null) {
-        console.log('lineOffset', lineOffset);
         const negativeOffset = 0 - lineOffset;
         return {
             transform: `translateX(calc(${negativeOffset}px + 40vw))`,
@@ -74,6 +85,12 @@ const LinePane = props => {
         routesInfo,
     ]);
 
+    const trainRoutePairs = getTrainRoutePairsForLine(trainsByRoute, routes);
+    const viewbox = renderViewboxForBounds(bounds, {
+        paddingX: 500,
+        paddingY: 5,
+    });
+
     useLayoutEffect(() => {
         const { current: firstStation } = firstStationRef;
         if (firstStation) {
@@ -82,11 +99,6 @@ const LinePane = props => {
         }
     }, []);
 
-    const viewbox = renderViewboxForBounds(bounds, {
-        paddingX: 500,
-        paddingY: 5,
-    });
-
     const renderLine = () => {
         return (
             <path d={pathDirective} stroke={colors.lines} fill="transparent" />
@@ -94,30 +106,14 @@ const LinePane = props => {
     };
 
     const renderStations = () => {
-        const { closestId } = Object.entries(stationPositions).reduce(
-            ({ closestId, shortestDistance }, [nextId, nextPosition]) => {
-                const { x, y } = nextPosition;
-                const nextDistance = Math.sqrt(x ** 2 + y ** 2);
-                if (nextDistance < shortestDistance) {
-                    return {
-                        closestId: nextId,
-                        shortestDistance: nextDistance,
-                    };
-                }
-                return { closestId, shortestDistance };
-            },
-            { closestId: null, shortestDistance: Infinity }
-        );
-
+        const closestId = findClosestStationToTop(stationPositions);
         return Object.entries(stationPositions).map(([stationId, pos]) => {
-            const maybeRefProps =
-                stationId === closestId ? { ref: firstStationRef } : {};
-
             const labelPosition = getStationLabelPosition(stationId);
-
             const stationName =
                 stations[stationId] &&
                 abbreviateStationName(stations[stationId].name);
+            const refProps =
+                stationId === closestId ? { ref: firstStationRef } : {};
 
             const label = labelPosition && stationName && (
                 <text
@@ -135,7 +131,7 @@ const LinePane = props => {
                 <g
                     key={stationId}
                     transform={`translate(${pos.x}, ${pos.y})`}
-                    {...maybeRefProps}
+                    {...refProps}
                 >
                     <circle cx={0} cy={0} r={1} fill={colors.lines} />
                     {label}
@@ -145,10 +141,7 @@ const LinePane = props => {
     };
 
     const renderTrains = () => {
-        return getTrainRoutePairsForLine(
-            trainsByRoute,
-            routes
-        ).map(({ train, route }) => (
+        return trainRoutePairs.map(({ train, route }) => (
             <Train
                 key={train.label}
                 train={train}
@@ -158,6 +151,16 @@ const LinePane = props => {
             />
         ));
     };
+
+    if (trainRoutePairs.length === 0) {
+        return (
+            <div className="line-pane empty">
+                <div className="empty-notice">
+                    No new trains on the {line.name} Line right now.
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div

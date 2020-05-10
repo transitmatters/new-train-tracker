@@ -24,7 +24,12 @@ const TabPicker = props => {
     }, [tabState.selectedId]);
 
     return (
-        <TabList {...tabState} className="tab-picker" ref={wrapperRef}>
+        <TabList
+            {...tabState}
+            className="tab-picker"
+            aria-label="Select a line"
+            ref={wrapperRef}
+        >
             <div className="selected-indicator" ref={selectedIndicatorRef} />
             {lines.map(line => {
                 const trains = getTrainRoutePairsForLine(
@@ -40,6 +45,7 @@ const TabPicker = props => {
                         data-color={line.color}
                     >
                         <div
+                            aria-label={line.name + ' line'}
                             className="icon"
                             style={{ backgroundColor: line.color }}
                         >

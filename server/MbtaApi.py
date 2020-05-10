@@ -28,10 +28,10 @@ def vehicle_data_for_routes(routes, new_only=False):
         "vehicles",
         {"filter[route]": ",".join(routes), "include": "stop,trip.route_pattern"},
     )
+ 
     # Iterate vehicles, only send new ones to the browser
     vehicles_to_display = []
     for vehicle in vehicles:
-        derive_custom_route_name(vehicle)
         try:
             vehicles_to_display.append(
                 {
