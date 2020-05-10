@@ -19,7 +19,7 @@ module.exports = {
                 use: ['style-loader', 'css-loader'],
             },
             {
-                test: /\.(png)$/,
+                test: /\.(png|svg)$/,
                 loader: 'file-loader',
             },
         ],

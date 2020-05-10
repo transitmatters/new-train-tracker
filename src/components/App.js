@@ -1,30 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { useTabState, useTab } from 'reakit';
+import React, { useEffect } from 'react';
+import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine } from '../lines';
 import { useMbtaApi } from '../useMbtaApi';
 
 import LinePane from './LinePane';
 import Header from './Header';
-import LinePicker from './LinePicker';
 import TabPicker from './TabPicker';
 
 const lines = [greenLine, orangeLine, redLine];
 
 const App = () => {
     const api = useMbtaApi(lines);
-    const [header, setHeader] = useState(null);
-    const [selectedLine, setSelectedLine] = useState(greenLine);
-    const tabState = useTabState();
+    const tabState = useTabState({ loop: false });
+    const tabIndex = tabState.currentId
+        ? tabState.items.findIndex(i => i.id === tabState.currentId)
+        : 0;
+    const selectedLine = lines[tabIndex];
+    console.log(tabIndex, selectedLine);
 
     useEffect(() => {
         document.documentElement.style.setProperty(
             '--line-color',
-            selectedLine.colorBright
+            selectedLine.colorSecondary
         );
         document.documentElement.style.setProperty(
             '--line-color-transparent',
-            selectedLine.colorBright + '00'
+            selectedLine.colorSecondary + '00'
         );
     }, [selectedLine]);
 
@@ -45,9 +47,8 @@ const App = () => {
                     key={selectedLine.name}
                     line={selectedLine}
                     api={api}
-                    headerElement={header}
                 />
-                <Header ref={setHeader} controls={renderControls()} />
+                <Header controls={renderControls()} />
             </>
         );
     }

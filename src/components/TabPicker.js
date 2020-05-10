@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab } from 'reakit';
 
 import { getTrainRoutePairsForLine } from './util';
@@ -31,7 +31,6 @@ const TabPicker = props => {
                     trainsByRoute,
                     line.routes
                 );
-
                 return (
                     <Tab
                         {...tabState}

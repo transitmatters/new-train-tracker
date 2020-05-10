@@ -20,7 +20,7 @@ const LinePicker = props => {
                         aria-label={`Show the ${line.name} line`}
                         onClick={() => onSelectLine(line)}
                         style={{
-                            background: line.colorBright,
+                            background: line.colorSecondary,
                             borderColor: line.color,
                         }}
                         className={classNames(

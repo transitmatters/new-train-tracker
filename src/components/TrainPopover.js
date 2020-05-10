@@ -125,7 +125,7 @@ const TrainPopover = props => {
             className={classNames('train-popover', positionStrategy)}
             style={{
                 ...positionStyle,
-                backgroundColor: colors.colorBright,
+                backgroundColor: colors.colorSecondary,
                 border: `2px solid ${colors.newTrains}`,
             }}
         >

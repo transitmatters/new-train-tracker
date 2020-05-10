@@ -87,7 +87,7 @@ export const greenLine = {
     name: 'Green',
     abbreviation: 'GL',
     color: '#114529',
-    colorBright: '#159765',
+    colorSecondary: '#159765',
     shouldLabelTrain: ({ stationId }) =>
         stationId && !labeledGreenLineStations.includes(stationId),
     getStationLabelPosition: stationId => {
@@ -118,8 +118,8 @@ export const greenLine = {
 export const orangeLine = {
     name: 'Orange',
     abbreviation: 'OL',
-    colorBright: '#e65100',
-    color: '#ed8b00',
+    colorSecondary: '#e66f00',
+    color: '#ffaa21',
     getStationLabelPosition: () => 'right',
     shouldLabelTrain: () => false,
     routes: {
@@ -168,8 +168,8 @@ const redB = [
 export const redLine = {
     name: 'Red',
     abbreviation: 'RL',
-    color: '#DA291C',
-    colorBright: '#EF5350',
+    color: '#E37C7C',
+    colorSecondary: '#D13434',
     getStationLabelPosition: () => 'right',
     shouldLabelTrain: () => false,
     routes: {

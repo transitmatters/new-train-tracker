@@ -11,7 +11,7 @@ body {
     width: 100%;
     margin: 0;
     overflow: hidden;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Nunito', sans-;
     -webkit-overflow-scrolling: none;
 }
 
@@ -25,22 +25,35 @@ body {
 
 @media screen and (max-width: 750px) {
     :root {
-        --top-content-height: 15vh;
+        --top-content-height: 22vh;
     }
 
     .header {
         position: fixed;
         top: 0;
         width: 100%;
-        font-size: 3.5vh;
+        font-size: 1.8vh;
+        padding-top: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         height: var(--top-content-height);
         color: white;
         text-shadow: var(--global-shadow);
         background: linear-gradient(var(--line-color) 0 70%, var(--line-color-transparent) 100%);
+    }
+
+    .header > :not(:last-child) {
+        margin-bottom: 5px;
+    }
+
+    .header .title {
+        font-size: 2.25em;
+    }
+
+    .header .logo {
+        height: 2.5vh;
+        filter: drop-shadow(var(--global-shadow));
     }
 }
 
@@ -71,6 +84,7 @@ body {
 
 .tab-picker > .tab:focus {
     outline: none;
+    box-shadow: 0px 0px 0px 2px white;
 }
 
 @media (pointer: none) {

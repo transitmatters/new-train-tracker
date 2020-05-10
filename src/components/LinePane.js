@@ -36,8 +36,19 @@ const renderRelativeStyles = ({ width, height }) => {
     return { height: '100%' };
 };
 
+const renderContainerStyles = lineOffset => {
+    if (lineOffset !== null) {
+        console.log('lineOffset', lineOffset);
+        const negativeOffset = 0 - lineOffset;
+        return {
+            transform: `translateX(calc(${negativeOffset}px + 40vw))`,
+        };
+    }
+    return {};
+};
+
 const LinePane = props => {
-    const { api, line, headerElement } = props;
+    const { api, line } = props;
     const { getStationLabelPosition, shouldLabelTrain } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
     const [lineOffset, setLineOffset] = useState(null);
@@ -46,7 +57,7 @@ const LinePane = props => {
     const colors = {
         lines: 'white',
         newTrains: line.color,
-        background: line.colorBright,
+        background: line.colorSecondary,
     };
 
     const [container, setContainer] = useState(null);
@@ -72,7 +83,7 @@ const LinePane = props => {
     }, []);
 
     const viewbox = renderViewboxForBounds(bounds, {
-        paddingX: 100,
+        paddingX: 500,
         paddingY: 5,
     });
 
@@ -152,6 +163,7 @@ const LinePane = props => {
         <div
             ref={setContainer}
             className={classNames('line-pane', line.name.toLowerCase())}
+            style={renderContainerStyles(lineOffset)}
         >
             <PopoverContainerContext.Provider value={container}>
                 <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>

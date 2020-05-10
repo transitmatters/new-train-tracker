@@ -1,24 +1,20 @@
 import React from 'react';
 
-// <div className="title">
-//     <div>MBTA</div>
-//     <div>New</div>
-//     <div>Train</div>
-//     <div>Tracker</div>
-// </div>
-// <div className="subtitle">
-//     Brought to&nbsp;you&nbsp;by{' '}
-//     <a href="http://transitmatters.org/" target="_blank">
-//         TransitMatters
-//     </a>
-// </div>
-// <div className="controls">{controls}</div>
+import logo from '../../static/images/logo.svg';
 
 const Header = React.forwardRef((props, ref) => {
     const { controls } = props;
     return (
         <div className="header" ref={ref}>
+            <a
+                href="https://transitmatters.org"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <img src={logo} className="logo" alt="TransitMatters" />
+            </a>
             <div className="title">New Train Tracker</div>
+            <div>See where the MBTA's new trains are right now</div>
             {controls}
         </div>
     );
