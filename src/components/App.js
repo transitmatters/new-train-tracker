@@ -39,9 +39,10 @@ const App = () => {
         return () => document.removeEventListener('keydown', listener);
     }, []);
 
-    const setHeaderHeightFromElement = el => {
-        if (el) {
-            setHeaderHeight(el.getBoundingClientRect().height);
+    const setHeaderHeightFromElement = headerElement => {
+        if (headerElement) {
+            const { height } = headerElement.getBoundingClientRect();
+            document.documentElement.style.setProperty('--header-height', `${height}px`);
         }
     };
 
@@ -53,12 +54,7 @@ const App = () => {
         return (
             <>
                 <Header ref={setHeaderHeightFromElement} controls={renderControls()} />
-                <Line
-                    key={selectedLine.name}
-                    line={selectedLine}
-                    api={api}
-                    style={{ marginTop: headerHeight }}
-                />
+                <Line key={selectedLine.name} line={selectedLine} api={api} />
             </>
         );
     }

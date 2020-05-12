@@ -68,14 +68,14 @@ const renderContainerStyles = lineOffset => {
     if (lineOffset !== null) {
         const negativeOffset = 0 - lineOffset;
         return {
-            transform: `translateX(calc(${negativeOffset}px + 40vw))`,
+            transform: `translateX(calc(${negativeOffset}px + var(--line-centering)))`,
         };
     }
     return {};
 };
 
 const Line = props => {
-    const { api, line, style } = props;
+    const { api, line } = props;
     const { getStationLabelPosition, shouldLabelTrain } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
     const [lineOffset, setLineOffset] = useState(null);
@@ -183,7 +183,6 @@ const Line = props => {
             aria-label={`New trains on the ${line.name} Line`}
             ref={setContainer}
             className={classNames('line-pane', line.name.toLowerCase())}
-            style={{ ...renderContainerStyles(lineOffset), ...style }}
         >
             <PopoverContainerContext.Provider value={container}>
                 <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>

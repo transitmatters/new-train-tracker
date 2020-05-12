@@ -21,10 +21,7 @@ const path = (strings, ...args) => {
         return '';
     };
 
-    return strings.reduce(
-        (acc, next, i) => `${acc}${next}${roundedString(i)}`,
-        ''
-    );
+    return strings.reduce((acc, next, i) => `${acc}${next}${roundedString(i)}`, '');
 };
 
 export const start = (x, y, theta) => {
@@ -96,8 +93,7 @@ export const wiggle = (length, width, angle = 0) => turtle => {
     const y2 = y1 + length * sind(theta) + width * sind(theta - 90);
     // The first control point is parallel to the turtle's incoming line, and is half the total
     // distance between (x1, y1) and (x2, y2).
-    const halfDist =
-        0.5 * Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
+    const halfDist = 0.5 * Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
     const xp1 = x1 + halfDist * cosd(theta);
     const yp1 = y1 + halfDist * sind(theta);
     // The second control point is parallel to the turtle's outgoing line, and is also half the

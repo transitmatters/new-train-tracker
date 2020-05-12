@@ -4,6 +4,9 @@
     --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     --top-content-height: 0px;
     --focus-outline-style: none;
+    --header-height: 0px;
+    --line-centering: 47vw;
+    --popover-font-size-basis: 5px;
 }
 
 html,
@@ -34,37 +37,43 @@ body {
     position: relative;
 }
 
+.header {
+    padding: 2vh 0;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-shadow: var(--global-shadow);
+    background: linear-gradient(var(--line-color) 0 95%, var(--line-color-transparent) 100%);
+}
+
+.header .title {
+    font-size: 1.5em;
+}
+
+.header .subtitle {
+    font-size: 0.8em;
+}
+
+.header .logo {
+    height: 1em;
+    filter: drop-shadow(var(--global-shadow));
+}
+
 @media screen and (max-width: 750px) {
     :root {
         font-size: 2vh;
+        --line-centering: 40vw;
+        --popover-font-size-basis: 1vw;
     }
 
     .header {
         padding-top: 10px;
-        z-index: 1;
-        position: fixed;
-        top: 0;
-        width: 100%;
         padding-bottom: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: white;
-        text-shadow: var(--global-shadow);
-        background: linear-gradient(var(--line-color) 0 95%, var(--line-color-transparent) 100%);
-    }
-
-    .header .title {
-        font-size: 1.5em;
-    }
-
-    .header .subtitle {
-        font-size: 0.8em;
-    }
-
-    .header .logo {
-        height: 2vh;
-        filter: drop-shadow(var(--global-shadow));
     }
 }
 
@@ -74,6 +83,8 @@ body {
     justify-content: center;
     color: white;
     width: 100%;
+    height: calc(100vh - var(--header-height));
+    margin-top: var(--header-height);
 }
 
 .line-pane.empty .empty-notice {
@@ -111,7 +122,6 @@ body {
     display: flex;
     align-items: center;
     color: white;
-    font-size: 4vw;
     border-radius: 100px;
     z-index: 1;
 }
@@ -210,7 +220,7 @@ body {
     max-width: 300px;
     border-radius: 4px;
     padding: 0px 3px;
-    font-size: 1vw;
+    font-size: var(--popover-font-size-basis);
     background: white;
     color: black;
     box-shadow: var(--global-shadow);

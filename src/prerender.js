@@ -90,10 +90,7 @@ const prerenderRoute = (shape, stationIds) => {
         if (entry.type === 'stationRange') {
             const initialLength = totalLength;
             const segmentsInRange = [];
-            const stationIdsWithinRange = getStationIdsWithinRange(
-                entry,
-                stationIds
-            );
+            const stationIdsWithinRange = getStationIdsWithinRange(entry, stationIds);
 
             entry.commands.forEach(command => {
                 const segment = consumeCommand(command);
@@ -107,8 +104,7 @@ const prerenderRoute = (shape, stationIds) => {
                     stationIdsWithinRange.length === 1
                         ? 0.5
                         : index / (stationIdsWithinRange.length - 1);
-                stationOffsets[stationId] =
-                    initialLength + fraction * segmentsLength;
+                stationOffsets[stationId] = initialLength + fraction * segmentsLength;
             });
         } else {
             consumeCommand(entry);
