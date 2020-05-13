@@ -4,9 +4,6 @@ import classNames from 'classnames';
 
 const popoverDistance = 15;
 
-const abbreviateDestination = destination =>
-    destination.replace('Government Center', "Gov't Center").replace('Boston College', 'B.C.');
-
 const abbreviateStationName = station =>
     station
         .replace('Boston University', 'BU')
@@ -44,12 +41,21 @@ const renderStationLabel = (train, route) => {
 
 const renderDestinationLabel = (train, route) => {
     const { directionDestinations } = route;
-    const destinationName = abbreviateDestination(directionDestinations[train.direction]);
+    const destinationName = directionDestinations[train.direction];
     return <div className="destination">to&nbsp;{destinationName}</div>;
 };
 
 const TrainPopover = props => {
-    const { colors, container, id, isVisible, referenceRect, route, train } = props;
+    const {
+        colors,
+        container,
+        fixedPositionStrategy,
+        id,
+        isVisible,
+        referenceRect,
+        route,
+        train,
+    } = props;
     const { direction } = train;
 
     const containerWidth = container.getBoundingClientRect().width;
@@ -77,14 +83,17 @@ const TrainPopover = props => {
             const canPositionLeft = leftPositionLeftExtent > 0;
             const canPositionRight = rightPositionRightExtent < containerWidth;
 
-            const nextPositionStrategy =
-                direction === 1
-                    ? canPositionLeft
-                        ? 'left'
-                        : 'right'
-                    : canPositionRight
-                    ? 'right'
-                    : 'left';
+            let nextPositionStrategy = fixedPositionStrategy;
+            if (!nextPositionStrategy) {
+                nextPositionStrategy =
+                    direction === 1
+                        ? canPositionLeft
+                            ? 'left'
+                            : 'right'
+                        : canPositionRight
+                        ? 'right'
+                        : 'left';
+            }
 
             const popoverX =
                 trainX +
@@ -99,7 +108,16 @@ const TrainPopover = props => {
                 transform: `translate(${popoverX}px, ${popoverY}px)`,
             });
         }
-    }, [containerWidth, direction, popoverWidth, popoverHeight, trainX, trainY, isVisible]);
+    }, [
+        containerWidth,
+        direction,
+        fixedPositionStrategy,
+        isVisible,
+        popoverHeight,
+        popoverWidth,
+        trainX,
+        trainY,
+    ]);
 
     return ReactDOM.createPortal(
         <div

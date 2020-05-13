@@ -1,27 +1,15 @@
-import React, { useMemo, useState, useRef, useLayoutEffect, useEffect } from 'react';
+import React, { useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
 
 import { prerenderLine } from '../prerender';
 import Train from './Train';
-import { PopoverContainerContext, getTrainRoutePairsForLine } from './util';
+import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 
 const abbreviateStationName = station =>
     station
         .replace('Boston College', 'B.C.')
         .replace('Hynes Convention Center', 'Hynes')
         .replace('Heath Street', 'Heath');
-
-const renderViewboxForBounds = bounds => {
-    const { top, bottom, left, right } = bounds;
-    const paddingTop = 5;
-    const paddingBottom = 10;
-    const paddingX = 50;
-    const width = right - left + paddingX * 2;
-    const height = bottom - top + paddingTop + paddingBottom;
-    const minX = left - paddingX;
-    const minY = top - paddingTop;
-    return `${minX} ${minY} ${width} ${height}`;
-};
 
 const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
     const distanceMap = new Map(
@@ -39,48 +27,13 @@ const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
     return pairs.sort((a, b) => distanceMap.get(a) - distanceMap.get(b));
 };
 
-const findClosestStationToTop = stationPositions => {
-    const { closestId } = Object.entries(stationPositions).reduce(
-        ({ closestId, shortestDistance }, [nextId, nextPosition]) => {
-            const { x, y } = nextPosition;
-            const nextDistance = Math.sqrt(x ** 2 + y ** 2);
-            if (nextDistance < shortestDistance) {
-                return {
-                    closestId: nextId,
-                    shortestDistance: nextDistance,
-                };
-            }
-            return { closestId, shortestDistance };
-        },
-        { closestId: null, shortestDistance: Infinity }
-    );
-    return closestId;
-};
-
-const renderRelativeStyles = ({ width, height }) => {
-    if (width > height) {
-        return { width: '100%' };
-    }
-    return { height: '100%' };
-};
-
-const renderContainerStyles = lineOffset => {
-    if (lineOffset !== null) {
-        const negativeOffset = 0 - lineOffset;
-        return {
-            transform: `translateX(calc(${negativeOffset}px + var(--line-centering)))`,
-        };
-    }
-    return {};
-};
-
 const Line = props => {
     const { api, line } = props;
-    const { getStationLabelPosition, shouldLabelTrain } = line;
+    const { getStationLabelPosition, shouldLabelTrain, fixedTrainLabelPosition } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
-    const [lineOffset, setLineOffset] = useState(null);
+    const [viewbox, setViewbox] = useState(undefined);
+    const [svg, setSvg] = useState(null);
     const [shouldFocusOnFirstTrain, setShouldFocusOnFirstTrain] = useState(true);
-    const firstStationRef = useRef(null);
 
     const colors = {
         lines: 'white',
@@ -90,7 +43,7 @@ const Line = props => {
 
     const [container, setContainer] = useState(null);
 
-    const { pathDirective, bounds, routes, stationPositions, stations } = useMemo(
+    const { pathDirective, routes, stationPositions, stations } = useMemo(
         () => prerenderLine(line, stationsByRoute, routesInfo),
         [line, stationsByRoute, routesInfo]
     );
@@ -98,34 +51,34 @@ const Line = props => {
     const trainRoutePairs = getTrainRoutePairsForLine(trainsByRoute, routes);
     const hasTrains = trainRoutePairs.length > 0;
 
-    const viewbox = renderViewboxForBounds(bounds, {
-        paddingX: 500,
-        paddingY: 5,
-    });
-
-    useLayoutEffect(() => {
-        const { current: firstStation } = firstStationRef;
-        if (firstStation) {
-            const { x } = firstStation.getBoundingClientRect();
-            setLineOffset(x);
-        }
-    }, []);
-
     useEffect(() => {
         setShouldFocusOnFirstTrain(!hasTrains);
     }, [hasTrains]);
+
+    useLayoutEffect(() => {
+        if (svg) {
+            const paddingX = 2;
+            const paddingY = 2;
+            const bbox = svg.getBBox();
+            const x = bbox.x - paddingX;
+            const width = bbox.width + paddingX * 2;
+            const y = bbox.y - paddingY;
+            const height = bbox.height + paddingY * 2;
+            setViewbox(`${x} ${y} ${width} ${height}`);
+            setCssVariable('--line-bbox-height', height);
+            setCssVariable('--line-bbox-width', width);
+        }
+    }, [svg]);
 
     const renderLine = () => {
         return <path d={pathDirective} stroke={colors.lines} fill="transparent" />;
     };
 
     const renderStations = () => {
-        const closestId = findClosestStationToTop(stationPositions);
         return Object.entries(stationPositions).map(([stationId, pos]) => {
             const labelPosition = getStationLabelPosition(stationId);
             const stationName =
                 stations[stationId] && abbreviateStationName(stations[stationId].name);
-            const refProps = stationId === closestId ? { ref: firstStationRef } : {};
 
             const label = labelPosition && stationName && (
                 <text
@@ -141,7 +94,7 @@ const Line = props => {
             );
 
             return (
-                <g key={stationId} transform={`translate(${pos.x}, ${pos.y})`} {...refProps}>
+                <g key={stationId} transform={`translate(${pos.x}, ${pos.y})`}>
                     <circle cx={0} cy={0} r={1} fill={colors.lines} />
                     {label}
                 </g>
@@ -161,6 +114,7 @@ const Line = props => {
                 route={route}
                 colors={colors}
                 alwaysLabelTrain={shouldLabelTrain(train)}
+                labelPosition={fixedTrainLabelPosition}
             />
         ));
     };
@@ -185,7 +139,7 @@ const Line = props => {
             className={classNames('line-pane', line.name.toLowerCase())}
         >
             <PopoverContainerContext.Provider value={container}>
-                <svg viewBox={viewbox} style={renderRelativeStyles(viewbox)}>
+                <svg ref={setSvg} viewBox={viewbox} preserveAspectRatio="xMidYMin">
                     {renderLine()}
                     {renderStations()}
                     {renderTrains()}

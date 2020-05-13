@@ -16,3 +16,7 @@ export const getTrainRoutePairsForLine = (trainsByRoute, routes, newOnly = true)
     });
     return pairs;
 };
+
+export const setCssVariable = (variable, value) => {
+    document.documentElement.style.setProperty(variable, value);
+};

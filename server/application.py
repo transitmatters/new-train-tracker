@@ -21,8 +21,11 @@ def static_files(filename):
 # Data routes
 @application.route("/trains/<routes>")
 def data(routes):
+    test_mode = flask.request.args.get("testMode")
     return flask.Response(
-        json.dumps(MbtaApi.vehicle_data_for_routes(routes.split(","), new_only=True)),
+        json.dumps(
+            MbtaApi.vehicle_data_for_routes(routes.split(","), test_mode=test_mode)
+        ),
         mimetype="application/json",
     )
 
@@ -42,4 +45,4 @@ def routes(route_ids):
 
 
 if __name__ == "__main__":
-    application.run(host='0.0.0.0', debug=(os.environ.get("NODE_ENV") != "production"))
+    application.run(host="0.0.0.0", debug=(os.environ.get("NODE_ENV") != "production"))

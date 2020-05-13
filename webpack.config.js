@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+// eslint-disable-next-line no-undef
 module.exports = {
     output: {
         filename: '[name].[contenthash].bundle.js',

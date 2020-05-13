@@ -1,13 +1,19 @@
 import { useEffect, useState, useCallback } from 'react';
 
-export const getTrainPositions = (...routes) =>
-    fetch(`/trains/${routes.join(',')}`).then(res => res.json());
+export const getIsTestMode = () => {
+    const params = new URLSearchParams(window.location.search);
+    const val = params.get('testMode');
+    return val === 'true' || !!parseInt(val);
+};
 
-export const getStationsForRoute = route =>
-    fetch(`/stations/${route}`).then(res => res.json());
+export const getTrainPositions = (routes, isTestMode) => {
+    const testSuffix = isTestMode ? '?testMode=1' : '';
+    return fetch(`/trains/${routes.join(',')}${testSuffix}`).then(res => res.json());
+};
 
-export const getRoutesInfo = routes =>
-    fetch(`/routes/${routes.join(',')}`).then(res => res.json());
+export const getStationsForRoute = route => fetch(`/stations/${route}`).then(res => res.json());
+
+export const getRoutesInfo = routes => fetch(`/routes/${routes.join(',')}`).then(res => res.json());
 
 export const useMbtaApi = lines => {
     const routeNames = lines
@@ -22,11 +28,12 @@ export const useMbtaApi = lines => {
     const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
 
     const getTrains = useCallback(() => {
+        const testMode = getIsTestMode();
         const nextTrainsByRoute = {};
         routeNames.forEach(routeName => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames).then(trains => {
+        getTrainPositions(routeNames, testMode).then(trains => {
             trains.forEach(train => nextTrainsByRoute[train.route].push(train));
             setTrainsByRoute(nextTrainsByRoute);
         });

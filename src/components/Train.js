@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import classNames from 'classnames';
 import { Spring } from 'react-spring/renderprops';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
@@ -31,7 +31,7 @@ const drawEquilateralTriangle = radius =>
         .trim();
 
 const Train = props => {
-    const { train, route, colors, alwaysLabelTrain, focusOnMount } = props;
+    const { train, route, colors, alwaysLabelTrain, focusOnMount, labelPosition } = props;
     const { direction, isNewTrain, latitude, longitude } = train;
     const { pathInterpolator, stations } = route;
 
@@ -110,6 +110,7 @@ const Train = props => {
                                 container={popoverContainer}
                                 isVisible={isLabelShown}
                                 isActive={isTracked}
+                                fixedPositionStrategy={labelPosition}
                                 referenceRect={getBoundingRectWithinParent(
                                     element,
                                     popoverContainer

@@ -124,6 +124,7 @@ export const orangeLine = {
     color: '#ffaa21',
     getStationLabelPosition: () => 'right',
     shouldLabelTrain: () => false,
+    fixedTrainLabelPosition: 'right',
     routes: {
         Orange: {
             shape: [
@@ -131,7 +132,7 @@ export const orangeLine = {
                 stationRange({
                     start: 'place-ogmnl',
                     end: 'place-forhl',
-                    commands: [line(175)],
+                    commands: [line(250)],
                 }),
             ],
         },

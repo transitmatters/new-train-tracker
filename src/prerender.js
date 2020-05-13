@@ -1,29 +1,5 @@
 import { createInterpolatorForSegments } from './interpolation';
 
-const createBounds = () => {
-    return { top: 0, bottom: 0, left: 0, right: 0 };
-};
-
-const captureTurtleInBounds = (bounds, turtle) => {
-    const { top, bottom, left, right } = bounds;
-    const { x, y } = turtle;
-    return {
-        top: Math.min(y, top),
-        bottom: Math.max(y, bottom),
-        left: Math.min(x, left),
-        right: Math.max(x, right),
-    };
-};
-
-const getUnionForBounds = (a, b) => {
-    return {
-        top: Math.min(a.top, b.top),
-        bottom: Math.max(a.bottom, b.bottom),
-        left: Math.min(a.left, b.left),
-        right: Math.max(a.right, b.right),
-    };
-};
-
 const createPathBuilder = () => {
     let path = '';
     return {
@@ -73,7 +49,6 @@ const prerenderRoute = (shape, stationIds) => {
         throw new Error('Route must begin with a start() command');
     }
     let { turtle } = start;
-    let bounds = captureTurtleInBounds(createBounds(), turtle);
 
     const consumeCommand = command => {
         const segment = command(turtle);
@@ -81,7 +56,6 @@ const prerenderRoute = (shape, stationIds) => {
         segments.push(segment);
         totalLength += length;
         turtle = nextTurtle;
-        bounds = captureTurtleInBounds(bounds, turtle);
         pathBuilder.add(path);
         return segment;
     };
@@ -113,7 +87,6 @@ const prerenderRoute = (shape, stationIds) => {
 
     return {
         stationOffsets,
-        bounds: bounds,
         pathDirective: pathBuilder.get(),
         pathInterpolator: createInterpolatorForSegments(segments),
     };
@@ -121,19 +94,16 @@ const prerenderRoute = (shape, stationIds) => {
 
 export const prerenderLine = (line, stationsByRoute, routesInfo) => {
     const pathBuilder = createPathBuilder();
-    let bounds = createBounds();
     let routes = {};
     let stationPositions = {};
     Object.entries(line.routes).forEach(([routeId, { shape }]) => {
         const stations = stationsByRoute[routeId];
         const routeInfo = routesInfo[routeId];
         const stationIds = stations.map(s => s.id);
-        const {
-            pathInterpolator,
-            stationOffsets,
-            pathDirective,
-            bounds: partialBounds,
-        } = prerenderRoute(shape, stationIds);
+        const { pathInterpolator, stationOffsets, pathDirective } = prerenderRoute(
+            shape,
+            stationIds
+        );
         const route = {
             ...routeInfo,
             id: routeId,
@@ -154,10 +124,8 @@ export const prerenderLine = (line, stationsByRoute, routesInfo) => {
         };
         routes[routeId] = route;
         pathBuilder.add(pathDirective);
-        bounds = getUnionForBounds(bounds, partialBounds);
     });
     return {
-        bounds: bounds,
         routes: routes,
         stations: Object.values(routes).reduce((partial, route) => {
             return {

@@ -19,7 +19,7 @@ def getV3(command, params={}):
     return json_api_doc.parse(response.json())
 
 
-def vehicle_data_for_routes(routes, new_only=False):
+def vehicle_data_for_routes(routes, test_mode=False):
     """Use getv3 to request real-time vehicle data for a given route set"""
 
     routes = normalize_custom_route_names(routes)
@@ -34,7 +34,7 @@ def vehicle_data_for_routes(routes, new_only=False):
     for vehicle in vehicles:
         try:
             is_new = Fleet.car_array_is_new(
-                vehicle["route"]["id"], vehicle["label"].split("-"), True
+                vehicle["route"]["id"], vehicle["label"].split("-"), test_mode
             )
             if not is_new:
                 continue
