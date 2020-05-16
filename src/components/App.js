@@ -6,7 +6,7 @@ import { useMbtaApi } from '../useMbtaApi';
 
 import Line from './Line';
 import Header from './Header';
-import TabPicker from './TabPicker';
+import TabPicker, { getTabIdForLine } from './TabPicker';
 import { setCssVariable } from './util';
 
 const lines = [greenLine, orangeLine, redLine];
@@ -24,6 +24,19 @@ const App = () => {
         setCssVariable('--line-color', backgroundColor);
         setCssVariable('--line-color-transparent', backgroundColor + '00');
     }, [selectedLine]);
+
+    useEffect(() => {
+        if (api.isReady) {
+            const lineWithTrains = lines.find(line => {
+                const routeIds = Object.keys(line.routes);
+                return routeIds.some(routeId => api.trainsByRoute[routeId].length > 0);
+            });
+            if (lineWithTrains) {
+                tabState.setCurrentId(getTabIdForLine(lineWithTrains));
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [api.isReady]);
 
     useEffect(() => {
         const listener = evt => {

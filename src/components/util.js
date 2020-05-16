@@ -21,6 +21,10 @@ export const setCssVariable = (variable, value) => {
     document.documentElement.style.setProperty(variable, value);
 };
 
+let doesPreferReducedMotion = null;
 export const prefersReducedMotion = () => {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (doesPreferReducedMotion === null) {
+        doesPreferReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    return doesPreferReducedMotion;
 };

@@ -1,12 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 
-const getInitialDataByKey = key => {
-    const { __NTT_INITIAL_DATA__ } = window;
-    if (__NTT_INITIAL_DATA__ && __NTT_INITIAL_DATA__[key]) {
-        return __NTT_INITIAL_DATA__[key];
-    }
-    return null;
-};
+import { getInitialDataByKey } from './initialData';
 
 const getIsTestMode = () => {
     const params = new URLSearchParams(window.location.search);

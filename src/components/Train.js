@@ -63,7 +63,7 @@ const Train = props => {
             elementScrollIntoView(element, {
                 behavior: prefersReducedMotion() ? 'auto' : 'smooth',
                 block: 'center',
-                duration: 200,
+                duration: 250,
             });
         }
     }, [element, isTracked]);
@@ -108,6 +108,7 @@ const Train = props => {
                             ref={setElement}
                             transform={`translate(${x}, ${y}) rotate(${correctedTheta})`}
                             onFocus={handleFocus}
+                            onClick={handleFocus}
                             onBlur={handleBlur}
                         >
                             {renderTrainMarker()}

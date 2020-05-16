@@ -3,6 +3,8 @@ import { TabList, Tab } from 'reakit';
 
 import { getTrainRoutePairsForLine } from './util';
 
+export const getTabIdForLine = line => `tab-${line.name}`;
+
 const TabPicker = props => {
     const { lines, tabState, trainsByRoute } = props;
     const wrapperRef = useRef(null);
@@ -32,6 +34,7 @@ const TabPicker = props => {
                 return (
                     <Tab
                         {...tabState}
+                        id={getTabIdForLine(line)}
                         className="tab"
                         key={line.name}
                         as="div"
