@@ -1,1 +1,1 @@
-web: npm run start-python
+web: python server/application.py
