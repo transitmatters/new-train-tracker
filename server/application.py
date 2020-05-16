@@ -68,4 +68,4 @@ def get_debug():
     return os.environ.get("NODE_ENV") != "production"
 
 if __name__ == "__main__":
-    application.run(host="localhost", port=get_port(), debug=get_debug())
+    application.run(host="0.0.0.0", port=get_port(), debug=get_debug())
