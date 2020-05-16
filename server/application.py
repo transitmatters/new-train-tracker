@@ -17,7 +17,6 @@ DEFAULT_ROUTE_IDS = [
     "Red-B",
 ]
 
-
 @application.route("/<path:filename>")
 def static_files(filename):
     return flask.send_from_directory("../dist", filename)
@@ -58,5 +57,15 @@ def root():
     return flask.render_template("index.html", initial_data=initial_data)
 
 
+def get_port():
+    env_port = os.environ.get("PORT")
+    if env_port is not None:
+        return int(env_port)
+    return 5000
+
+
+def get_debug():
+    return os.environ.get("NODE_ENV") != "production"
+
 if __name__ == "__main__":
-    application.run(host="0.0.0.0", debug=(os.environ.get("NODE_ENV") != "production"))
+    application.run(host="localhost", port=get_port(), debug=get_debug())
