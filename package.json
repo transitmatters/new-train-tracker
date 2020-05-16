@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "cd server && pipenv install",
-    "start-python": "cd server && pipenv run python3 application.py",
+    "start-python": "pipenv run python3 server/application.py",
     "start": "concurrently npm:start-python npm:build-dev",
     "build-dev": "webpack --watch --mode development",
     "build-prod": "webpack --mode production",
