@@ -1,16 +1,21 @@
 import os
 import json
-
+import asyncio
 import flask
 
 import MbtaApi
 
-application = flask.Flask(__name__)
+application = flask.Flask(__name__, template_folder="../dist")
 
-
-@application.route("/")
-def root():
-    return static_files("index.html")
+DEFAULT_ROUTE_IDS = [
+    "Green-B",
+    "Green-C",
+    "Green-D",
+    "Green-E",
+    "Orange",
+    "Red-A",
+    "Red-B",
+]
 
 
 @application.route("/<path:filename>")
@@ -18,30 +23,39 @@ def static_files(filename):
     return flask.send_from_directory("../dist", filename)
 
 
-# Data routes
-@application.route("/trains/<routes>")
-def data(routes):
+@application.route("/trains/<route_ids_string>")
+def data(route_ids_string):
+    route_ids = route_ids_string.split(",")
     test_mode = flask.request.args.get("testMode")
-    return flask.Response(
-        json.dumps(
-            MbtaApi.vehicle_data_for_routes(routes.split(","), test_mode=test_mode)
-        ),
-        mimetype="application/json",
+    vehicle_data = asyncio.run(
+        MbtaApi.vehicle_data_for_routes(route_ids, test_mode=test_mode)
     )
+    return flask.Response(json.dumps(vehicle_data), mimetype="application/json",)
 
 
-@application.route("/stations/<route>")
-def stops(route):
-    return flask.Response(
-        json.dumps(MbtaApi.stops_for_route(route)), mimetype="application/json"
+@application.route("/stops/<route_id>")
+def stops(route_id):
+    stop_data = asyncio.run(MbtaApi.stops_for_route(route_id))
+    return flask.Response(json.dumps(stop_data), mimetype="application/json")
+
+
+@application.route("/routes/<route_ids_string>")
+def routes(route_ids_string):
+    route_ids = route_ids_string.split(",")
+    route_data = asyncio.run(MbtaApi.routes_info(route_ids))
+    return flask.Response(json.dumps(route_data), mimetype="application/json")
+
+
+@application.route("/")
+def root():
+    test_mode = flask.request.args.get("testMode")
+    shell = flask.request.args.get("shell")
+    if shell:
+        return static_files("index.html")
+    initial_data = asyncio.run(
+        MbtaApi.initial_request_data(DEFAULT_ROUTE_IDS, test_mode)
     )
-
-
-@application.route("/routes/<route_ids>")
-def routes(route_ids):
-    return flask.Response(
-        json.dumps(MbtaApi.routes_info(route_ids)), mimetype="application/json"
-    )
+    return flask.render_template("index.html", initial_data=initial_data)
 
 
 if __name__ == "__main__":

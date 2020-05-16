@@ -7,8 +7,9 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-requests = "*"
+flask-caching = "*"
 json-api-doc = "*"
+aiohttp = "*"
 
 [requires]
 python_version = "3.7"

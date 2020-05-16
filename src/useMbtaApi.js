@@ -1,19 +1,45 @@
 import { useEffect, useState, useCallback } from 'react';
 
-export const getIsTestMode = () => {
+const getInitialDataByKey = key => {
+    const { __NTT_INITIAL_DATA__ } = window;
+    if (__NTT_INITIAL_DATA__ && __NTT_INITIAL_DATA__[key]) {
+        return __NTT_INITIAL_DATA__[key];
+    }
+    return null;
+};
+
+const getIsTestMode = () => {
     const params = new URLSearchParams(window.location.search);
     const val = params.get('testMode');
     return val === 'true' || !!parseInt(val);
 };
 
-export const getTrainPositions = (routes, isTestMode) => {
+export const getTrainPositions = (routes, isTestMode, isFirstRequest) => {
+    if (isFirstRequest) {
+        const initialTrainsData = getInitialDataByKey('vehicles');
+        if (initialTrainsData) {
+            return Promise.resolve(initialTrainsData);
+        }
+    }
     const testSuffix = isTestMode ? '?testMode=1' : '';
     return fetch(`/trains/${routes.join(',')}${testSuffix}`).then(res => res.json());
 };
 
-export const getStationsForRoute = route => fetch(`/stations/${route}`).then(res => res.json());
+export const getStationsForRoute = route => {
+    const initialStopsData = getInitialDataByKey('stops');
+    if (initialStopsData && initialStopsData[route]) {
+        return Promise.resolve(initialStopsData[route]);
+    }
+    return fetch(`/stops/${route}`).then(res => res.json());
+};
 
-export const getRoutesInfo = routes => fetch(`/routes/${routes.join(',')}`).then(res => res.json());
+export const getRoutesInfo = routes => {
+    const initialRoutesData = getInitialDataByKey('routes');
+    if (initialRoutesData) {
+        return Promise.resolve(initialRoutesData);
+    }
+    return fetch(`/routes/${routes.join(',')}`).then(res => res.json());
+};
 
 export const useMbtaApi = lines => {
     const routeNames = lines
@@ -25,6 +51,7 @@ export const useMbtaApi = lines => {
     const [routesInfoByRoute, setRoutesInfoByRoute] = useState(null);
     const [stationsByRoute, setStationsByRoute] = useState(null);
     const [trainsByRoute, setTrainsByRoute] = useState(null);
+    const [isInitialFetch, setIsInitialFetch] = useState(true);
     const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
 
     const getTrains = useCallback(() => {
@@ -33,11 +60,12 @@ export const useMbtaApi = lines => {
         routeNames.forEach(routeName => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames, testMode).then(trains => {
+        getTrainPositions(routeNames, testMode, isInitialFetch).then(trains => {
             trains.forEach(train => nextTrainsByRoute[train.route].push(train));
             setTrainsByRoute(nextTrainsByRoute);
         });
-    }, [routeNames]);
+        setIsInitialFetch(false);
+    }, [routeNames, isInitialFetch]);
 
     useEffect(() => {
         const nextStopsByRoute = {};

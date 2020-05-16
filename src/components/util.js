@@ -22,5 +22,5 @@ export const setCssVariable = (variable, value) => {
 };
 
 export const prefersReducedMotion = () => {
-    return window.matchMedia('(prefers-reduced-motion: reduce)');
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };

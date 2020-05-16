@@ -1,34 +1,83 @@
 from urllib.parse import urlencode
-import requests
+import asyncio
 import json_api_doc
 import os
+import aiohttp
 import secrets
+import time
+
 import Fleet
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
-
-def getV3(command, params={}):
+async def getV3(command, params={}, session=None):
     """Make a GET request against the MBTA v3 API"""
+    url = BASE_URL_V3.format(command=command, parameters=urlencode(params))
     api_key = os.environ.get("MBTA_V3_API_KEY", "") or secrets.MBTA_V3_API_KEY
     headers = {"x-api-key": api_key} if api_key else {}
-    response = requests.get(
-        BASE_URL_V3.format(command=command, parameters=urlencode(params)),
-        headers=headers,
-    )
-    return json_api_doc.parse(response.json())
+
+    async def inner(some_session):
+        async with some_session.get(url, headers=headers) as response:
+            response_json = await response.json()
+            return json_api_doc.parse(response_json)
+
+    if session is None:
+        async with aiohttp.ClientSession() as local_session:
+            return await inner(local_session)
+    else:
+        return await inner(session)
 
 
-def vehicle_data_for_routes(routes, test_mode=False):
+def maybe_reverse(stops, route):
+    if route in ["Green-B", "Green-C", "Green-E", "Orange"]:
+        return list(reversed(stops))
+    return stops
+
+
+def derive_custom_route_name(vehicle):
+    default_route_id = vehicle["route"]["id"]
+    if default_route_id == "Red":
+        route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
+        return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
+    return default_route_id
+
+
+def normalize_custom_route_name(route):
+    return "Red" if route in ("Red-A", "Red-B") else route
+
+
+def normalize_custom_route_ids(routes):
+    return set(map(normalize_custom_route_name, routes))
+
+
+def stop_belongs_to_custom_route(stop_id, custom_route_name, normalized_route_name):
+    if normalized_route_name != "Red":
+        return True
+    if custom_route_name == "Red-A":
+        return stop_id not in (
+            "place-nqncy",
+            "place-wlsta",
+            "place-qnctr",
+            "place-qamnl",
+            "place-brntn",
+        )
+    if custom_route_name == "Red-B":
+        return stop_id not in (
+            "place-shmnl",
+            "place-fldcr",
+            "place-smmnl",
+            "place-asmnl",
+        )
+    return True
+
+
+async def vehicle_data_for_routes(route_ids, test_mode=False):
     """Use getv3 to request real-time vehicle data for a given route set"""
-
-    routes = normalize_custom_route_names(routes)
-
-    vehicles = getV3(
+    route_ids = normalize_custom_route_ids(route_ids)
+    vehicles = await getV3(
         "vehicles",
-        {"filter[route]": ",".join(routes), "include": "stop,trip.route_pattern"},
+        {"filter[route]": ",".join(route_ids), "include": "stop,trip.route_pattern"},
     )
-
     # Iterate vehicles, only send new ones to the browser
     vehicles_to_display = []
     for vehicle in vehicles:
@@ -56,15 +105,11 @@ def vehicle_data_for_routes(routes, test_mode=False):
     return vehicles_to_display
 
 
-def maybe_reverse(stops, route):
-    if route in ["Green-B", "Green-C", "Green-E", "Orange"]:
-        return list(reversed(stops))
-    return stops
-
-
-def stops_for_route(route_name):
-    normalized_route_name = normalize_custom_route_name(route_name)
-    stops = getV3("stops", {"filter[route]": normalized_route_name, "include": "route"})
+async def stops_for_route(route_id):
+    normalized_route_name = normalize_custom_route_name(route_id)
+    stops = await getV3(
+        "stops", {"filter[route]": normalized_route_name, "include": "route"}
+    )
     return maybe_reverse(
         list(
             map(
@@ -77,22 +122,22 @@ def stops_for_route(route_name):
                 },
                 filter(
                     lambda stop: stop_belongs_to_custom_route(
-                        stop["id"], route_name, normalized_route_name
+                        stop["id"], route_id, normalized_route_name
                     ),
                     stops,
                 ),
             )
         ),
-        route_name,
+        route_id,
     )
 
 
-def routes_info(route_names_string):
+async def routes_info(route_ids):
     routes_to_return = []
-    custom_route_names = [s.strip() for s in route_names_string.split(",")]
-    routes_info = getV3(
+    custom_route_names = [s.strip() for s in route_ids]
+    routes_info = await getV3(
         "routes",
-        {"filter[id]": ",".join(normalize_custom_route_names(custom_route_names))},
+        {"filter[id]": ",".join(normalize_custom_route_ids(custom_route_names))},
     )
     for custom_route_name in custom_route_names:
         normalized_route_name = normalize_custom_route_name(custom_route_name)
@@ -105,42 +150,19 @@ def routes_info(route_names_string):
                         "directionNames": route["direction_names"],
                     }
                 )
-
     return routes_to_return
 
 
-def derive_custom_route_name(vehicle):
-    default_route_id = vehicle["route"]["id"]
-    if default_route_id == "Red":
-        route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
-        return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
-    return default_route_id
-
-
-def normalize_custom_route_name(route):
-    return "Red" if route in ("Red-A", "Red-B") else route
-
-
-def normalize_custom_route_names(routes):
-    return set(map(normalize_custom_route_name, routes))
-
-
-def stop_belongs_to_custom_route(stop_id, custom_route_name, normalized_route_name):
-    if normalized_route_name != "Red":
-        return True
-    if custom_route_name == "Red-A":
-        return stop_id not in (
-            "place-nqncy",
-            "place-wlsta",
-            "place-qnctr",
-            "place-qamnl",
-            "place-brntn",
-        )
-    if custom_route_name == "Red-B":
-        return stop_id not in (
-            "place-shmnl",
-            "place-fldcr",
-            "place-smmnl",
-            "place-asmnl",
-        )
-    return True
+async def initial_request_data(route_ids, test_mode=False):
+    routes, vehicles, *stops = await asyncio.gather(
+        *[
+            routes_info(route_ids),
+            vehicle_data_for_routes(route_ids, test_mode),
+            *[stops_for_route(route_id) for route_id in route_ids],
+        ]
+    )
+    return {
+        "routes": routes,
+        "vehicles": vehicles,
+        "stops": dict(zip(route_ids, stops)),
+    }
