@@ -4,8 +4,15 @@ import { Spring } from 'react-spring/renderprops';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 
 import { interpolateTrainOffset } from '../interpolation';
-import { PopoverContainerContext } from './util';
+import { PopoverContainerContext, prefersReducedMotion } from './util';
 import TrainPopover from './TrainPopover';
+
+const getSpringConfig = () => {
+    if (prefersReducedMotion()) {
+        return { duration: 0 };
+    }
+    return undefined;
+};
 
 const getBoundingRectWithinParent = (element, parent) => {
     const elementRect = element.getBoundingClientRect();
@@ -32,7 +39,7 @@ const drawEquilateralTriangle = radius =>
 
 const Train = props => {
     const { train, route, colors, alwaysLabelTrain, focusOnMount, labelPosition } = props;
-    const { direction, isNewTrain, latitude, longitude } = train;
+    const { direction, isNewTrain } = train;
     const { pathInterpolator, stations } = route;
 
     const [element, setElement] = useState(null);
@@ -53,9 +60,13 @@ const Train = props => {
 
     useEffect(() => {
         if (element && isTracked) {
-            elementScrollIntoView(element, { behavior: 'smooth', block: 'center', duration: 200 });
+            elementScrollIntoView(element, {
+                behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+                block: 'center',
+                duration: 200,
+            });
         }
-    }, [element, isTracked, latitude, longitude]);
+    }, [element, isTracked]);
 
     useEffect(() => {
         if (element && shouldAutoFocus) {
@@ -82,7 +93,7 @@ const Train = props => {
     };
 
     return (
-        <Spring to={{ offset }}>
+        <Spring to={{ offset }} config={getSpringConfig()}>
             {spring => {
                 const { x, y, theta } = pathInterpolator(spring.offset);
                 const correctedTheta = direction === 1 ? 180 + theta : theta;

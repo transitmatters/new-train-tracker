@@ -20,3 +20,7 @@ export const getTrainRoutePairsForLine = (trainsByRoute, routes, newOnly = true)
 export const setCssVariable = (variable, value) => {
     document.documentElement.style.setProperty(variable, value);
 };
+
+export const prefersReducedMotion = () => {
+    return window.matchMedia('(prefers-reduced-motion: reduce)');
+};

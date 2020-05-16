@@ -1,8 +1,5 @@
 const geoDistance = (from, to) => {
-    return Math.sqrt(
-        (from.latitude - to.latitude) ** 2 +
-            (from.longitude - to.longitude) ** 2
-    );
+    return Math.sqrt((from.latitude - to.latitude) ** 2 + (from.longitude - to.longitude) ** 2);
 };
 
 const getTrainDistanceFraction = (fromStation, toStation, train) => {
@@ -35,20 +32,14 @@ export const interpolateTrainOffset = (train, stations) => {
     if (currentStatus !== 'STOPPED_AT') {
         const indexOfStation = stations.indexOf(toStation);
         const fromStation =
-            direction === 0
-                ? stations[indexOfStation - 1]
-                : stations[indexOfStation + 1];
+            direction === 0 ? stations[indexOfStation - 1] : stations[indexOfStation + 1];
 
         if (fromStation) {
             const fromOffset = fromStation.offset;
             const toOffset = toStation.offset;
             const offsetDistance = toOffset - fromOffset;
 
-            const trainDistanceFraction = getTrainDistanceFraction(
-                fromStation,
-                toStation,
-                train
-            );
+            const trainDistanceFraction = getTrainDistanceFraction(fromStation, toStation, train);
 
             return offsetDistance > 0
                 ? fromOffset + trainDistanceFraction * offsetDistance
@@ -68,9 +59,7 @@ export const createInterpolatorForSegments = segments => {
                 if (ptr < segments.length) {
                     ++ptr;
                 } else {
-                    throw new Error(
-                        'Ran out of track while mapping position to segment!'
-                    );
+                    throw new Error('Ran out of track while mapping position to segment!');
                 }
             } else {
                 break;
