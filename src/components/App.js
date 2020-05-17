@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine } from '../lines';
@@ -13,6 +13,7 @@ const lines = [greenLine, orangeLine, redLine];
 
 const App = () => {
     const api = useMbtaApi(lines);
+    const [headerElement, setHeaderElement] = useState(null);
     const tabState = useTabState({ loop: false });
     const tabIndex = tabState.currentId
         ? tabState.items.findIndex(i => i.id === tabState.currentId)
@@ -24,6 +25,13 @@ const App = () => {
         setCssVariable('--line-color', backgroundColor);
         setCssVariable('--line-color-transparent', backgroundColor + '00');
     }, [selectedLine]);
+
+    useLayoutEffect(() => {
+        if (headerElement) {
+            const { height } = headerElement.getBoundingClientRect();
+            setCssVariable('--header-height', `${height}px`);
+        }
+    });
 
     useEffect(() => {
         if (api.isReady) {
@@ -48,13 +56,6 @@ const App = () => {
         return () => document.removeEventListener('keydown', listener);
     }, []);
 
-    const setHeaderHeightFromElement = headerElement => {
-        if (headerElement) {
-            const { height } = headerElement.getBoundingClientRect();
-            setCssVariable('--header-height', `${height}px`);
-        }
-    };
-
     const renderControls = () => {
         return <TabPicker tabState={tabState} lines={lines} trainsByRoute={api.trainsByRoute} />;
     };
@@ -62,7 +63,7 @@ const App = () => {
     if (api.isReady) {
         return (
             <>
-                <Header ref={setHeaderHeightFromElement} controls={renderControls()} />
+                <Header ref={setHeaderElement} controls={renderControls()} />
                 <Line key={selectedLine.name} line={selectedLine} api={api} />
             </>
         );

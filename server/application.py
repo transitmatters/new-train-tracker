@@ -48,7 +48,7 @@ def routes(route_ids_string):
 @application.route("/")
 def root():
     test_mode = flask.request.args.get("testMode")
-    shell = True # flask.request.args.get("shell")
+    shell = flask.request.args.get("shell")
     if shell:
         return static_files("index.html")
     initial_data = asyncio.run(
