@@ -108,7 +108,7 @@ const Train = props => {
                             ref={setElement}
                             transform={`translate(${x}, ${y}) rotate(${correctedTheta})`}
                             onFocus={handleFocus}
-                            onClick={handleFocus}
+                            onClick={() => element.focus()}
                             onBlur={handleBlur}
                         >
                             {renderTrainMarker()}
