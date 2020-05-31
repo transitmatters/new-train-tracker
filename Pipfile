@@ -9,7 +9,6 @@ verify_ssl = true
 flask = "*"
 json-api-doc = "*"
 aiohttp = "*"
-gunicorn = "*"
 
 [requires]
 python_version = "3.8"
