@@ -7,8 +7,8 @@
     "build-dev": "webpack --watch --mode development",
     "build": "webpack --mode production",
     "postinstall": "pipenv install",
-    "start-prod": "npm run build-prod && NODE_ENV=production PORT=80 npm run start-python",
-    "start-prod-locally": "npm run build-prod && NODE_ENV=production npm run start-python",
+    "start-prod": "npm run build && NODE_ENV=production PORT=80 npm run start-python",
+    "start-prod-locally": "npm run build && NODE_ENV=production npm run start-python",
     "start-python": "pipenv run python3 server/application.py",
     "start": "concurrently npm:start-python npm:build-dev"
   },
