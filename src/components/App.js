@@ -3,6 +3,7 @@ import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine } from '../lines';
 import { useMbtaApi } from '../useMbtaApi';
+import { useFontsLoaded } from '../useFontsLoaded';
 
 import Line from './Line';
 import Header from './Header';
@@ -13,6 +14,7 @@ const lines = [greenLine, orangeLine, redLine];
 
 const App = () => {
     const api = useMbtaApi(lines);
+    const fontsLoaded = useFontsLoaded();
     const [headerElement, setHeaderElement] = useState(null);
     const tabState = useTabState({ loop: false });
     const tabIndex = tabState.currentId
@@ -31,7 +33,7 @@ const App = () => {
             const { height } = headerElement.getBoundingClientRect();
             setCssVariable('--header-height', `${height}px`);
         }
-    });
+    }, [headerElement, fontsLoaded]);
 
     useEffect(() => {
         if (api.isReady) {
