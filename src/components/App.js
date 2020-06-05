@@ -1,9 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine } from '../lines';
 import { useMbtaApi } from '../useMbtaApi';
-import { useFontsLoaded } from '../useFontsLoaded';
 
 import Line from './Line';
 import Header from './Header';
@@ -14,8 +13,6 @@ const lines = [greenLine, orangeLine, redLine];
 
 const App = () => {
     const api = useMbtaApi(lines);
-    const fontsLoaded = useFontsLoaded();
-    const [headerElement, setHeaderElement] = useState(null);
     const tabState = useTabState({ loop: false });
     const tabIndex = tabState.currentId
         ? tabState.items.findIndex(i => i.id === tabState.currentId)
@@ -27,13 +24,6 @@ const App = () => {
         setCssVariable('--line-color', backgroundColor);
         setCssVariable('--line-color-transparent', backgroundColor + '00');
     }, [selectedLine]);
-
-    useLayoutEffect(() => {
-        if (headerElement) {
-            const { height } = headerElement.getBoundingClientRect();
-            setCssVariable('--header-height', `${height}px`);
-        }
-    }, [headerElement, fontsLoaded]);
 
     useEffect(() => {
         if (api.isReady) {
@@ -65,7 +55,7 @@ const App = () => {
     if (api.isReady) {
         return (
             <>
-                <Header ref={setHeaderElement} controls={renderControls()} />
+                <Header controls={renderControls()} />
                 <Line key={selectedLine.name} line={selectedLine} api={api} />
             </>
         );
