@@ -1,10 +1,12 @@
 from urllib.parse import urlencode
 import asyncio
 import json_api_doc
+import json
 import os
 import aiohttp
 import secrets
 import time
+import tempfile
 
 import Fleet
 
@@ -19,7 +21,14 @@ async def getV3(command, params={}, session=None):
     async def inner(some_session):
         async with some_session.get(url, headers=headers) as response:
             response_json = await response.json()
-            return json_api_doc.parse(response_json)
+            try:
+                return json_api_doc.parse(response_json)
+            except Exception as e:
+                _, log_path = tempfile.mkstemp(suffix=".log")
+                print(f"Writing problematic API response to {log_path}")
+                with open(log_path, "w") as file:
+                    file.write(json.dumps(response_json))
+                raise e
 
     if session is None:
         async with aiohttp.ClientSession() as local_session:
