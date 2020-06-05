@@ -2,7 +2,6 @@ import os
 import json
 import asyncio
 import flask
-
 import MbtaApi
 
 application = flask.Flask(__name__, template_folder="../dist")

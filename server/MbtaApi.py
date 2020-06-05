@@ -28,7 +28,6 @@ async def getV3(command, params={}, session=None):
                 print(f"Writing problematic API response to {log_path}")
                 with open(log_path, "w") as file:
                     file.write(json.dumps(response_json))
-                raise e
 
     if session is None:
         async with aiohttp.ClientSession() as local_session:
@@ -85,7 +84,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
     route_ids = normalize_custom_route_ids(route_ids)
     vehicles = await getV3(
         "vehicles",
-        {"filter[route]": ",".join(route_ids), "include": "stop,trip.route_pattern"},
+        {"filter[route]": ",".join(route_ids), "include": "stop,trip.route_pattern.name"},
     )
     # Iterate vehicles, only send new ones to the browser
     vehicles_to_display = []
