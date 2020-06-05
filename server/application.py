@@ -12,8 +12,7 @@ DEFAULT_ROUTE_IDS = [
     "Green-D",
     "Green-E",
     "Orange",
-    "Red-A",
-    "Red-B",
+    "Red"
 ]
 
 @application.route("/<path:filename>")
