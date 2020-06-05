@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -19,7 +20,11 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    { loader: 'postcss-loader', options: { plugins: () => [autoprefixer()] } },
+                ],
             },
             {
                 test: /\.(png|svg)$/,
