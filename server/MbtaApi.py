@@ -28,6 +28,7 @@ async def getV3(command, params={}, session=None):
                 print(f"Writing problematic API response to {log_path}")
                 with open(log_path, "w") as file:
                     file.write(json.dumps(response_json))
+                raise e
 
     if session is None:
         async with aiohttp.ClientSession() as local_session:
