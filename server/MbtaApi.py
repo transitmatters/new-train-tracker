@@ -45,9 +45,9 @@ def maybe_reverse(stops, route):
 
 def derive_custom_route_name(vehicle):
     default_route_id = vehicle["route"]["id"]
-    if default_route_id == "Red":
-        route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
-        return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
+    # if default_route_id == "Red":
+    #     route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
+    #     return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
     return default_route_id
 
 
@@ -85,7 +85,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
     route_ids = normalize_custom_route_ids(route_ids)
     vehicles = await getV3(
         "vehicles",
-        {"filter[route]": ",".join(route_ids), "include": "stop,trip.route_pattern.name"},
+        {"filter[route]": ",".join(route_ids), "include": "stop"},
     )
     # Iterate vehicles, only send new ones to the browser
     vehicles_to_display = []
@@ -105,7 +105,6 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
                     "longitude": vehicle["longitude"],
                     "currentStatus": vehicle["current_status"],
                     "stationId": vehicle["stop"]["parent_station"]["id"],
-                    "routePatternName": vehicle["trip"]["route_pattern"]["name"],
                     "isNewTrain": is_new,
                 }
             )
