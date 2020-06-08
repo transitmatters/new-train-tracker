@@ -79,7 +79,7 @@ const Train = props => {
     const renderTrainMarker = () => {
         const color = isNewTrain ? colors.newTrains : colors.oldTrains;
         return (
-            <g aria-hidden="true">
+            <g>
                 <circle
                     cx={0}
                     cy={0}
@@ -97,11 +97,9 @@ const Train = props => {
             {spring => {
                 const { x, y, theta } = pathInterpolator(spring.offset);
                 const correctedTheta = direction === 1 ? 180 + theta : theta;
-                const labelId = `train-popover-${train.label}`;
                 return (
                     <>
                         <g
-                            aria-labelledby={labelId}
                             className={classNames('train', isTracked && 'tracked')}
                             tabIndex="0"
                             role="listitem"
@@ -115,7 +113,6 @@ const Train = props => {
                         </g>
                         {popoverContainer && element && (
                             <TrainPopover
-                                id={labelId}
                                 train={train}
                                 route={route}
                                 colors={colors}

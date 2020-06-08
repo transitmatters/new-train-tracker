@@ -2,6 +2,8 @@ import React, { useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
 
 import { prerenderLine } from '../prerender';
+import { renderTextTrainlabel } from '../labels';
+
 import Train from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 
@@ -51,6 +53,8 @@ const Line = props => {
     const trainRoutePairs = getTrainRoutePairsForLine(trainsByRoute, routes);
     const hasTrains = trainRoutePairs.length > 0;
 
+    const sortedTrainRoutePairs = sortTrainRoutePairsByDistance(trainRoutePairs, stationPositions);
+
     useEffect(() => {
         setShouldFocusOnFirstTrain(!hasTrains);
     }, [hasTrains]);
@@ -82,7 +86,6 @@ const Line = props => {
 
             const label = labelPosition && stationName && (
                 <text
-                    aria-hidden="true"
                     fontSize={4}
                     fill={colors.lines}
                     textAnchor={labelPosition === 'right' ? 'start' : 'end'}
@@ -103,10 +106,7 @@ const Line = props => {
     };
 
     const renderTrains = () => {
-        return sortTrainRoutePairsByDistance(
-            trainRoutePairs,
-            stationPositions
-        ).map(({ train, route }, index) => (
+        return sortedTrainRoutePairs.map(({ train, route }, index) => (
             <Train
                 focusOnMount={shouldFocusOnFirstTrain && index === 0}
                 key={train.label}
@@ -117,6 +117,16 @@ const Line = props => {
                 labelPosition={fixedTrainLabelPosition}
             />
         ));
+    };
+
+    const renderTrainsForScreenreader = () => {
+        return (
+            <ul className="screenreader-only" aria-label={`New trains on the ${line.name} Line`}>
+                {sortedTrainRoutePairs.map(({ train, route }) => (
+                    <li key={train.id}>{renderTextTrainlabel(train, route)}</li>
+                ))}
+            </ul>
+        );
     };
 
     if (trainRoutePairs.length === 0) {
@@ -132,18 +142,19 @@ const Line = props => {
     }
 
     return (
-        <div
-            role="list"
-            aria-label={`New trains on the ${line.name} Line`}
-            ref={setContainer}
-            className={classNames('line-pane', line.name.toLowerCase())}
-        >
+        <div ref={setContainer} className={classNames('line-pane', line.name.toLowerCase())}>
             <PopoverContainerContext.Provider value={container}>
-                <svg ref={setSvg} viewBox={viewbox} preserveAspectRatio="xMidYMin">
+                <svg
+                    ref={setSvg}
+                    viewBox={viewbox}
+                    aria-hidden="true"
+                    preserveAspectRatio="xMidYMin"
+                >
                     {renderLine()}
                     {renderStations()}
                     {renderTrains()}
                 </svg>
+                {renderTrainsForScreenreader()}
             </PopoverContainerContext.Provider>
         </div>
     );
