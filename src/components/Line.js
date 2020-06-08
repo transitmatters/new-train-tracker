@@ -91,6 +91,7 @@ const Line = props => {
                     textAnchor={labelPosition === 'right' ? 'start' : 'end'}
                     x={labelPosition === 'right' ? 4 : -4}
                     y={1.5}
+                    aria-hidden="true"
                 >
                     {stationName}
                 </text>

@@ -83,6 +83,7 @@ const TrainPopover = props => {
             ref={setPopoverElement}
             className={classNames('train-popover', positionStrategy, isVisible && 'visible')}
             style={positionStyle}
+            aria-hidden="true"
         >
             <div
                 className="scale-container"
