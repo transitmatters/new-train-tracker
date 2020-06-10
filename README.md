@@ -1,3 +1,5 @@
+_Development of the New Train Tracker has moved to [a new repository](https://github.com/transitmatters/new-train-tracker)._
+
 # New Train Tracker
 
 Developed by [TransitMatters](transitmatters.org)
