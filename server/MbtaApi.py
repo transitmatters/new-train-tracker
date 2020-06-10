@@ -20,6 +20,8 @@ async def getV3(command, params={}, session=None):
 
     async def inner(some_session):
         async with some_session.get(url, headers=headers) as response:
+            if response.status >= 400:
+                print("API returned", response.status, "for", url)
             response_json = await response.json()
             try:
                 return json_api_doc.parse(response_json)
