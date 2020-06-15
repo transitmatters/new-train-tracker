@@ -110,7 +110,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
                     "isNewTrain": is_new,
                 }
             )
-        except (KeyError, TypeError):
+        except (KeyError, TypeError, AttributeError):
             continue
     return vehicles_to_display
 
