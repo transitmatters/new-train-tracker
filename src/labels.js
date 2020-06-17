@@ -49,11 +49,25 @@ const renderDestinationLabel = (train, route) => {
     return <div className="destination">to&nbsp;{destinationName}</div>;
 };
 
-export const renderTrainLabel = (train, route) => {
+const renderLeadCarLabel = (train, backgroundColor) => {
+    const { label } = train;
+    if (!label) {
+        return null;
+    }
+    return (
+        <div className="lead-car" style={{ background: backgroundColor }}>
+            #{label}
+        </div>
+    );
+};
+
+export const renderTrainLabel = (train, route, accentColor) => {
+    console.log(accentColor);
     return (
         <>
             {renderStationLabel(train, route)}
             {renderDestinationLabel(train, route)}
+            {renderLeadCarLabel(train, accentColor)}
         </>
     );
 };
@@ -65,5 +79,5 @@ export const renderTextTrainlabel = (train, route) => {
         return null;
     }
     const destinationName = directionDestinations[train.direction];
-    return `${route.id} train ${statusLabel} ${stationName} bound for ${destinationName}`;
+    return `${route.id} train ${statusLabel} ${stationName} bound for ${destinationName} with lead car ${train.label}`;
 };

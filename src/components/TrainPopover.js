@@ -85,14 +85,10 @@ const TrainPopover = props => {
             style={positionStyle}
             aria-hidden="true"
         >
-            <div
-                className="scale-container"
-                style={{
-                    backgroundColor: colors.colorSecondary,
-                    border: `2px solid ${colors.newTrains}`,
-                }}
-            >
-                <div className="train-details">{renderTrainLabel(train, route)}</div>
+            <div className="scale-container" style={{ border: `2px solid ${colors.newTrains}` }}>
+                <div className="train-details">
+                    {renderTrainLabel(train, route, colors.newTrains)}
+                </div>
             </div>
         </div>,
         container

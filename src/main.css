@@ -269,5 +269,14 @@ body {
 
 .train-popover .train-details .destination {
     font-style: italic;
-    font-size: 2.5em;
+    font-size: 3em;
+}
+
+.train-popover .train-details .lead-car {
+    font-size: 3em;
+    color: white;
+    display: inline-block;
+    margin-top: 2px;
+    padding: 2px 4px;
+    border-radius: 2px;
 }
