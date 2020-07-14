@@ -12,8 +12,10 @@ DEFAULT_ROUTE_IDS = [
     "Green-D",
     "Green-E",
     "Orange",
-    "Red"
+    "Red-A",
+    "Red-B",
 ]
+
 
 @application.route("/<path:filename>")
 def static_files(filename):
@@ -27,7 +29,7 @@ def data(route_ids_string):
     vehicle_data = asyncio.run(
         MbtaApi.vehicle_data_for_routes(route_ids, test_mode=test_mode)
     )
-    return flask.Response(json.dumps(vehicle_data), mimetype="application/json",)
+    return flask.Response(json.dumps(vehicle_data), mimetype="application/json")
 
 
 @application.route("/stops/<route_id>")
@@ -64,6 +66,7 @@ def get_port():
 
 def get_debug():
     return os.environ.get("NODE_ENV") != "production"
+
 
 if __name__ == "__main__":
     application.run(host="0.0.0.0", port=get_port(), debug=get_debug())

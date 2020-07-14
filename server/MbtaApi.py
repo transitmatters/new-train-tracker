@@ -12,6 +12,7 @@ import Fleet
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
+
 async def getV3(command, params={}, session=None):
     """Make a GET request against the MBTA v3 API"""
     url = BASE_URL_V3.format(command=command, parameters=urlencode(params))
@@ -22,7 +23,14 @@ async def getV3(command, params={}, session=None):
         async with some_session.get(url, headers=headers) as response:
             response_json = await response.json()
             if response.status >= 400:
-                print("API returned", response.status, "for", url, "-- it says", response_json)
+                print(
+                    "API returned",
+                    response.status,
+                    "for",
+                    url,
+                    "-- it says",
+                    response_json,
+                )
             try:
                 return json_api_doc.parse(response_json)
             except Exception as e:
@@ -47,10 +55,21 @@ def maybe_reverse(stops, route):
 
 def derive_custom_route_name(vehicle):
     default_route_id = vehicle["route"]["id"]
-    # if default_route_id == "Red":
-    #     route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
-    #     return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
+    if default_route_id == "Red":
+        route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
+        return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
     return default_route_id
+
+
+def derive_custom_direction_destinations(
+    route, normalized_route_name, custom_route_name
+):
+    if normalized_route_name == "Red":
+        if custom_route_name == "Red-A":
+            return ["Braintree", "Alewife"]
+        else:
+            return ["Ashmont", "Alewife"]
+    return route["direction_destinations"]
 
 
 def normalize_custom_route_name(route):
@@ -87,7 +106,10 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
     route_ids = normalize_custom_route_ids(route_ids)
     vehicles = await getV3(
         "vehicles",
-        {"filter[route]": ",".join(route_ids), "include": "stop"},
+        {
+            "filter[route]": ",".join(route_ids),
+            "include": "stop,trip.route_pattern.name",
+        },
     )
     # Iterate vehicles, only send new ones to the browser
     vehicles_to_display = []
@@ -156,7 +178,9 @@ async def routes_info(route_ids):
                 routes_to_return.append(
                     {
                         "id": custom_route_name,
-                        "directionDestinations": route["direction_destinations"],
+                        "directionDestinations": derive_custom_direction_destinations(
+                            route, normalize_custom_route_ids, custom_route_name
+                        ),
                         "directionNames": route["direction_names"],
                     }
                 )
