@@ -1,4 +1,5 @@
 # New Train Tracker
+![](https://github.com/transitmatters/new-train-tracker/workflows/lint/badge.svg)
 
 Developed by [TransitMatters](transitmatters.org)
 
