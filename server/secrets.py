@@ -1,4 +1,8 @@
 MBTA_V3_API_KEY = ''
+
+POSTGRES_DB = 'newtrains'
+POSTGRES_USER = 'ubuntu' # No password; unix account auth
+
 '''
 If you put your api key here, you may want to run
 `git update-index --assume-unchanged server/secrets.py`
