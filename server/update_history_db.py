@@ -3,7 +3,7 @@ import MbtaApi
 import datetime
 import psycopg2
 import psycopg2.extras
-from Fleet import car_is_new, car_array_is_new
+from Fleet import car_is_new
 import secrets
 
 DB_LOG_TABLE_NAME = 'newtrains_history'
@@ -35,7 +35,7 @@ async def update_history():
                     vehicle['tripId'])
                 vehicle_set = {
                     # This can be mixed old/new. Gets filtered before db insertion below
-                    'cars': vehicle['label'].split('-') 
+                    'cars': vehicle['label'].split('-')
                 }
 
                 vehicles_by_route[route_name].append(vehicle_set)
