@@ -128,6 +128,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
                     "longitude": vehicle["longitude"],
                     "currentStatus": vehicle["current_status"],
                     "stationId": vehicle["stop"]["parent_station"]["id"],
+                    "tripId": vehicle["trip"]["id"],
                     "isNewTrain": is_new,
                 }
             )
