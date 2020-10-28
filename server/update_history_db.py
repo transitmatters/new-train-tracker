@@ -22,19 +22,20 @@ async def update_history():
         },
     )
 
+    json = await MbtaApi.vehicle_data_for_routes(routes)
     # Transform all of the current vehicles into easy-to-use form
     vehicles_by_route = {x: [] for x in routes}
     seen_trip_ids = []
     for vehicle in json:
         try:
-            route_name = vehicle['route']['id']
-            if vehicle['trip']['id'] not in seen_trip_ids:
+            route_name = vehicle['route']
+            if vehicle['tripId'] not in seen_trip_ids:
                 # Dedup trip ids
                 seen_trip_ids.append(
-                    vehicle['trip']['id'])
+                    vehicle['tripId'])
                 vehicle_set = {
-                    'cars': vehicle['label'].split('-'),
-                    'cars_new_flag': car_array_is_new(route_name, vehicle['label'].split('-'))
+                    # This can be mixed old/new. Gets filtered before db insertion below
+                    'cars': vehicle['label'].split('-') 
                 }
 
                 vehicles_by_route[route_name].append(vehicle_set)
