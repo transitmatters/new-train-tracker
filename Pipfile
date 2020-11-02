@@ -4,12 +4,18 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
+black = "*"
 
 [packages]
 flask = "*"
-json-api-doc = "*"
 aiohttp = "*"
 gunicorn = "*"
+psycopg2-binary = "*"
+json-api-doc = {editable = true, git = "https://github.com/austinjpaul/json-api-doc.git"}
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true

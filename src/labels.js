@@ -62,7 +62,6 @@ const renderLeadCarLabel = (train, backgroundColor) => {
 };
 
 export const renderTrainLabel = (train, route, accentColor) => {
-    console.log(accentColor);
     return (
         <>
             {renderStationLabel(train, route)}
