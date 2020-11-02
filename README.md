@@ -30,8 +30,8 @@ The Flask app is being run under gunicorn, and this process is controlled by sup
 
 For a fresh deploy:
 
-- Copy devops/tracker-nginx.conf to /etc/nginx/sites-enabled. Probably restart nginx (`sudo systemctl restart nginx`)
-- Copy devops/tracker-supervisor.conf to /etc/supervisor/conf.d
+- Copy `devops/tracker-nginx.conf` into `/etc/nginx/sites-enabled/`. Probably restart nginx (`sudo systemctl restart nginx`)
+- Copy `devops/tracker-supervisor.conf` into `/etc/supervisor/conf.d/`
 - Run `pipenv install`
 - Run `npm run build`
 - Run `sudo supervisorctl reload`
