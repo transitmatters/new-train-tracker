@@ -10,6 +10,7 @@ black = "*"
 [packages]
 flask = "*"
 aiohttp = "*"
+gunicorn = "*"
 psycopg2-binary = "*"
 json-api-doc = {editable = true, git = "https://github.com/austinjpaul/json-api-doc.git"}
 
