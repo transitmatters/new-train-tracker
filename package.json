@@ -9,7 +9,9 @@
     "postinstall": "pipenv install",
     "start-prod": "npm run build && NODE_ENV=production npm run start-python",
     "start-python": "pipenv run python3 -m server.application",
-    "start": "concurrently npm:start-python npm:build-dev"
+    "start": "concurrently npm:start-python npm:build-dev",
+    "create-history-db": "pipenv run python3 -m history.create_history_db",
+    "update-history-db": "pipenv run python3 -m history.update_history_db"
   },
   "repository": {
     "type": "git",
