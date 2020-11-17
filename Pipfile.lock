@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "de637c1baf3c28a7f127b03ffefe8a827b57d795ed5b9b1ce82875b996ffbae7"
+            "sha256": "8ca2c024484f496a60e1a0b4de21815a326838544d355a2941e11e7b706889e5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -130,8 +130,8 @@
             "editable": true,
             "git": "https://github.com/austinjpaul/json-api-doc.git",
             "hashes": [
-                "sha256:79126b05bff342ba293eba782d199e69599ebe30f1b53713bf7760823c054cd7",
-                "sha256:58eb2363ef1b05e0ff91c4977bf891d0f80f7253f2029b4b94e4ac442be87e61"
+                "sha256:58eb2363ef1b05e0ff91c4977bf891d0f80f7253f2029b4b94e4ac442be87e61",
+                "sha256:79126b05bff342ba293eba782d199e69599ebe30f1b53713bf7760823c054cd7"
             ],
             "ref": "7efda6a29405a0e6787f858ce32cb87da02435d7"
         },
@@ -257,6 +257,14 @@
             ],
             "index": "pypi",
             "version": "==2.8.6"
+        },
+        "pytz": {
+            "hashes": [
+                "sha256:3e6b7dd2d1e0a59084bcee14a17af60c5c562cdc16d828e8eba2e683d3a7e268",
+                "sha256:5c55e189b682d420be27c6995ba6edce0c0a77dd67bfbe2ae6607134d5851ffd"
+            ],
+            "index": "pypi",
+            "version": "==2020.4"
         },
         "typing-extensions": {
             "hashes": [

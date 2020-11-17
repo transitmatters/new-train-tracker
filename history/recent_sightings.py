@@ -12,7 +12,7 @@ def choose_between_sightings(best, next):
     return best
 
 
-def get_recent_sightings_for_lines(test_mode):
+def get_recent_sightings_for_lines(test_mode=False):
     cxn = get_history_db_connection()
     with cxn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
         cursor.execute(

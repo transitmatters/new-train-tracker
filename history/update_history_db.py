@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import pytz
 import psycopg2
 import psycopg2.extras
 
@@ -12,6 +13,7 @@ from history.util import get_history_db_connection, HISTORY_TABLE_NAME
 
 async def update_history(test_mode=False):
     routes = DEFAULT_ROUTE_IDS
+    now = datetime.datetime.now(pytz.utc)
     postgres_conn = get_history_db_connection()
     json = await mbta_api.vehicle_data_for_routes(routes, test_mode)
     # Transform all of the current vehicles into easy-to-use form
@@ -46,12 +48,12 @@ async def update_history(test_mode=False):
                     # Update the current record
                     if (
                         latest
-                        and (datetime.datetime.now() - latest["seen_end"]).seconds
+                        and (now - latest["seen_end"]).seconds
                         < 1200
                     ):
                         cursor.execute(
                             f"UPDATE {HISTORY_TABLE_NAME} SET seen_end = %s WHERE id = %s",
-                            [datetime.datetime.now(), latest["id"]],
+                            [now, latest["id"]],
                         )
                     else:
                         # Make a new record
@@ -60,8 +62,8 @@ async def update_history(test_mode=False):
                             [
                                 line,
                                 car,
-                                datetime.datetime.now(),
-                                datetime.datetime.now(),
+                                now,
+                                now,
                                 car_is_new(route, car),
                             ],
                         )
