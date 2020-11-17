@@ -46,11 +46,7 @@ async def update_history(test_mode=False):
                     )
                     latest = cursor.fetchone()
                     # Update the current record
-                    if (
-                        latest
-                        and (now - latest["seen_end"]).seconds
-                        < 1200
-                    ):
+                    if latest and (now - latest["seen_end"]).seconds < 1200:
                         cursor.execute(
                             f"UPDATE {HISTORY_TABLE_NAME} SET seen_end = %s WHERE id = %s",
                             [now, latest["id"]],
@@ -59,13 +55,7 @@ async def update_history(test_mode=False):
                         # Make a new record
                         cursor.execute(
                             f"INSERT INTO {HISTORY_TABLE_NAME} (line, car, seen_start, seen_end, is_new) values (%s, %s, %s, %s, %s)",
-                            [
-                                line,
-                                car,
-                                now,
-                                now,
-                                car_is_new(route, car),
-                            ],
+                            [line, car, now, now, car_is_new(route, car),],
                         )
         postgres_conn.commit()
 

@@ -60,6 +60,7 @@ def maybe_reverse(stops, route):
         return list(reversed(stops))
     return stops
 
+
 async def vehicle_data_for_routes(route_ids, test_mode=False):
     """Use getv3 to request real-time vehicle data for a given route set"""
     route_ids = normalize_custom_route_ids(route_ids)

@@ -1,7 +1,8 @@
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT 
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from server.secrets import POSTGRES_DB
 from history.util import get_history_db_connection, HISTORY_DB_SCHEMA
+
 
 def create_history_db():
     cxn = get_history_db_connection(False)
@@ -14,6 +15,7 @@ def create_history_db():
     cur = cxn.cursor()
     cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     cur.execute(HISTORY_DB_SCHEMA)
+
 
 if __name__ == "__main__":
     create_history_db()

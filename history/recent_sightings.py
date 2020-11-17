@@ -22,7 +22,9 @@ def get_recent_sightings_for_lines(test_mode=False):
     res = {}
     for line in ("Orange", "Red", "Green"):
         most_recent_sighting = reduce(
-            choose_between_sightings, filter(lambda row: row["line"] == line, rows), None
+            choose_between_sightings,
+            filter(lambda row: row["line"] == line, rows),
+            None,
         )
         if most_recent_sighting:
             res[line] = {
@@ -30,4 +32,3 @@ def get_recent_sightings_for_lines(test_mode=False):
                 "time": most_recent_sighting["seen_end"],
             }
     return res
-
