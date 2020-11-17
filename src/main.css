@@ -109,6 +109,9 @@ body {
 .line-pane.empty .empty-notice {
     font-style: italic;
     padding-top: 15vh;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    text-align: center;
 }
 
 .tab-picker {

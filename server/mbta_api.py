@@ -7,7 +7,16 @@ import aiohttp
 import secrets
 import tempfile
 
-import Fleet
+from history.recent_sightings import get_recent_sightings_for_lines
+
+import server.fleet as fleet
+from server.routes import (
+    derive_custom_direction_destinations,
+    derive_custom_route_name,
+    normalize_custom_route_ids,
+    normalize_custom_route_name,
+    stop_belongs_to_custom_route,
+)
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
@@ -51,55 +60,6 @@ def maybe_reverse(stops, route):
         return list(reversed(stops))
     return stops
 
-
-def derive_custom_route_name(vehicle):
-    default_route_id = vehicle["route"]["id"]
-    if default_route_id == "Red":
-        route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
-        return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
-    return default_route_id
-
-
-def derive_custom_direction_destinations(
-    route, normalized_route_name, custom_route_name
-):
-    if normalized_route_name == "Red":
-        if custom_route_name == "Red-A":
-            return ["Braintree", "Alewife"]
-        else:
-            return ["Ashmont", "Alewife"]
-    return route["direction_destinations"]
-
-
-def normalize_custom_route_name(route):
-    return "Red" if route in ("Red-A", "Red-B") else route
-
-
-def normalize_custom_route_ids(routes):
-    return set(map(normalize_custom_route_name, routes))
-
-
-def stop_belongs_to_custom_route(stop_id, custom_route_name, normalized_route_name):
-    if normalized_route_name != "Red":
-        return True
-    if custom_route_name == "Red-A":
-        return stop_id not in (
-            "place-nqncy",
-            "place-wlsta",
-            "place-qnctr",
-            "place-qamnl",
-            "place-brntn",
-        )
-    if custom_route_name == "Red-B":
-        return stop_id not in (
-            "place-shmnl",
-            "place-fldcr",
-            "place-smmnl",
-            "place-asmnl",
-        )
-    return True
-
-
 async def vehicle_data_for_routes(route_ids, test_mode=False):
     """Use getv3 to request real-time vehicle data for a given route set"""
     route_ids = normalize_custom_route_ids(route_ids)
@@ -114,15 +74,16 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
     vehicles_to_display = []
     for vehicle in vehicles:
         try:
-            is_new = Fleet.car_array_is_new(
-                vehicle["route"]["id"], vehicle["label"].split("-"), test_mode
+            custom_route = derive_custom_route_name(vehicle)
+            is_new = fleet.car_array_is_new(
+                custom_route, vehicle["label"].split("-"), test_mode
             )
             if not is_new:
                 continue
             vehicles_to_display.append(
                 {
                     "label": vehicle["label"],
-                    "route": derive_custom_route_name(vehicle),
+                    "route": custom_route,
                     "direction": vehicle["direction_id"],
                     "latitude": vehicle["latitude"],
                     "longitude": vehicle["longitude"],
@@ -132,7 +93,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
                     "isNewTrain": is_new,
                 }
             )
-        except (KeyError, TypeError, AttributeError):
+        except (KeyError, TypeError, AttributeError) as err:
             continue
     return vehicles_to_display
 
@@ -195,7 +156,9 @@ async def initial_request_data(route_ids, test_mode=False):
             *[stops_for_route(route_id) for route_id in route_ids],
         ]
     )
+    sightings = get_recent_sightings_for_lines()
     return {
+        "sightings": sightings,
         "routes": routes,
         "vehicles": vehicles,
         "stops": dict(zip(route_ids, stops)),
