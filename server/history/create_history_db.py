@@ -1,7 +1,7 @@
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from server.secrets import POSTGRES_DB
-from history.util import get_history_db_connection, HISTORY_DB_SCHEMA
+from server.history.util import get_history_db_connection, HISTORY_DB_SCHEMA
 
 
 def create_history_db():

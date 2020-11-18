@@ -8,7 +8,7 @@ import server.mbta_api as mbta_api
 from server.fleet import car_is_new
 from server.routes import get_line_for_route
 from server.routes import DEFAULT_ROUTE_IDS
-from history.util import get_history_db_connection, HISTORY_TABLE_NAME
+from server.history.util import get_history_db_connection, HISTORY_TABLE_NAME
 
 
 async def update_history(test_mode=False):
@@ -55,7 +55,13 @@ async def update_history(test_mode=False):
                         # Make a new record
                         cursor.execute(
                             f"INSERT INTO {HISTORY_TABLE_NAME} (line, car, seen_start, seen_end, is_new) values (%s, %s, %s, %s, %s)",
-                            [line, car, now, now, car_is_new(route, car),],
+                            [
+                                line,
+                                car,
+                                now,
+                                now,
+                                car_is_new(route, car),
+                            ],
                         )
         postgres_conn.commit()
 

@@ -1,7 +1,7 @@
 from functools import reduce
 import psycopg2.extras
 
-from history.util import get_history_db_connection, HISTORY_TABLE_NAME
+from server.history.util import get_history_db_connection, HISTORY_TABLE_NAME
 
 
 def choose_between_sightings(best, next):

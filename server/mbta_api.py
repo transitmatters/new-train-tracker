@@ -7,8 +7,7 @@ import aiohttp
 import secrets
 import tempfile
 
-from history.recent_sightings import get_recent_sightings_for_lines
-
+from server.history.recent_sightings import get_recent_sightings_for_lines
 import server.fleet as fleet
 from server.routes import (
     derive_custom_direction_destinations,
