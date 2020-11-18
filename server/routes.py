@@ -19,9 +19,9 @@ def derive_custom_direction_destinations(
 ):
     if normalized_route_name == "Red":
         if custom_route_name == "Red-A":
-            return ["Braintree", "Alewife"]
-        else:
             return ["Ashmont", "Alewife"]
+        else:
+            return ["Braintree", "Alewife"]
     return route["direction_destinations"]
 
 

@@ -13,7 +13,6 @@ def create_history_db():
     cxn = get_history_db_connection()
     cxn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     cur = cxn.cursor()
-    cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     cur.execute(HISTORY_DB_SCHEMA)
 
 

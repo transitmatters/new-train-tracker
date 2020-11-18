@@ -4,9 +4,9 @@ import server.secrets as secrets
 
 HISTORY_TABLE_NAME = "newtrains_history"
 
-HISTORY_DB_SCHEMA = """
-CREATE TABLE IF NOT EXISTS newtrains_history (
-    id UUID DEFAULT uuid_generate_v4(),
+HISTORY_DB_SCHEMA = f"""
+CREATE TABLE IF NOT EXISTS {HISTORY_TABLE_NAME} (
+    id SERIAL,
     is_new BOOLEAN NOT NULL,
     line VARCHAR(255) NOT NULL,
     car VARCHAR(5) NOT NULL,
@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS newtrains_history (
     seen_end TIMESTAMP WITH TIME ZONE NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE INDEX {HISTORY_TABLE_NAME}_car ON {HISTORY_TABLE_NAME}(car);
 """.strip()
 
 
