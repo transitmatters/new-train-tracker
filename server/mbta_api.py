@@ -4,10 +4,10 @@ import json_api_doc
 import json
 import os
 import aiohttp
-import secrets
 import tempfile
 
 from server.history.recent_sightings import get_recent_sightings_for_lines
+import server.secrets as secrets
 import server.fleet as fleet
 from server.routes import (
     derive_custom_direction_destinations,
