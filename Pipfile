@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 black = "*"
+flake8 = "*"
 
 [packages]
 flask = "*"
@@ -13,6 +14,7 @@ aiohttp = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 json-api-doc = {editable = true, git = "https://github.com/austinjpaul/json-api-doc.git"}
+pytz = "*"
 
 [requires]
 python_version = "3.8"

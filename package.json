@@ -8,8 +8,10 @@
     "build": "webpack --mode production",
     "postinstall": "pipenv install",
     "start-prod": "npm run build && NODE_ENV=production npm run start-python",
-    "start-python": "pipenv run python3 server/application.py",
-    "start": "concurrently npm:start-python npm:build-dev"
+    "start-python": "pipenv run python3 -m server.application",
+    "start": "concurrently npm:start-python npm:build-dev",
+    "create-history-db": "pipenv run python3 -m server.history.create_history_db",
+    "update-history-db": "pipenv run python3 -m server.history.update_history_db"
   },
   "repository": {
     "type": "git",
@@ -31,7 +33,8 @@
     "react-dom": "^16.13.0",
     "react-spring": "^8.0.27",
     "reakit": "^1.0.0-rc.2",
-    "seamless-scroll-polyfill": "^1.0.10"
+    "seamless-scroll-polyfill": "^1.0.10",
+    "timeago.js": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

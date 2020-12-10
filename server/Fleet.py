@@ -1,17 +1,21 @@
-# Fleet: defines what a new train is
+red_is_new = lambda x: int(x) >= 1900 and int(x) <= 2151
+green_is_new = lambda x: int(x) >= 3900 and int(x) <= 3924
+orange_is_new = lambda x: int(x) >= 1400 and int(x) <= 1551
 
 train_is_new_func = {
-    "Red": lambda x: int(x) >= 1900 and int(x) <= 2151,
-    "Orange": lambda x: int(x) >= 1400 and int(x) <= 1551,
-    "Green-B": lambda x: int(x) >= 3900 and int(x) <= 3924,
-    "Green-C": lambda x: int(x) >= 3900 and int(x) <= 3924,
-    "Green-D": lambda x: int(x) >= 3900 and int(x) <= 3924,
-    "Green-E": lambda x: int(x) >= 3900 and int(x) <= 3924,
+    "Red-A": red_is_new,
+    "Red-B": red_is_new,
+    "Orange": orange_is_new,
+    "Green-B": green_is_new,
+    "Green-C": green_is_new,
+    "Green-D": green_is_new,
+    "Green-E": green_is_new,
 }
 
 green_new_test = lambda x: True
 train_is_new_func_test = {
-    "Red": lambda x: True,
+    "Red-A": lambda x: True,
+    "Red-B": lambda x: True,
     "Orange": lambda x: True,
     "Green-B": green_new_test,
     "Green-C": green_new_test,

@@ -1,11 +1,13 @@
 import React, { useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
+import * as timeago from 'timeago.js';
 
 import { prerenderLine } from '../prerender';
 import { renderTextTrainlabel } from '../labels';
 
 import Train from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
+import { getInitialDataByKey } from '../initialData';
 
 const abbreviateStationName = station =>
     station
@@ -27,6 +29,17 @@ const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
         })
     );
     return pairs.sort((a, b) => distanceMap.get(a) - distanceMap.get(b));
+};
+
+const renderEmptyNoticeForLine = line => {
+    const sightings = getInitialDataByKey('sightings');
+    const sightingForLine = sightings && sightings[line];
+    if (sightingForLine) {
+        const { car, time } = sightingForLine;
+        const ago = timeago.format(time);
+        return `A new ${line} Line train (#${car}) was last seen ${ago}.`;
+    }
+    return `No new trains on the ${line} Line right now.`;
 };
 
 const Line = props => {
@@ -133,11 +146,7 @@ const Line = props => {
     if (trainRoutePairs.length === 0) {
         return (
             <div className="line-pane empty">
-                <div className="empty-notice">
-                    {line.name === 'Red'
-                        ? 'New Red Line trains are expected later in 2020.'
-                        : `No new trains on the ${line.name} Line right now.`}
-                </div>
+                <div className="empty-notice">{renderEmptyNoticeForLine(line.name)}</div>
             </div>
         );
     }
