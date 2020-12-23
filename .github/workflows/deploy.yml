@@ -1,0 +1,24 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Run deploy-on-lightsail ansible playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: deploy-on-lightsail.yml
+          directory: ./
+          key: ${{ secrets.AWS_PRIVATE_KEY }}
+          inventory: |
+            [all]
+            ${{ secrets.LIGHTSAIL_PUBLIC_IP }} ansible_python_interpreter="/usr/bin/python3"
+          options: |
+            --verbose
