@@ -1,5 +1,7 @@
 from urllib.parse import urlencode
 import asyncio
+import datetime
+import pytz
 import json_api_doc
 import json
 import os
@@ -42,7 +44,10 @@ async def getV3(command, params={}, session=None):
                 return json_api_doc.parse(response_json)
             except Exception as e:
                 _, log_path = tempfile.mkstemp(suffix=".log")
-                print(f"Writing problematic API response to {log_path}")
+                now = datetime.datetime.now(pytz.utc)
+                eastern = pytz.timezone('US/Eastern')
+                now_eastern = now.astimezone(eastern)
+                print(f"[{now_eastern}] Writing problematic API response to {log_path}")
                 with open(log_path, "w") as file:
                     file.write(json.dumps(response_json))
                 raise e
