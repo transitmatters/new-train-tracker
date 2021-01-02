@@ -165,7 +165,7 @@ const redB = [
     stationRange({
         start: 'place-nqncy',
         end: 'place-brntn',
-        commands: [line(90)],
+        commands: [line(70)],
     }),
 ];
 
