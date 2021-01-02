@@ -22,6 +22,12 @@
         dest: /etc/nginx/sites-enabled/
         remote_src: yes
 
+    - name: copy secrets file
+      copy:
+        src: /home/ubuntu/secrets/secrets.py
+        dest: /home/ubuntu/new-train-tracker/server/secrets.py
+        remote_src: yes
+
     - name: restart supervisor
       service:
         name: supervisor 
