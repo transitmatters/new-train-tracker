@@ -1,0 +1,52 @@
+---
+- name: deploy latest new train tracker on lightsail
+  hosts: all
+  remote_user: ubuntu
+  become: yes
+  tasks:
+    - name: get latest github repo
+      git:
+        repo: https://github.com/transitmatters/new-train-tracker.git
+        dest: /home/ubuntu/new-train-tracker
+        force: yes
+
+    - name: copy supervisor config file
+      copy:
+        src: /home/ubuntu/new-train-tracker/devops/tracker-supervisor.conf
+        dest: /etc/supervisor/conf.d/
+        remote_src: yes
+
+    - name: copy nginx config file
+      copy:
+        src: /home/ubuntu/new-train-tracker/devops/tracker-nginx.conf
+        dest: /etc/nginx/sites-enabled/
+        remote_src: yes
+
+    - name: restart supervisor
+      service:
+        name: supervisor 
+        state: restarted
+
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        daemon_reload: yes
+
+    - name: update pipenv dependencies
+      shell: pipenv update
+      args:
+        chdir: /home/ubuntu/new-train-tracker 
+
+    - name: update npm
+      shell: npm update
+      args:
+        chdir: /home/ubuntu/new-train-tracker 
+
+    - name: build application with npm
+      shell: npm run build
+      args:
+        chdir: /home/ubuntu/new-train-tracker      
+
+    - name: restart new train tracker service
+      shell: supervisorctl restart new-train-tracker

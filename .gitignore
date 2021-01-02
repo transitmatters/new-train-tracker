@@ -2,3 +2,7 @@ node_modules
 .vscode
 dist/
 venv/
+hosts
+*.pem
+traintracker-dev.nginx.conf
+__pycache__/
