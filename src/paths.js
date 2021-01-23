@@ -64,7 +64,7 @@ export const curve = (length, angle) => turtle => {
     const m2 = tand(nextTheta);
     // Calculate control point, which is the intersection of these two tangent lines
     let xc, yc;
-    if (theta % 90 === 0) {
+    if (Math.abs(theta % 360) === 90) {
         // tan(theta) = infinity, so the line through (x1, y1) is vertical, and xc = x1
         xc = x1;
         yc = m2 * (xc - x2) + y2;
