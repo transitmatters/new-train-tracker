@@ -14,9 +14,7 @@ def derive_custom_route_name(vehicle):
     return default_route_id
 
 
-def derive_custom_direction_destinations(
-    route, normalized_route_name, custom_route_name
-):
+def derive_custom_direction_destinations(route, normalized_route_name, custom_route_name):
     if normalized_route_name == "Red":
         if custom_route_name == "Red-A":
             return ["Ashmont", "Alewife"]
@@ -50,12 +48,25 @@ def get_line_for_route(route):
     return route.split("-")[0]
 
 
-DEFAULT_ROUTE_IDS = [
+GREEN_ROUTE_IDS = [
     "Green-B",
     "Green-C",
     "Green-D",
     "Green-E",
+]
+
+DEFAULT_ROUTE_IDS = [
     "Orange",
     "Red-A",
     "Red-B",
+    *GREEN_ROUTE_IDS,
+]
+
+SILVER_ROUTE_IDS = [
+    "741",
+    "742",
+    "743",
+    "751",
+    "749",
+    "746",
 ]
