@@ -3,7 +3,7 @@ from server.routes import GREEN_ROUTE_IDS, SILVER_ROUTE_IDS
 red_is_new = lambda x: int(x) >= 1900 and int(x) <= 2151
 green_is_new = lambda x: int(x) >= 3900 and int(x) <= 3924
 orange_is_new = lambda x: int(x) >= 1400 and int(x) <= 1551
-silver_is_new = lambda x: int(x) >= 1294 and int(x) <= 1
+silver_is_new = lambda x: int(x) >= 1294 and int(x) <= 1299
 
 
 def get_is_new_dict(route_ids, test_fn):
