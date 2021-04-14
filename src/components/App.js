@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect } from 'react';
+import Favicon from 'react-favicon';
 import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine } from '../lines';
@@ -8,6 +9,8 @@ import Line from './Line';
 import Header from './Header';
 import TabPicker, { getTabIdForLine } from './TabPicker';
 import { setCssVariable } from './util';
+
+import favicon from '../../static/images/favicon.png';
 
 const lines = [greenLine, orangeLine, redLine];
 
@@ -55,6 +58,7 @@ const App = () => {
     if (api.isReady) {
         return (
             <>
+                <Favicon url={favicon} />
                 <Header controls={renderControls()} />
                 <Line key={selectedLine.name} line={selectedLine} api={api} />
             </>
