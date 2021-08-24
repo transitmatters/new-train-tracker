@@ -9,7 +9,7 @@
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-frontend": "eslint src",
     "lint-backend": "cd server && pipenv run flake8 --ignore=E501,E731",
-    "postinstall": "pipenv install",
+    "postinstall": "pipenv install --python=3.8",
     "start-prod": "npm run build && NODE_ENV=production npm run start-python",
     "start-python": "pipenv run python3 -m server.application",
     "start": "concurrently npm:start-python npm:build-dev",
