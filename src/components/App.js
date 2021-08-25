@@ -4,6 +4,7 @@ import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine } from '../lines';
 import { useMbtaApi } from '../useMbtaApi';
+import { getInitialDataByKey } from '../initialData';
 
 import Line from './Line';
 import Header from './Header';
@@ -55,20 +56,13 @@ const App = () => {
         return <TabPicker tabState={tabState} lines={lines} trainsByRoute={api.trainsByRoute} />;
     };
 
-    async function nttVersion() {
-        const response = await fetch(`/git_tag`);
-        const git_tag_json = await response.json();
-        const git_tag = git_tag_json.git_tag;
-        return git_tag;
-    }
-
     if (api.isReady) {
         return (
             <>
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
                 <Line key={selectedLine.name} line={selectedLine} api={api} />
-                <div className="footer">{nttVersion()}</div>
+                <div className="footer">{getInitialDataByKey('version')}</div>
             </>
         );
     }

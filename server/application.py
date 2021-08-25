@@ -2,7 +2,6 @@ import os
 import json
 import asyncio
 import flask
-import subprocess
 
 import server.mbta_api as mbta_api
 from server.routes import DEFAULT_ROUTE_IDS
@@ -36,13 +35,6 @@ def routes(route_ids_string):
     route_ids = route_ids_string.split(",")
     route_data = asyncio.run(mbta_api.routes_info(route_ids))
     return flask.Response(json.dumps(route_data), mimetype="application/json")
-
-
-@application.route("/git_tag")
-def get_git_tag():
-    git_tag = str(subprocess.check_output(['git', 'describe', '--tags', '--abbrev=0']))
-    git_tag_data = {"git_tag": git_tag}
-    return flask.Response(json.dumps(git_tag_data), mimetype="application/json")
 
 
 @application.route("/")
