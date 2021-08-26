@@ -12,9 +12,11 @@ Dependencies:
 - `node` `12.13.0`
 - `python` `3.8`
 - [`pipenv`](https://pipenv.readthedocs.io/en/latest/)
+- [postgresql](https://www.postgresql.org/)
 
 Run:
 - `npm install`
+- `npm run create-history-db` if it is your first time running the application, `npm run update-history-db` otherwise
 - `npm start`
 - visit [http://localhost:5000/](http://localhost:5000/)
 

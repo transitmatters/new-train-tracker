@@ -57,6 +57,20 @@ body {
     background: linear-gradient(var(--line-color) 0 95%, var(--line-color-transparent) 100%);
 }
 
+.footer {
+    padding: 1vh 0;
+    z-index: 1;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    color: white;
+    flex-direction: column;
+    align-items: center;
+    text-shadow: var(--global-shadow);
+    background: linear-gradient(var(--line-color) 0 100%, var(--line-color-transparent) 100%);
+}
+
 .screenreader-only {
 	position: absolute;
 	left: -10000px;
@@ -282,10 +296,4 @@ body {
     margin-top: 2px;
     padding: 2px 4px;
     border-radius: 2px;
-}
-
-.footer {
-    position: fixed;
-    top: 0;
-    bottom: 0;
 }
