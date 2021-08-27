@@ -8,9 +8,9 @@ const Footer = React.forwardRef((props, ref) => {
                 <a href="https://transitmatters.org/transitmatters-labs">TransitMatters Labs</a> |{' '}
                 <a href="https://github.com/transitmatters/new-train-tracker">Source code</a> |{' '}
                 <a href="mailto:labs@transitmatters.org?subject=[Train%20Tracker%20Feedback]%20-%20">
-                    🚀 Send feedback
+                    Send feedback
                 </a>{' '}
-                | version {version}
+                | v{version}
             </p>
         </div>
     );
