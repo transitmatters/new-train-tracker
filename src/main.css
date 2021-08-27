@@ -45,6 +45,8 @@ a {
     overflow: auto;
     overflow-x: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -64,8 +66,6 @@ a {
 .footer {
     padding: 1vh 0;
     z-index: 1;
-    position: sticky;
-    bottom: 0;
     width: 100%;
     display: flex;
     color: white;
@@ -123,6 +123,10 @@ a {
     justify-content: center;
     color: white;
     width: 100%;
+}
+
+.line-pane.empty {
+    flex-grow: 1;
 }
 
 .line-pane.empty .empty-notice {
