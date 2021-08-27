@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Footer = React.forwardRef((props, ref) => {
+const Footer = props => {
     const { version } = props;
     return (
-        <div className="footer" ref={ref}>
+        <div className="footer">
             <p>
                 <a href="https://transitmatters.org/transitmatters-labs">TransitMatters Labs</a> |{' '}
                 <a href="https://github.com/transitmatters/new-train-tracker">Source code</a> |{' '}
@@ -14,7 +14,7 @@ const Footer = React.forwardRef((props, ref) => {
             </p>
         </div>
     );
-});
+};
 
 Footer.displayName = 'Footer';
 export default Footer;

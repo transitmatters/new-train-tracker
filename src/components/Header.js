@@ -2,10 +2,10 @@ import React from 'react';
 
 import logo from '../../static/images/logo.svg';
 
-const Header = React.forwardRef((props, ref) => {
+const Header = props => {
     const { controls } = props;
     return (
-        <div className="header" ref={ref}>
+        <div className="header">
             <a
                 href="https://transitmatters.org"
                 target="_blank"
@@ -19,7 +19,7 @@ const Header = React.forwardRef((props, ref) => {
             {controls}
         </div>
     );
-});
+};
 
 Header.displayName = 'Header';
 export default Header;
