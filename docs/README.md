@@ -12,7 +12,7 @@ Dependencies:
 - `node` `12.13.0`
 - `python` `3.8`
 - [`pipenv`](https://pipenv.readthedocs.io/en/latest/)
-- [postgresql](https://www.postgresql.org/)
+- [`postgresql`](https://www.postgresql.org/)
 
 Run:
 - `npm install`
