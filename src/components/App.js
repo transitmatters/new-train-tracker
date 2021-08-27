@@ -8,6 +8,7 @@ import { getInitialDataByKey } from '../initialData';
 
 import Line from './Line';
 import Header from './Header';
+import Footer from './Footer';
 import TabPicker, { getTabIdForLine } from './TabPicker';
 import { setCssVariable } from './util';
 
@@ -62,7 +63,7 @@ const App = () => {
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
                 <Line key={selectedLine.name} line={selectedLine} api={api} />
-                <div className="footer">{getInitialDataByKey('version')}</div>
+                <Footer version={getInitialDataByKey('version')} />
             </>
         );
     }

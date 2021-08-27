@@ -168,7 +168,7 @@ async def initial_request_data(route_ids, test_mode=False):
     sightings = get_recent_sightings_for_lines()
     git_tag = get_git_tag()
     return {
-        "version": "version " + git_tag,
+        "version": git_tag,
         "sightings": sightings,
         "routes": routes,
         "vehicles": vehicles,
