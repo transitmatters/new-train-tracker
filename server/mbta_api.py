@@ -7,6 +7,7 @@ import json
 import os
 import aiohttp
 import tempfile
+import subprocess
 
 from server.history.recent_sightings import get_recent_sightings_for_lines
 import server.secrets as secrets
@@ -152,6 +153,10 @@ async def routes_info(route_ids):
     return routes_to_return
 
 
+def get_git_tag():
+    return str(subprocess.check_output(['git', 'describe', '--tags', '--abbrev=0']))[2:-3]
+
+
 async def initial_request_data(route_ids, test_mode=False):
     routes, vehicles, *stops = await asyncio.gather(
         *[
@@ -161,7 +166,9 @@ async def initial_request_data(route_ids, test_mode=False):
         ]
     )
     sightings = get_recent_sightings_for_lines()
+    git_tag = get_git_tag()
     return {
+        "version": git_tag,
         "sightings": sightings,
         "routes": routes,
         "vehicles": vehicles,
