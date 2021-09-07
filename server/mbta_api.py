@@ -32,21 +32,14 @@ async def getV3(command, params={}, session=None):
     async def inner(some_session):
         async with some_session.get(url, headers=headers) as response:
             response_json = await response.json()
+            eastern = pytz.timezone('US/Eastern')
+            now_eastern = datetime.datetime.now(eastern)
             if response.status >= 400:
-                print(
-                    "API returned",
-                    response.status,
-                    "for",
-                    url,
-                    "-- it says",
-                    response_json,
-                )
+                print(f"[{now_eastern}] API returned {response.status} for {url} -- it says {response_json}")
             try:
                 return json_api_doc.parse(response_json)
             except Exception as e:
                 _, log_path = tempfile.mkstemp(suffix=".log")
-                eastern = pytz.timezone('US/Eastern')
-                now_eastern = datetime.datetime.now(eastern)
                 print(f"[{now_eastern}] Writing problematic API response to {log_path}")
                 with open(log_path, "w") as file:
                     file.write(json.dumps(response_json))
