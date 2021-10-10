@@ -22,6 +22,11 @@ Run:
 
 To use an API key, put it in `server/secrets.py` or as an environment variable `MBTA_V3_API_KEY`
 
+On Windows:
+Before running `npm install`,
+- Ensure that `python3` in the `start-python`,`create-history-db`, and `update-history-db` is updated to `python`.
+- update `server/secrets.py` `POSTGRES_USER` and `POSTGRES_PASS` variables with your credentials.
+
 ### Linting
 To lint frontend and backend code, run `npm run lint` in the root directory
 
