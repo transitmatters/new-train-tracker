@@ -1,6 +1,6 @@
 MBTA_V3_API_KEY = ''
 POSTGRES_DB = 'newtrains'
-POSTGRES_USER = 'ubuntu' # Update to your Postgres User account if required.
+POSTGRES_USER = 'ubuntu'  # Update to your Postgres User account if required.
 POSTGRES_PASS = ''  # Add password if required; Uses unix account auth on linux
 '''
 If you put your api key here, you may want to run
