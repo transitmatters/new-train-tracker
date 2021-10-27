@@ -53,7 +53,7 @@ async def getV3(command, params={}, session=None):
 
 
 def maybe_reverse(stops, route):
-    if route in ["Green-B", "Green-C", "Green-E", "Orange"]:
+    if route in ["Green-C", "Green-E", "Orange"]:
         return list(reversed(stops))
     return stops
 
