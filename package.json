@@ -11,10 +11,10 @@
     "lint-backend": "cd server && pipenv run flake8 --ignore=E501,E731",
     "postinstall": "pipenv install --python=3.8",
     "start-prod": "npm run build && NODE_ENV=production npm run start-python",
-    "start-python": "pipenv run python3 -m server.application",
+    "start-python": "pipenv run python -m server.application",
     "start": "concurrently npm:start-python npm:build-dev",
-    "create-history-db": "pipenv run python3 -m server.history.create_history_db",
-    "update-history-db": "pipenv run python3 -m server.history.update_history_db"
+    "create-history-db": "pipenv run python -m server.history.create_history_db",
+    "update-history-db": "pipenv run python -m server.history.update_history_db"
   },
   "repository": {
     "type": "git",
