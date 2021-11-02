@@ -2,7 +2,7 @@
 ![lint](https://github.com/transitmatters/new-train-tracker/workflows/lint/badge.svg)
 ![deploy](https://github.com/transitmatters/new-train-tracker/workflows/deploy/badge.svg)
 
-Developed by [TransitMatters](transitmatters.org)
+Developed by [TransitMatters](https://transitmatters.org/)
 
 Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 
