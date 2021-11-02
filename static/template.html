@@ -3,6 +3,16 @@
 
 <head>
   <meta charset="UTF-8">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HEG8BYEJ6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-0HEG8BYEJ6');
+  </script>
+  <!-- End Google Analytics -->
   <script type="text/javascript">
     window.__NTT_INITIAL_DATA__ = {{ initial_data | tojson }}
   </script>
