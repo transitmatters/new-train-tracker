@@ -2,7 +2,7 @@
 ![lint](https://github.com/transitmatters/new-train-tracker/workflows/lint/badge.svg)
 ![deploy](https://github.com/transitmatters/new-train-tracker/workflows/deploy/badge.svg)
 
-Developed by [TransitMatters](transitmatters.org)
+Developed by [TransitMatters](https://transitmatters.org/)
 
 Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 
@@ -21,6 +21,9 @@ Run:
 - visit [http://localhost:5000/](http://localhost:5000/)
 
 To use an API key, put it in `server/secrets.py` or as an environment variable `MBTA_V3_API_KEY`
+
+On Windows:
+- In `server/secrets.py`, update `POSTGRES_USER` and `POSTGRES_PASS` variables with your credentials.
 
 ### Linting
 To lint frontend and backend code, run `npm run lint` in the root directory
