@@ -32,10 +32,12 @@ async def getV3(command, params={}, session=None):
     async def inner(some_session):
         async with some_session.get(url, headers=headers) as response:
             response_json = await response.json()
-            eastern = pytz.timezone('US/Eastern')
+            eastern = pytz.timezone("US/Eastern")
             now_eastern = datetime.datetime.now(eastern)
             if response.status >= 400:
-                print(f"[{now_eastern}] API returned {response.status} for {url} -- it says {response_json}")
+                print(
+                    f"[{now_eastern}] API returned {response.status} for {url} -- it says {response_json}"
+                )
             try:
                 return json_api_doc.parse(response_json)
             except Exception as e:
@@ -52,9 +54,28 @@ async def getV3(command, params={}, session=None):
         return await inner(session)
 
 
+def reverse_if_stops_out_of_order(stops, first_expected_stop_name, second_expected_stop_name):
+    try:
+        (index_of_first, index_of_second) = (
+            next(index for index, stop in enumerate(stops) if stop["name"] == stop_name)
+            for stop_name in (first_expected_stop_name, second_expected_stop_name)
+        )
+        print(index_of_first, index_of_second)
+        if index_of_first > index_of_second:
+            return list(reversed(stops))
+        return stops
+    except StopIteration:
+        # This shouldn't happen if we specified our stops right
+        return stops
+
+
 def maybe_reverse(stops, route):
-    if route in ["Green-C", "Green-D", "Green-E", "Orange"]:
-        return list(reversed(stops))
+    if route.startswith("Green-"):
+        return reverse_if_stops_out_of_order(stops, "Park Street", "Boylston")
+    if route.startswith("Red-"):
+        return reverse_if_stops_out_of_order(stops, "Park Street", "Downtown Crossing")
+    if route == "Orange":
+        return reverse_if_stops_out_of_order(stops, "Oak Grove", "Wellington")
     return stops
 
 
@@ -73,9 +94,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
     for vehicle in vehicles:
         try:
             custom_route = derive_custom_route_name(vehicle)
-            is_new = fleet.car_array_is_new(
-                custom_route, vehicle["label"].split("-"), test_mode
-            )
+            is_new = fleet.car_array_is_new(custom_route, vehicle["label"].split("-"), test_mode)
             if not is_new:
                 continue
             vehicles_to_display.append(
@@ -98,9 +117,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
 
 async def stops_for_route(route_id):
     normalized_route_name = normalize_custom_route_name(route_id)
-    stops = await getV3(
-        "stops", {"filter[route]": normalized_route_name, "include": "route"}
-    )
+    stops = await getV3("stops", {"filter[route]": normalized_route_name, "include": "route"})
     return maybe_reverse(
         list(
             map(
@@ -147,7 +164,7 @@ async def routes_info(route_ids):
 
 
 def get_git_tag():
-    return str(subprocess.check_output(['git', 'describe', '--tags', '--abbrev=0']))[2:-3]
+    return str(subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]))[2:-3]
 
 
 async def initial_request_data(route_ids, test_mode=False):
