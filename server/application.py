@@ -1,3 +1,8 @@
+"""
+application.py defines backend routes provided by the Flask framework
+
+"""
+
 import os
 import json
 import asyncio
@@ -9,13 +14,17 @@ from server.routes import DEFAULT_ROUTE_IDS
 application = flask.Flask(__name__, template_folder="../dist")
 
 
+# use dist as app root
 @application.route("/<path:filename>")
 def static_files(filename):
     return flask.send_from_directory("../dist", filename)
 
 
+# takes a comma-delimited string of route ids
+# if test_mode is false, returns a JSON object containing new vehicles
+# if test_mode is true, returns a JSON object containing all vehicles
 @application.route("/trains/<route_ids_string>")
-def data(route_ids_string):
+def trains(route_ids_string):
     route_ids = route_ids_string.split(",")
     test_mode = flask.request.args.get("testMode")
     vehicle_data = asyncio.run(
@@ -24,12 +33,16 @@ def data(route_ids_string):
     return flask.Response(json.dumps(vehicle_data), mimetype="application/json")
 
 
+# takes a single route id
+# returns a JSON object containing all stops in route
 @application.route("/stops/<route_id>")
 def stops(route_id):
     stop_data = asyncio.run(mbta_api.stops_for_route(route_id))
     return flask.Response(json.dumps(stop_data), mimetype="application/json")
 
 
+# takes a comma-delimited string of route ids
+# returns a JSON object containing all routes with directional information
 @application.route("/routes/<route_ids_string>")
 def routes(route_ids_string):
     route_ids = route_ids_string.split(",")
@@ -37,6 +50,10 @@ def routes(route_ids_string):
     return flask.Response(json.dumps(route_data), mimetype="application/json")
 
 
+# root function to serve landing page
+# add ?testMode=1 to enable test mode
+#   if test mode is true, app will show all trains, not just new ones
+# if shell mode is true, app will generate without getting any intital API data
 @application.route("/")
 def root():
     test_mode = flask.request.args.get("testMode")

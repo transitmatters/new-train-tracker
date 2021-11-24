@@ -1,3 +1,9 @@
+/*
+
+Funcs that fetch data served by the backend in the form of the Initial Request Data JSON
+
+*/
+
 import { useEffect, useState, useCallback } from 'react';
 
 import { getInitialDataByKey } from './initialData';
@@ -8,6 +14,8 @@ const getIsTestMode = () => {
     return val === 'true' || !!parseInt(val);
 };
 
+// if isFirstRequest is true, get train positions from intial request data JSON
+// if isFirstRequest is false, makes request for new train positions through backend server via Flask route defined in application.py
 export const getTrainPositions = (routes, isTestMode, isFirstRequest) => {
     if (isFirstRequest) {
         const initialTrainsData = getInitialDataByKey('vehicles');
