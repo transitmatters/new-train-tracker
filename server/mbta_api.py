@@ -91,7 +91,9 @@ def maybe_reverse(stops, route):
 
 # takes a list of route ids
 # uses getV3 to request real-time vehicle data for a given route id
-# returns JSON of vehicles to display
+# returns list of
+# - list of vehicles to display
+# - dict of vehicle stats
 async def vehicle_data_for_routes(route_ids, test_mode=False):
     route_ids = normalize_custom_route_ids(route_ids)
     vehicles = await getV3(
@@ -105,6 +107,19 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
     # intialize empty list of vehicles to display
     vehicles_to_display = []
 
+    # intialize dictionary of stats
+    vehicle_stats = {
+        "green_new_active": 0,
+        "orange_new_active": 0,
+        "red_new_active": 0,
+        "green_total_active": 0,
+        "orange_total_active": 0,
+        "red_total_active": 0,
+        "green_percent_active_new": 0,
+        "orange_percent_active_new": 0,
+        "red_percent_active_new": 0,
+    }
+
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
         try:
@@ -113,6 +128,19 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
 
             # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
+
+            if "Green" in vehicle["route"]["id"]:
+                vehicle_stats["green_total_active"] += 1
+                if is_new:
+                    vehicle_stats["green_new_active"] += 1
+            if "Orange" in vehicle["route"]["id"]:
+                vehicle_stats["orange_total_active"] += 1
+                if is_new:
+                    vehicle_stats["orange_new_active"] += 1
+            if "Red" in vehicle["route"]["id"]:
+                vehicle_stats["red_total_active"] += 1
+                if is_new:
+                    vehicle_stats["red_new_active"] += 1
 
             # if not running test mode and vehicle is not new, skip this vehicle
             if not test_mode and not is_new:
@@ -137,7 +165,12 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
             now_eastern = datetime.datetime.now(eastern)
             print(f"[{now_eastern}] Error processing vehicle {vehicle}: {e}")
             continue
-    return vehicles_to_display
+
+    vehicle_stats["green_percent_active_new"] = percent(vehicle_stats["green_new_active"], vehicle_stats["green_total_active"])
+    vehicle_stats["orange_percent_active_new"] = percent(vehicle_stats["orange_new_active"], vehicle_stats["orange_total_active"])
+    vehicle_stats["red_percent_active_new"] = percent(vehicle_stats["red_new_active"], vehicle_stats["red_total_active"])
+
+    return [vehicles_to_display, vehicle_stats]
 
 
 # returns list of dicts for every stop in a given route, based on route_id
@@ -191,6 +224,12 @@ async def routes_info(route_ids):
     return routes_to_return
 
 
+def percent(part, whole):
+    if whole == 0:
+        return 0
+    return round(100 * float(part) / float(whole), 1)
+
+
 def get_git_tag():
     return str(subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]))[2:-3]
 
@@ -198,7 +237,7 @@ def get_git_tag():
 # captures intitial request data from MBTA API as well as server-side data such as git tags
 # returns JSON of all data
 async def initial_request_data(route_ids, test_mode=False):
-    routes, vehicles, *stops = await asyncio.gather(
+    routes, vehicle_data, *stops = await asyncio.gather(
         *[
             routes_info(route_ids),
             vehicle_data_for_routes(route_ids, test_mode),
@@ -211,6 +250,7 @@ async def initial_request_data(route_ids, test_mode=False):
         "version": git_tag,
         "sightings": sightings,
         "routes": routes,
-        "vehicles": vehicles,
+        "vehicles": vehicle_data[0],
+        "vehicle_stats": vehicle_data[1],
         "stops": dict(zip(route_ids, stops)),
     }
