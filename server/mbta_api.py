@@ -30,7 +30,7 @@ BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
 
 # wrapper around MBTA V3 API
-# used to simply API calls
+# used to simplify API calls
 # returns JSON of requested data
 async def getV3(command, params={}, session=None):
     """Make a GET request against the MBTA v3 API"""
@@ -109,15 +109,18 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
 
     # intialize dictionary of stats
     vehicle_stats = {
-        "green_new_active": 0,
-        "orange_new_active": 0,
-        "red_new_active": 0,
-        "green_total_active": 0,
-        "orange_total_active": 0,
-        "red_total_active": 0,
-        "green_percent_active_new": 0,
-        "orange_percent_active_new": 0,
-        "red_percent_active_new": 0,
+        "Green": {
+            "totalActive": 0,
+            "totalNew": 0
+        },
+        "Orange": {
+            "totalActive": 0,
+            "totalNew": 0
+        },
+        "Red": {
+            "totalActive": 0,
+            "totalNew": 0
+        }
     }
 
     # iterate over all vehicles fetched from V3 API
@@ -126,49 +129,35 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
             # derive Red Line vehicle branch if needed
             custom_route = derive_custom_route_name(vehicle)
 
-            # determine if vehicle is new
+            # determine vehicle line and if vehicle is new
+            line = vehicle["route"]["id"]
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
-            if "Green" in vehicle["route"]["id"]:
-                vehicle_stats["green_total_active"] += 1
-                if is_new:
-                    vehicle_stats["green_new_active"] += 1
-            if "Orange" in vehicle["route"]["id"]:
-                vehicle_stats["orange_total_active"] += 1
-                if is_new:
-                    vehicle_stats["orange_new_active"] += 1
-            if "Red" in vehicle["route"]["id"]:
-                vehicle_stats["red_total_active"] += 1
-                if is_new:
-                    vehicle_stats["red_new_active"] += 1
+            vehicle_stats[line]["totalActive"] += 1
+            if is_new:
+                vehicle_stats[line]["totalNew"] += 1
 
-            # if not running test mode and vehicle is not new, skip this vehicle
-            if not test_mode and not is_new:
-                continue
+            # if running test mode or vehicle is new, append this vehicle
+            if test_mode and is_new:
+                vehicles_to_display.append(
+                    {
+                        "label": vehicle["label"],
+                        "route": custom_route,
+                        "direction": vehicle["direction_id"],
+                        "latitude": vehicle["latitude"],
+                        "longitude": vehicle["longitude"],
+                        "currentStatus": vehicle["current_status"],
+                        "stationId": vehicle["stop"]["parent_station"]["id"],
+                        "tripId": vehicle["trip"]["id"],
+                        "isNewTrain": is_new,
+                    }
+                )
 
-            # otherwise, append vehicle to list
-            vehicles_to_display.append(
-                {
-                    "label": vehicle["label"],
-                    "route": custom_route,
-                    "direction": vehicle["direction_id"],
-                    "latitude": vehicle["latitude"],
-                    "longitude": vehicle["longitude"],
-                    "currentStatus": vehicle["current_status"],
-                    "stationId": vehicle["stop"]["parent_station"]["id"],
-                    "tripId": vehicle["trip"]["id"],
-                    "isNewTrain": is_new,
-                }
-            )
         except Exception as e:
             eastern = pytz.timezone("US/Eastern")
             now_eastern = datetime.datetime.now(eastern)
             print(f"[{now_eastern}] Error processing vehicle {vehicle}: {e}")
             continue
-
-    vehicle_stats["green_percent_active_new"] = percent(vehicle_stats["green_new_active"], vehicle_stats["green_total_active"])
-    vehicle_stats["orange_percent_active_new"] = percent(vehicle_stats["orange_new_active"], vehicle_stats["orange_total_active"])
-    vehicle_stats["red_percent_active_new"] = percent(vehicle_stats["red_new_active"], vehicle_stats["red_total_active"])
 
     return [vehicles_to_display, vehicle_stats]
 
@@ -222,12 +211,6 @@ async def routes_info(route_ids):
                     }
                 )
     return routes_to_return
-
-
-def percent(part, whole):
-    if whole == 0:
-        return 0
-    return round(100 * float(part) / float(whole), 1)
 
 
 def get_git_tag():

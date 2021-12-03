@@ -1,7 +1,6 @@
 /*
-
-Funcs that fetch data served by the backend in the form of the Initial Request Data JSON
-
+File that contains a React hook that provides data from the MBTA API
+Provides the __NTT_INITIAL_DATA__ JSON blob that is embedded in the initial server response
 */
 
 import { useEffect, useState, useCallback } from 'react';
@@ -16,7 +15,7 @@ const getIsTestMode = () => {
 
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via Flask route defined in application.py
-export const getTrainPositions = (routes, isTestMode, isFirstRequest) => {
+const getTrainPositions = (routes, isTestMode, isFirstRequest) => {
     if (isFirstRequest) {
         const initialTrainsData = getInitialDataByKey('vehicles');
         if (initialTrainsData) {
@@ -27,7 +26,7 @@ export const getTrainPositions = (routes, isTestMode, isFirstRequest) => {
     return fetch(`/trains/${routes.join(',')}${testSuffix}`).then(res => res.json());
 };
 
-export const getStationsForRoute = route => {
+const getStationsForRoute = route => {
     const initialStopsData = getInitialDataByKey('stops');
     if (initialStopsData && initialStopsData[route]) {
         return Promise.resolve(initialStopsData[route]);
@@ -35,7 +34,7 @@ export const getStationsForRoute = route => {
     return fetch(`/stops/${route}`).then(res => res.json());
 };
 
-export const getRoutesInfo = routes => {
+const getRoutesInfo = routes => {
     const initialRoutesData = getInitialDataByKey('routes');
     if (initialRoutesData) {
         return Promise.resolve(initialRoutesData);

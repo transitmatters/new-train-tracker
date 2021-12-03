@@ -21,7 +21,7 @@ def get_is_new_dict(route_ids, test_fn):
     return {route_id: test_fn for route_id in route_ids}
 
 
-vehicle_is_new_func = {
+vehicle_is_new = {
     "Red-A": red_is_new,
     "Red-B": red_is_new,
     "Orange": orange_is_new,
@@ -31,8 +31,8 @@ vehicle_is_new_func = {
 
 
 def vehicle_is_new(route_name, car):
-    return vehicle_is_new_func[route_name](car)
+    return vehicle_is_new[route_name](car)
 
 
 def vehicle_array_is_new(route_name, arr):
-    return any(map(vehicle_is_new_func[route_name], arr))
+    return any(map(vehicle_is_new[route_name], arr))
