@@ -15,11 +15,11 @@ const abbreviateStationName = station =>
         .replace('Hynes Convention Center', 'Hynes')
         .replace('Heath Street', 'Heath');
 
-const sortTrainRoutePairsByDistance = (pairs, allStationPositions) => {
+const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
     const distanceMap = new Map(
         pairs.map(pair => {
             const { train } = pair;
-            const station = allStationPositions[train.stationId];
+            const station = stationPositions[train.stationId];
             if (station) {
                 const { x, y } = station;
                 const distance = Math.sqrt(x ** 2 + y ** 2);
