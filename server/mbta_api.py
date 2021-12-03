@@ -131,6 +131,8 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
 
             # determine vehicle line and if vehicle is new
             line = vehicle["route"]["id"]
+            if "Green" in line:
+                line = "Green"
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
             vehicle_stats[line]["totalActive"] += 1
@@ -138,7 +140,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
                 vehicle_stats[line]["totalNew"] += 1
 
             # if running test mode or vehicle is new, append this vehicle
-            if test_mode and is_new:
+            if test_mode or is_new:
                 vehicles_to_display.append(
                     {
                         "label": vehicle["label"],
