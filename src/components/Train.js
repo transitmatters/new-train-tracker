@@ -38,7 +38,7 @@ const drawEquilateralTriangle = radius =>
         .trim();
 
 const Train = props => {
-    const { train, route, colors, alwaysLabelTrain, focusOnMount, labelPosition } = props;
+    const { train, route, colors, focusOnMount, labelPosition, onFocus, onBlur } = props;
     const { direction, isNewTrain } = train;
     const { pathInterpolator, stations } = route;
 
@@ -48,14 +48,19 @@ const Train = props => {
 
     const offset = interpolateTrainOffset(train, stations);
     const popoverContainer = useContext(PopoverContainerContext);
-    const isLabelShown = alwaysLabelTrain || isTracked;
 
     const handleFocus = () => {
         setIsTracked(true);
+        if (onFocus) {
+            onFocus();
+        }
     };
 
     const handleBlur = () => {
         setIsTracked(false);
+        if (onBlur) {
+            onBlur();
+        }
     };
 
     useEffect(() => {
@@ -72,7 +77,6 @@ const Train = props => {
         if (element && shouldAutoFocus) {
             setShouldAutoFocus(false);
             element.focus();
-            setIsTracked(true);
         }
     }, [element, shouldAutoFocus]);
 
@@ -117,8 +121,7 @@ const Train = props => {
                                 route={route}
                                 colors={colors}
                                 container={popoverContainer}
-                                isVisible={isLabelShown}
-                                isActive={isTracked}
+                                isVisible={isTracked}
                                 fixedPositionStrategy={labelPosition}
                                 referenceRect={getBoundingRectWithinParent(
                                     element,

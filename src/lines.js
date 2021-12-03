@@ -84,23 +84,19 @@ export const greenEShape = [
     }),
 ];
 
-// const shouldLabelGLTrain = ({ stationId }) =>
-//     stationId && !labeledGreenLineStations.includes(stationId);
-
 export const greenLine = {
     name: 'Green',
     abbreviation: 'GL',
     color: '#114529',
     colorSecondary: '#159765',
-    shouldLabelTrain: () => false,
-    getStationLabelPosition: stationId => {
-        if (stationId === 'place-hymnl') {
-            return 'left';
-        }
+    getStationLabelPosition: ({ stationId, routeId, isRouteFocused }) => {
         if (labeledGreenLineStations.includes(stationId)) {
-            return 'right';
+            return stationId === 'place-hymnl' ? 'left' : 'right';
         }
-        return false;
+        if (isRouteFocused) {
+            return routeId === 'Green-E' ? 'left' : 'right';
+        }
+        return null;
     },
     routes: {
         'Green-B': {
@@ -124,7 +120,6 @@ export const orangeLine = {
     colorSecondary: '#e66f00',
     color: '#ffaa21',
     getStationLabelPosition: () => 'right',
-    shouldLabelTrain: () => false,
     fixedTrainLabelPosition: 'right',
     routes: {
         Orange: {
@@ -175,7 +170,6 @@ export const redLine = {
     color: '#E37C7C',
     colorSecondary: '#D13434',
     getStationLabelPosition: () => 'right',
-    shouldLabelTrain: () => false,
     routes: {
         'Red-A': {
             derivedFromRouteId: 'Red',

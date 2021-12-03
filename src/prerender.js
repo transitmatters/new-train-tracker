@@ -104,6 +104,7 @@ export const prerenderLine = (line, stationsByRoute, routesInfo) => {
             shape,
             stationIds
         );
+        const routeStationPositions = getStationPositions(stationOffsets, pathInterpolator);
         const route = {
             ...routeInfo,
             id: routeId,
@@ -117,10 +118,12 @@ export const prerenderLine = (line, stationsByRoute, routesInfo) => {
                     offset: stationOffsets[station.id],
                 };
             }),
+            stationPositions: routeStationPositions,
+            pathDirective,
         };
         stationPositions = {
             ...stationPositions,
-            ...getStationPositions(stationOffsets, pathInterpolator),
+            ...routeStationPositions,
         };
         routes[routeId] = route;
         pathBuilder.add(pathDirective);

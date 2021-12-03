@@ -213,9 +213,14 @@ a {
 
 .train {
     cursor: pointer;
+    z-index: -1;
 }
 
 .train.tracked {
+    pointer-events: none;
+}
+
+.station-label {
     pointer-events: none;
 }
 
