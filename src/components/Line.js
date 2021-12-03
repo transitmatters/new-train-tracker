@@ -102,7 +102,7 @@ const Line = props => {
         return <>{pathsByRoute}</>;
     };
 
-    const renderStations = () => {
+    const renderStationDots = () => {
         return Object.entries(routes)
             .map(([routeId, { stationPositions }]) => {
                 const isRouteFocused = routeId === focusedRouteId;
@@ -128,13 +128,14 @@ const Line = props => {
                         </text>
                     );
                     return (
-                        <g
-                            key={`${routeId}-${stationId}`}
+                        <circle
+                            cx={0}
+                            cy={0}
+                            r={1}
+                            key={`${routeId}-${stationId}-dot`}
                             transform={`translate(${pos.x}, ${pos.y})`}
-                        >
-                            <circle cx={0} cy={0} r={1} fill={routeColor} />
-                            {label}
-                        </g>
+                            fill={routeColor}
+                        />
                     );
                 });
             })
@@ -154,6 +155,49 @@ const Line = props => {
                 onBlur={() => setFocusedRouteId(null)}
             />
         ));
+    };
+
+    const renderStationLabelsForRouteId = routeId => {
+        const { stationPositions } = routes[routeId];
+        const isRouteFocused = routeId === focusedRouteId;
+        return Object.entries(stationPositions).map(([stationId, pos]) => {
+            const labelPosition = getStationLabelPosition({
+                stationId,
+                routeId,
+                isRouteFocused,
+            });
+            const stationName =
+                stations[stationId] && abbreviateStationName(stations[stationId].name);
+            if (labelPosition && stationName) {
+                return (
+                    <text
+                        fontSize={4}
+                        fill={colors.lines}
+                        textAnchor={labelPosition === 'right' ? 'start' : 'end'}
+                        x={labelPosition === 'right' ? 4 : -4}
+                        y={1.5}
+                        aria-hidden="true"
+                        transform={`translate(${pos.x}, ${pos.y})`}
+                    >
+                        {stationName}
+                    </text>
+                );
+            }
+            return null;
+        });
+    };
+
+    const renderLabelsForUnfocusedStations = () => {
+        return Object.keys(routes)
+            .filter(routeId => routeId !== focusedRouteId)
+            .map(renderStationLabelsForRouteId);
+    };
+
+    const renderLabelsForFocusedStations = () => {
+        if (focusedRouteId) {
+            return renderStationLabelsForRouteId(focusedRouteId);
+        }
+        return null;
     };
 
     const renderTrainsForScreenreader = () => {
@@ -184,8 +228,10 @@ const Line = props => {
                     preserveAspectRatio="xMidYMin"
                 >
                     {renderLine()}
-                    {renderStations()}
+                    {renderLabelsForUnfocusedStations()}
+                    {renderStationDots()}
                     {renderTrains()}
+                    {renderLabelsForFocusedStations()}
                 </svg>
                 {renderTrainsForScreenreader()}
             </PopoverContainerContext.Provider>
