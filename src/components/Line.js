@@ -44,8 +44,8 @@ const renderEmptyNoticeForLine = line => {
 
 const getRouteColor = (colors, routeId, focusedRouteId) => {
     return routeId === focusedRouteId || focusedRouteId === null
-        ? colors.lines
-        : colors.secondaryLines;
+        ? colors.route
+        : colors.unfocusedRoute;
 };
 
 const Line = props => {
@@ -58,9 +58,9 @@ const Line = props => {
     const [focusedRouteId, setFocusedRouteId] = useState(null);
 
     const colors = {
-        lines: 'white',
-        secondaryLines: '#ffffff55',
-        newTrains: line.color,
+        route: 'white',
+        unfocusedRoute: '#ffffff55',
+        train: line.color,
         background: line.colorSecondary,
     };
 
@@ -105,28 +105,8 @@ const Line = props => {
     const renderStationDots = () => {
         return Object.entries(routes)
             .map(([routeId, { stationPositions }]) => {
-                const isRouteFocused = routeId === focusedRouteId;
                 const routeColor = getRouteColor(colors, routeId, focusedRouteId);
                 return Object.entries(stationPositions).map(([stationId, pos]) => {
-                    const labelPosition = getStationLabelPosition({
-                        stationId,
-                        routeId,
-                        isRouteFocused,
-                    });
-                    const stationName =
-                        stations[stationId] && abbreviateStationName(stations[stationId].name);
-                    const label = labelPosition && stationName && (
-                        <text
-                            fontSize={4}
-                            fill={colors.lines}
-                            textAnchor={labelPosition === 'right' ? 'start' : 'end'}
-                            x={labelPosition === 'right' ? 4 : -4}
-                            y={1.5}
-                            aria-hidden="true"
-                        >
-                            {stationName}
-                        </text>
-                    );
                     return (
                         <circle
                             cx={0}
@@ -172,7 +152,7 @@ const Line = props => {
                 return (
                     <text
                         fontSize={4}
-                        fill={colors.lines}
+                        fill={colors.route}
                         textAnchor={labelPosition === 'right' ? 'start' : 'end'}
                         x={labelPosition === 'right' ? 4 : -4}
                         y={1.5}

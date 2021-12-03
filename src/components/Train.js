@@ -39,7 +39,7 @@ const drawEquilateralTriangle = radius =>
 
 const Train = props => {
     const { train, route, colors, focusOnMount, labelPosition, onFocus, onBlur } = props;
-    const { direction, isNewTrain } = train;
+    const { direction } = train;
     const { pathInterpolator, stations } = route;
 
     const [element, setElement] = useState(null);
@@ -81,14 +81,13 @@ const Train = props => {
     }, [element, shouldAutoFocus]);
 
     const renderTrainMarker = () => {
-        const color = isNewTrain ? colors.newTrains : colors.oldTrains;
         return (
             <g>
                 <circle
                     cx={0}
                     cy={0}
                     r={3.326}
-                    fill={color}
+                    fill={colors.train}
                     stroke={isTracked ? 'white' : undefined}
                 />
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
