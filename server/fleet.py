@@ -1,3 +1,14 @@
+"""
+fleet.py provides functions used to determine whether vehicles are "new" or not
+
+"new" encompasses
+- CRRC-built trainsets for the Orange and Red Lines
+- CAF-built (Type-9) trainsets for the Green Line
+- BEBs (Battery Electric Buses) for the Silver Line
+
+"""
+
+
 from server.routes import GREEN_ROUTE_IDS, SILVER_ROUTE_IDS
 
 red_is_new = lambda x: int(x) >= 1900 and int(x) <= 2151
@@ -10,7 +21,7 @@ def get_is_new_dict(route_ids, test_fn):
     return {route_id: test_fn for route_id in route_ids}
 
 
-train_is_new_func = {
+vehicle_is_new_func = {
     "Red-A": red_is_new,
     "Red-B": red_is_new,
     "Orange": orange_is_new,
@@ -19,15 +30,9 @@ train_is_new_func = {
 }
 
 
-def car_is_new(route_name, car, test_mode=False):
-    if test_mode:
-        return True
-    else:
-        return train_is_new_func[route_name](car)
+def vehicle_is_new(route_name, car):
+    return vehicle_is_new_func[route_name](car)
 
 
-def car_array_is_new(route_name, arr, test_mode=False):
-    if test_mode:
-        return True
-    else:
-        return any(map(train_is_new_func[route_name], arr))
+def vehicle_array_is_new(route_name, arr):
+    return any(map(vehicle_is_new_func[route_name], arr))

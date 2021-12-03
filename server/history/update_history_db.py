@@ -5,7 +5,7 @@ import psycopg2
 import psycopg2.extras
 
 import server.mbta_api as mbta_api
-from server.fleet import car_is_new
+from server.fleet import vehicle_is_new
 from server.routes import get_line_for_route
 from server.routes import DEFAULT_ROUTE_IDS, SILVER_ROUTE_IDS
 from server.history.util import get_history_db_connection, HISTORY_TABLE_NAME
@@ -62,7 +62,7 @@ async def update_history(test_mode=False):
                                 car,
                                 now,
                                 now,
-                                car_is_new(route, car),
+                                vehicle_is_new(route, car),
                             ],
                         )
         postgres_conn.commit()

@@ -1,3 +1,9 @@
+"""
+mbta_api.py provides functions dealing with interactions with the MBTA V3 API
+
+"""
+
+
 from urllib.parse import urlencode
 import asyncio
 import datetime
@@ -23,6 +29,9 @@ from server.routes import (
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
 
+# wrapper around MBTA V3 API
+# used to simplify API calls
+# returns JSON of requested data
 async def getV3(command, params={}, session=None):
     """Make a GET request against the MBTA v3 API"""
     url = BASE_URL_V3.format(command=command, parameters=urlencode(params))
@@ -54,13 +63,13 @@ async def getV3(command, params={}, session=None):
         return await inner(session)
 
 
+# ensures stops are in expected order specified in maybe_reverse()
 def reverse_if_stops_out_of_order(stops, first_expected_stop_name, second_expected_stop_name):
     try:
         (index_of_first, index_of_second) = (
             next(index for index, stop in enumerate(stops) if stop["name"] == stop_name)
             for stop_name in (first_expected_stop_name, second_expected_stop_name)
         )
-        print(index_of_first, index_of_second)
         if index_of_first > index_of_second:
             return list(reversed(stops))
         return stops
@@ -69,6 +78,7 @@ def reverse_if_stops_out_of_order(stops, first_expected_stop_name, second_expect
         return stops
 
 
+# reverse stops if MBTA API returns them in unexpected order
 def maybe_reverse(stops, route):
     if route.startswith("Green-"):
         return reverse_if_stops_out_of_order(stops, "Park Street", "Boylston")
@@ -79,8 +89,12 @@ def maybe_reverse(stops, route):
     return stops
 
 
+# takes a list of route ids
+# uses getV3 to request real-time vehicle data for a given route id
+# returns list of
+# - list of vehicles to display
+# - dict of vehicle stats
 async def vehicle_data_for_routes(route_ids, test_mode=False):
-    """Use getv3 to request real-time vehicle data for a given route set"""
     route_ids = normalize_custom_route_ids(route_ids)
     vehicles = await getV3(
         "vehicles",
@@ -89,32 +103,69 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
             "include": "stop,trip.route_pattern.name",
         },
     )
-    # Iterate vehicles, only send new ones to the browser
+
+    # intialize empty list of vehicles to display
     vehicles_to_display = []
+
+    # intialize dictionary of stats
+    vehicle_stats = {
+        "Green": {
+            "totalActive": 0,
+            "totalNew": 0
+        },
+        "Orange": {
+            "totalActive": 0,
+            "totalNew": 0
+        },
+        "Red": {
+            "totalActive": 0,
+            "totalNew": 0
+        }
+    }
+
+    # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
         try:
+            # derive Red Line vehicle branch if needed
             custom_route = derive_custom_route_name(vehicle)
-            is_new = fleet.car_array_is_new(custom_route, vehicle["label"].split("-"), test_mode)
-            if not is_new:
-                continue
-            vehicles_to_display.append(
-                {
-                    "label": vehicle["label"],
-                    "route": custom_route,
-                    "direction": vehicle["direction_id"],
-                    "latitude": vehicle["latitude"],
-                    "longitude": vehicle["longitude"],
-                    "currentStatus": vehicle["current_status"],
-                    "stationId": vehicle["stop"]["parent_station"]["id"],
-                    "tripId": vehicle["trip"]["id"],
-                    "isNewTrain": is_new,
-                }
-            )
-        except (KeyError, TypeError, AttributeError):
+
+            # determine vehicle line and if vehicle is new
+            line = vehicle["route"]["id"]
+            if "Green" in line:
+                line = "Green"
+            is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
+
+            vehicle_stats[line]["totalActive"] += 1
+            if is_new:
+                vehicle_stats[line]["totalNew"] += 1
+
+            # if running test mode or vehicle is new, append this vehicle
+            if test_mode or is_new:
+                vehicles_to_display.append(
+                    {
+                        "label": vehicle["label"],
+                        "route": custom_route,
+                        "direction": vehicle["direction_id"],
+                        "latitude": vehicle["latitude"],
+                        "longitude": vehicle["longitude"],
+                        "currentStatus": vehicle["current_status"],
+                        "stationId": vehicle["stop"]["parent_station"]["id"],
+                        "tripId": vehicle["trip"]["id"],
+                        "isNewTrain": is_new,
+                    }
+                )
+
+        except Exception as e:
+            eastern = pytz.timezone("US/Eastern")
+            now_eastern = datetime.datetime.now(eastern)
+            print(f"[{now_eastern}] Error processing vehicle {vehicle}: {e}")
             continue
-    return vehicles_to_display
+
+    return [vehicles_to_display, vehicle_stats]
 
 
+# returns list of dicts for every stop in a given route, based on route_id
+# ensures stops are in expected order via maybe_reverse()
 async def stops_for_route(route_id):
     normalized_route_name = normalize_custom_route_name(route_id)
     stops = await getV3("stops", {"filter[route]": normalized_route_name, "include": "route"})
@@ -140,6 +191,7 @@ async def stops_for_route(route_id):
     )
 
 
+# returns list of dicts containing directional information about routes based on the given route_id
 async def routes_info(route_ids):
     routes_to_return = []
     custom_route_names = [s.strip() for s in route_ids]
@@ -167,8 +219,10 @@ def get_git_tag():
     return str(subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]))[2:-3]
 
 
+# captures intitial request data from MBTA API as well as server-side data such as git tags
+# returns JSON of all data
 async def initial_request_data(route_ids, test_mode=False):
-    routes, vehicles, *stops = await asyncio.gather(
+    routes, vehicle_data, *stops = await asyncio.gather(
         *[
             routes_info(route_ids),
             vehicle_data_for_routes(route_ids, test_mode),
@@ -181,6 +235,7 @@ async def initial_request_data(route_ids, test_mode=False):
         "version": git_tag,
         "sightings": sightings,
         "routes": routes,
-        "vehicles": vehicles,
+        "vehicles": vehicle_data[0],
+        "vehicle_stats": vehicle_data[1],
         "stops": dict(zip(route_ids, stops)),
     }
