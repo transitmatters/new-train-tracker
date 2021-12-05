@@ -42,30 +42,37 @@ const renderEmptyNoticeForLine = line => {
     return `No new trains on the ${line} Line right now.`;
 };
 
+const getRouteColor = (colors, routeId, focusedRouteId) => {
+    return routeId === focusedRouteId || focusedRouteId === null
+        ? colors.route
+        : colors.unfocusedRoute;
+};
+
 const Line = props => {
     const { api, line } = props;
-    const { getStationLabelPosition, shouldLabelTrain, fixedTrainLabelPosition } = line;
+    const { getStationLabelPosition, fixedTrainLabelPosition } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
     const [viewbox, setViewbox] = useState(undefined);
     const [svg, setSvg] = useState(null);
     const [shouldFocusOnFirstTrain, setShouldFocusOnFirstTrain] = useState(true);
+    const [focusedRouteId, setFocusedRouteId] = useState(null);
 
     const colors = {
-        lines: 'white',
-        newTrains: line.color,
+        route: 'white',
+        unfocusedRoute: '#ffffff55',
+        train: line.color,
         background: line.colorSecondary,
     };
 
     const [container, setContainer] = useState(null);
 
-    const { pathDirective, routes, stationPositions, stations } = useMemo(
+    const { routes, stationPositions, stations } = useMemo(
         () => prerenderLine(line, stationsByRoute, routesInfo),
         [line, stationsByRoute, routesInfo]
     );
 
     const trainRoutePairs = getTrainRoutePairsForLine(trainsByRoute, routes);
     const hasTrains = trainRoutePairs.length > 0;
-
     const sortedTrainRoutePairs = sortTrainRoutePairsByDistance(trainRoutePairs, stationPositions);
 
     useEffect(() => {
@@ -88,35 +95,31 @@ const Line = props => {
     }, [svg]);
 
     const renderLine = () => {
-        return <path d={pathDirective} stroke={colors.lines} fill="transparent" />;
+        const pathsByRoute = Object.entries(routes).map(([routeId, { pathDirective }]) => {
+            const routeColor = getRouteColor(colors, routeId, focusedRouteId);
+            return <path key={routeId} d={pathDirective} stroke={routeColor} fill="transparent" />;
+        });
+        return <>{pathsByRoute}</>;
     };
 
-    const renderStations = () => {
-        return Object.entries(stationPositions).map(([stationId, pos]) => {
-            const labelPosition = getStationLabelPosition(stationId);
-            const stationName =
-                stations[stationId] && abbreviateStationName(stations[stationId].name);
-
-            const label = labelPosition && stationName && (
-                <text
-                    fontSize={4}
-                    fill={colors.lines}
-                    textAnchor={labelPosition === 'right' ? 'start' : 'end'}
-                    x={labelPosition === 'right' ? 4 : -4}
-                    y={1.5}
-                    aria-hidden="true"
-                >
-                    {stationName}
-                </text>
-            );
-
-            return (
-                <g key={stationId} transform={`translate(${pos.x}, ${pos.y})`}>
-                    <circle cx={0} cy={0} r={1} fill={colors.lines} />
-                    {label}
-                </g>
-            );
-        });
+    const renderStationDots = () => {
+        return Object.entries(routes)
+            .map(([routeId, { stationPositions }]) => {
+                const routeColor = getRouteColor(colors, routeId, focusedRouteId);
+                return Object.entries(stationPositions).map(([stationId, pos]) => {
+                    return (
+                        <circle
+                            cx={0}
+                            cy={0}
+                            r={1}
+                            key={`${routeId}-${stationId}-dot`}
+                            transform={`translate(${pos.x}, ${pos.y})`}
+                            fill={routeColor}
+                        />
+                    );
+                });
+            })
+            .flat();
     };
 
     const renderTrains = () => {
@@ -127,17 +130,61 @@ const Line = props => {
                 train={train}
                 route={route}
                 colors={colors}
-                alwaysLabelTrain={shouldLabelTrain(train)}
                 labelPosition={fixedTrainLabelPosition}
+                onFocus={() => setFocusedRouteId(route.id)}
+                onBlur={() => setFocusedRouteId(null)}
             />
         ));
+    };
+
+    const renderStationLabelsForRouteId = routeId => {
+        const { stationPositions } = routes[routeId];
+        const isRouteFocused = routeId === focusedRouteId;
+        return Object.entries(stationPositions).map(([stationId, pos]) => {
+            const labelPosition = getStationLabelPosition({
+                stationId,
+                routeId,
+                isRouteFocused,
+            });
+            const stationName =
+                stations[stationId] && abbreviateStationName(stations[stationId].name);
+            if (labelPosition && stationName) {
+                return (
+                    <text
+                        fontSize={4}
+                        fill={colors.route}
+                        textAnchor={labelPosition === 'right' ? 'start' : 'end'}
+                        x={labelPosition === 'right' ? 4 : -4}
+                        y={1.5}
+                        aria-hidden="true"
+                        transform={`translate(${pos.x}, ${pos.y})`}
+                    >
+                        {stationName}
+                    </text>
+                );
+            }
+            return null;
+        });
+    };
+
+    const renderLabelsForUnfocusedStations = () => {
+        return Object.keys(routes)
+            .filter(routeId => routeId !== focusedRouteId)
+            .map(renderStationLabelsForRouteId);
+    };
+
+    const renderLabelsForFocusedStations = () => {
+        if (focusedRouteId) {
+            return renderStationLabelsForRouteId(focusedRouteId);
+        }
+        return null;
     };
 
     const renderTrainsForScreenreader = () => {
         return (
             <ul className="screenreader-only" aria-label={`New trains on the ${line.name} Line`}>
                 {sortedTrainRoutePairs.map(({ train, route }) => (
-                    <li key={train.id}>{renderTextTrainlabel(train, route)}</li>
+                    <li key={train.tripId}>{renderTextTrainlabel(train, route)}</li>
                 ))}
             </ul>
         );
@@ -161,8 +208,10 @@ const Line = props => {
                     preserveAspectRatio="xMidYMin"
                 >
                     {renderLine()}
-                    {renderStations()}
+                    {renderLabelsForUnfocusedStations()}
+                    {renderStationDots()}
                     {renderTrains()}
+                    {renderLabelsForFocusedStations()}
                 </svg>
                 {renderTrainsForScreenreader()}
             </PopoverContainerContext.Provider>
