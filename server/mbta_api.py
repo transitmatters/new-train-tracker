@@ -218,7 +218,7 @@ async def routes_info(route_ids):
 
 
 def get_static_data():
-    with open('../static/static_data.json') as f:
+    with open('./static/static_data.json') as f:
         static_data = json.load(f)
     return static_data
 
