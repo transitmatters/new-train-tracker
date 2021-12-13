@@ -42,13 +42,12 @@ def normalize_custom_route_ids(route_ids):
 # takes no action on Green or Orangle Line vehicles
 def derive_custom_route_name(vehicle):
     default_route_id = vehicle["route"]["id"]
-    try:
-        if default_route_id == "Red":
+    if default_route_id == "Red":
+        try:
             route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
             return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
-    except TypeError:
-        # If there's no route pattern, leave the route id as is (i.e. "Red")
-        pass
+        except TypeError:
+            pass
     return default_route_id
 
 
