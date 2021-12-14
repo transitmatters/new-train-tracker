@@ -63,7 +63,14 @@ def root():
     initial_data = asyncio.run(
         mbta_api.initial_request_data(DEFAULT_ROUTE_IDS, test_mode)
     )
+    initial_data["static_data"] = get_static_data()
     return flask.render_template("index.html", initial_data=initial_data)
+
+
+def get_static_data():
+    with open('./static/static_data.json') as f:
+        static_data = json.load(f)
+    return static_data
 
 
 def get_port():
