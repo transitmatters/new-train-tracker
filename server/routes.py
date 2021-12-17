@@ -43,8 +43,11 @@ def normalize_custom_route_ids(route_ids):
 def derive_custom_route_name(vehicle):
     default_route_id = vehicle["route"]["id"]
     if default_route_id == "Red":
-        route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
-        return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
+        try:
+            route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
+            return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
+        except TypeError:
+            pass
     return default_route_id
 
 
