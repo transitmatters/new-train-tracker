@@ -74,6 +74,7 @@ const Line = props => {
     const trainRoutePairs = getTrainRoutePairsForLine(trainsByRoute, routes);
     const hasTrains = trainRoutePairs.length > 0;
     const sortedTrainRoutePairs = sortTrainRoutePairsByDistance(trainRoutePairs, stationPositions);
+    const renderedStationLabelIds = new Set();
 
     useEffect(() => {
         setShouldFocusOnFirstTrain(!hasTrains);
@@ -141,6 +142,9 @@ const Line = props => {
         const { stationPositions } = routes[routeId];
         const isRouteFocused = routeId === focusedRouteId;
         return Object.entries(stationPositions).map(([stationId, pos]) => {
+            if (renderedStationLabelIds.has(stationId)) {
+                return null;
+            }
             const labelPosition = getStationLabelPosition({
                 stationId,
                 routeId,
@@ -149,8 +153,10 @@ const Line = props => {
             const stationName =
                 stations[stationId] && abbreviateStationName(stations[stationId].name);
             if (labelPosition && stationName) {
+                renderedStationLabelIds.add(stationId);
                 return (
                     <text
+                        key={`station-label-${stationId}`}
                         fontSize={4}
                         fill={colors.route}
                         textAnchor={labelPosition === 'right' ? 'start' : 'end'}
