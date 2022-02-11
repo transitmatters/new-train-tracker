@@ -13,6 +13,7 @@ import json
 import os
 import aiohttp
 import tempfile
+import traceback
 import subprocess
 
 from server.history.recent_sightings import get_recent_sightings_for_lines
@@ -159,6 +160,7 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
             eastern = pytz.timezone("US/Eastern")
             now_eastern = datetime.datetime.now(eastern)
             print(f"[{now_eastern}] Error processing vehicle {vehicle}: {e}")
+            traceback.print_exc()
             continue
 
     return [vehicles_to_display, vehicle_stats]
