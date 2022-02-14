@@ -1,9 +1,9 @@
-import { start, line, wiggle, stationRange } from './paths';
+import { start, line, curve, wiggle, stationRange } from './paths';
 
 const glSharedStations = [
     // Lechmere and Science Park are closed for GLX
-    // 'place-lech',
-    // 'place-spmnl',
+    'place-lech',
+    'place-spmnl',
     'place-north',
     'place-haecl',
     'place-gover',
@@ -14,6 +14,7 @@ const glSharedStations = [
 ];
 
 const labeledGreenLineStations = [
+    'place-tufts',
     ...glSharedStations,
     'place-hymnl',
     'place-kencl',
@@ -25,7 +26,6 @@ const labeledGreenLineStations = [
 ];
 
 export const greenShared = [
-    start(0, 0, 90),
     stationRange({
         stations: glSharedStations,
         commands: [line(70)],
@@ -42,6 +42,7 @@ export const greenBCDTrunk = [
 ];
 
 export const greenBShape = [
+    start(0, 0, 90),
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, -20),
@@ -53,6 +54,7 @@ export const greenBShape = [
 ];
 
 export const greenCShape = [
+    start(0, 0, 90),
     ...greenShared,
     ...greenBCDTrunk,
     line(30),
@@ -64,6 +66,12 @@ export const greenCShape = [
 ];
 
 export const greenDShape = [
+    start(-17, -7, 0),
+    stationRange({
+        stations: ['place-union'],
+        commands: [line(10)],
+    }),
+    curve(10, 90),
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, 20),
@@ -75,6 +83,12 @@ export const greenDShape = [
 ];
 
 export const greenEShape = [
+    start(0, -55, 90),
+    stationRange({
+        stations: ['place-eastsom', 'place-gilman', 'place-magoun', 'place-ball', 'place-tufts'],
+        commands: [line(40)],
+    }),
+    line(15),
     ...greenShared,
     wiggle(60, 40),
     stationRange({
