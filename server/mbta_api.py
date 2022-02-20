@@ -113,10 +113,7 @@ async def vehicle_data_for_routes(route_ids):
             # derive Red Line vehicle branch if needed
             custom_route = derive_custom_route_name(vehicle)
 
-            # determine vehicle line and if vehicle is new
-            line = vehicle["route"]["id"]
-            if "Green" in line:
-                line = "Green"
+            # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
             vehicles_to_display.append(
@@ -242,13 +239,7 @@ async def initial_request_data(route_ids, test_mode=False):
         "version": git_tag,
         "sightings": sightings,
         "routes": routes,
-<<<<<<< HEAD
-        "vehicles": vehicle_data[0],
-        "vehicle_stats": vehicle_data[1],
-        "stops": dict(zip(route_ids, stops))
-=======
         "vehicles": vehicle_data if test_mode else filter_new(vehicle_data),
         "vehicle_stats": calc_stats(vehicle_data),
         "stops": dict(zip(route_ids, stops)),
->>>>>>> separation of data gathering and stat calculation
     }
