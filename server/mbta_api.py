@@ -92,10 +92,8 @@ def maybe_reverse(stops, route):
 
 # takes a list of route ids
 # uses getV3 to request real-time vehicle data for a given route id
-# returns list of
-# - list of vehicles to display
-# - dict of vehicle stats
-async def vehicle_data_for_routes(route_ids, test_mode=False):
+# returns list of all vehicles
+async def vehicle_data_for_routes(route_ids):
     route_ids = normalize_custom_route_ids(route_ids)
     vehicles = await getV3(
         "vehicles",
@@ -108,21 +106,6 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
     # intialize empty list of vehicles to display
     vehicles_to_display = []
 
-    # intialize dictionary of stats
-    vehicle_stats = {
-        "Green": {
-            "totalActive": 0,
-            "totalNew": 0
-        },
-        "Orange": {
-            "totalActive": 0,
-            "totalNew": 0
-        },
-        "Red": {
-            "totalActive": 0,
-            "totalNew": 0
-        }
-    }
 
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
@@ -136,25 +119,19 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
                 line = "Green"
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
-            vehicle_stats[line]["totalActive"] += 1
-            if is_new:
-                vehicle_stats[line]["totalNew"] += 1
-
-            # if running test mode or vehicle is new, append this vehicle
-            if test_mode or is_new:
-                vehicles_to_display.append(
-                    {
-                        "label": vehicle["label"],
-                        "route": custom_route,
-                        "direction": vehicle["direction_id"],
-                        "latitude": vehicle["latitude"],
-                        "longitude": vehicle["longitude"],
-                        "currentStatus": vehicle["current_status"],
-                        "stationId": vehicle["stop"]["parent_station"]["id"],
-                        "tripId": vehicle["trip"]["id"],
-                        "isNewTrain": is_new,
-                    }
-                )
+            vehicles_to_display.append(
+                {
+                    "label": vehicle["label"],
+                    "route": custom_route,
+                    "direction": vehicle["direction_id"],
+                    "latitude": vehicle["latitude"],
+                    "longitude": vehicle["longitude"],
+                    "currentStatus": vehicle["current_status"],
+                    "stationId": vehicle["stop"]["parent_station"]["id"],
+                    "tripId": vehicle["trip"]["id"],
+                    "isNewTrain": is_new,
+                }
+            )
 
         except Exception as e:
             eastern = pytz.timezone("US/Eastern")
@@ -163,8 +140,36 @@ async def vehicle_data_for_routes(route_ids, test_mode=False):
             traceback.print_exc()
             continue
 
-    return [vehicles_to_display, vehicle_stats]
+    return vehicles_to_display
 
+def filter_new(vehicle_array):
+    return list(filter(lambda veh: veh["isNewTrain"], vehicle_array))
+
+def filter_route(line, vehicle_array):
+    return list(filter(lambda veh: line in veh["route"], vehicle_array))
+
+def calc_stats(vehicle_array):
+    totalGreen = filter_route("Green", vehicle_array)
+    totalOrange = filter_route("Orange", vehicle_array)
+    totalRed = filter_route("Red", vehicle_array)
+
+    # intialize dictionary of stats
+    vehicle_stats = {
+        "Green": {
+            "totalActive": len(totalGreen),
+            "totalNew": len(filter_new(totalGreen))
+        },
+        "Orange": {
+            "totalActive": len(totalOrange),
+            "totalNew": len(filter_new(totalOrange))
+        },
+        "Red": {
+            "totalActive": len(totalRed),
+            "totalNew": len(filter_new(totalRed))
+        }
+    }
+
+    return vehicle_stats
 
 # returns list of dicts for every stop in a given route, based on route_id
 # ensures stops are in expected order via maybe_reverse()
@@ -227,7 +232,7 @@ async def initial_request_data(route_ids, test_mode=False):
     routes, vehicle_data, *stops = await asyncio.gather(
         *[
             routes_info(route_ids),
-            vehicle_data_for_routes(route_ids, test_mode),
+            vehicle_data_for_routes(route_ids),
             *[stops_for_route(route_id) for route_id in route_ids],
         ]
     )
@@ -237,7 +242,13 @@ async def initial_request_data(route_ids, test_mode=False):
         "version": git_tag,
         "sightings": sightings,
         "routes": routes,
+<<<<<<< HEAD
         "vehicles": vehicle_data[0],
         "vehicle_stats": vehicle_data[1],
         "stops": dict(zip(route_ids, stops))
+=======
+        "vehicles": vehicle_data if test_mode else filter_new(vehicle_data),
+        "vehicle_stats": calc_stats(vehicle_data),
+        "stops": dict(zip(route_ids, stops)),
+>>>>>>> separation of data gathering and stat calculation
     }
