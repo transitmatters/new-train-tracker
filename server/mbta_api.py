@@ -209,7 +209,7 @@ async def routes_info(route_ids):
                     {
                         "id": custom_route_name,
                         "directionDestinations": derive_custom_direction_destinations(
-                            route, normalize_custom_route_ids, custom_route_name
+                            route, normalized_route_name, custom_route_name
                         ),
                         "directionNames": route["direction_names"],
                     }
