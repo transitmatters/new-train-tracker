@@ -221,7 +221,7 @@ def get_git_tag():
     return str(subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]))[2:-3]
 
 
-# captures intitial request data from MBTA API as well as server-side data such as git tags
+# captures initial request data from MBTA API as well as server-side data such as git tags and static train data
 # returns JSON of all data
 async def initial_request_data(route_ids, test_mode=False):
     routes, vehicle_data, *stops = await asyncio.gather(
@@ -239,5 +239,5 @@ async def initial_request_data(route_ids, test_mode=False):
         "routes": routes,
         "vehicles": vehicle_data[0],
         "vehicle_stats": vehicle_data[1],
-        "stops": dict(zip(route_ids, stops)),
+        "stops": dict(zip(route_ids, stops))
     }
