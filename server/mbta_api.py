@@ -106,7 +106,6 @@ async def vehicle_data_for_routes(route_ids):
     # intialize empty list of vehicles to display
     vehicles_to_display = []
 
-
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
         try:
@@ -139,11 +138,14 @@ async def vehicle_data_for_routes(route_ids):
 
     return vehicles_to_display
 
+
 def filter_new(vehicle_array):
     return list(filter(lambda veh: veh["isNewTrain"], vehicle_array))
 
+
 def filter_route(line, vehicle_array):
     return list(filter(lambda veh: line in veh["route"], vehicle_array))
+
 
 def calc_stats(vehicle_array):
     totalGreen = filter_route("Green", vehicle_array)
@@ -167,6 +169,7 @@ def calc_stats(vehicle_array):
     }
 
     return vehicle_stats
+
 
 # returns list of dicts for every stop in a given route, based on route_id
 # ensures stops are in expected order via maybe_reverse()
