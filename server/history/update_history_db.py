@@ -15,7 +15,8 @@ async def update_history(test_mode=False):
     routes = DEFAULT_ROUTE_IDS + SILVER_ROUTE_IDS
     now = datetime.datetime.now(pytz.utc)
     postgres_conn = get_history_db_connection()
-    [vehicles_to_display, _] = await mbta_api.vehicle_data_for_routes(routes, test_mode)
+    all_vehicles = await mbta_api.vehicle_data_for_routes(routes)
+    vehicles_to_display = all_vehicles if test_mode else mbta_api.filter_new(all_vehicles)
     # Transform all of the current vehicles into easy-to-use form
     vehicles_by_route = {x: [] for x in routes}
     seen_trip_ids = []
