@@ -1,9 +1,9 @@
 import { start, line, wiggle, stationRange } from './paths';
 
 const glSharedStations = [
-    // Lechmere and Science Park are closed for GLX
-    // 'place-lech',
-    // 'place-spmnl',
+    'place-unsqu',
+    'place-lech',
+    'place-spmnl',
     'place-north',
     'place-haecl',
     'place-gover',
@@ -28,7 +28,7 @@ export const greenShared = [
     start(0, 0, 90),
     stationRange({
         stations: glSharedStations,
-        commands: [line(70)],
+        commands: [line(100)],
     }),
 ];
 
