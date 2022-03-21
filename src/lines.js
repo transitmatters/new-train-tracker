@@ -27,7 +27,7 @@ const labeledGreenLineStations = [
 export const greenShared = [
     stationRange({
         stations: glSharedStations,
-        commands: [line(70)],
+        commands: [line(100)],
     }),
 ];
 
@@ -67,7 +67,7 @@ export const greenCShape = [
 export const greenDShape = [
     start(0, -25, 90),
     stationRange({
-        stations: ['place-union'],
+        stations: ['place-unsqu'],
         commands: [line(1)],
     }),
     line(24),
