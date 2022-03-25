@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
+const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
@@ -36,6 +37,9 @@ module.exports = {
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: 'static/template.html',
+        }),
+        new CopyPlugin({
+            patterns: [{ from: 'static/images/apple-touch-icon.png', to: 'apple-touch-icon.png' }],
         }),
         new PwaManifestPlugin({
             name: 'TransitMatters New Train Tracker',
