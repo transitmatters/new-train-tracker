@@ -21,10 +21,9 @@ const labeledGreenLineStations = [
     'place-river',
     'place-clmnl',
     'place-lake',
-    'place-hsmnl',
 ];
 
-export const greenShared = [
+const greenShared = [
     start(0, 0, 90),
     stationRange({
         stations: glSharedStations,
@@ -32,7 +31,7 @@ export const greenShared = [
     }),
 ];
 
-export const greenBCDTrunk = [
+const greenBCDTrunk = [
     line(20),
     stationRange({
         start: 'place-hymnl',
@@ -41,7 +40,7 @@ export const greenBCDTrunk = [
     }),
 ];
 
-export const greenBShape = [
+const greenBShape = [
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, -20),
@@ -52,7 +51,7 @@ export const greenBShape = [
     }),
 ];
 
-export const greenCShape = [
+const greenCShape = [
     ...greenShared,
     ...greenBCDTrunk,
     line(30),
@@ -63,7 +62,7 @@ export const greenCShape = [
     }),
 ];
 
-export const greenDShape = [
+const greenDShape = [
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, 20),
@@ -74,7 +73,7 @@ export const greenDShape = [
     }),
 ];
 
-export const greenEShape = [
+const greenEShape = [
     ...greenShared,
     wiggle(60, 40),
     stationRange({
