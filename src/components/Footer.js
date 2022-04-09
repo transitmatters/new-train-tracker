@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Footer = props => {
+const Footer = (props) => {
     const { version } = props;
     return (
         <div className="footer">

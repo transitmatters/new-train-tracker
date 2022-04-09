@@ -20,7 +20,7 @@ const App = () => {
     const api = useMbtaApi(lines);
     const tabState = useTabState({ loop: false });
     const tabIndex = tabState.currentId
-        ? tabState.items.findIndex(i => i.id === tabState.currentId)
+        ? tabState.items.findIndex((i) => i.id === tabState.currentId)
         : 0;
     const selectedLine = lines[tabIndex];
 
@@ -32,9 +32,9 @@ const App = () => {
 
     useEffect(() => {
         if (api.isReady) {
-            const lineWithTrains = lines.find(line => {
+            const lineWithTrains = lines.find((line) => {
                 const routeIds = Object.keys(line.routes);
-                return routeIds.some(routeId => api.trainsByRoute[routeId].length > 0);
+                return routeIds.some((routeId) => api.trainsByRoute[routeId].length > 0);
             });
             if (lineWithTrains) {
                 tabState.setCurrentId(getTabIdForLine(lineWithTrains));
@@ -44,7 +44,7 @@ const App = () => {
     }, [api.isReady]);
 
     useEffect(() => {
-        const listener = evt => {
+        const listener = (evt) => {
             if (evt.key === 'Tab') {
                 setCssVariable('--focus-outline-style', '0px 0px 0px 2px white');
             }
