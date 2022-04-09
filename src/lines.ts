@@ -136,6 +136,11 @@ export const greenLine = {
     },
 };
 
+const enum OLStations {
+    OakGrove = 'place-ogmnl',
+    ForestHills = 'place-forhl',
+}
+
 export const orangeLine = {
     name: 'Orange',
     abbreviation: 'OL',
@@ -148,8 +153,8 @@ export const orangeLine = {
             shape: [
                 start(0, 0, 90),
                 stationRange({
-                    start: 'place-ogmnl',
-                    end: 'place-forhl',
+                    start: OLStations.OakGrove,
+                    end: OLStations.ForestHills,
                     commands: [line(250)],
                 }),
             ],
@@ -157,11 +162,20 @@ export const orangeLine = {
     },
 };
 
+const enum RLStations {
+    Alewife = 'place-alfcl',
+    UmassJFK = 'place-jfk',
+    SavinHill = 'place-shmnl',
+    Ashmont = 'place-asmnl',
+    NorthQuincy = 'place-nqncy',
+    Braintree = 'place-brntn',
+}
+
 const redShared = [
     start(0, 0, 90),
     stationRange({
-        start: 'place-alfcl',
-        end: 'place-jfk',
+        start: RLStations.Alewife,
+        end: RLStations.UmassJFK,
         commands: [line(120)],
     }),
 ];
@@ -170,8 +184,8 @@ const redA = [
     ...redShared,
     wiggle(30, -20),
     stationRange({
-        start: 'place-shmnl',
-        end: 'place-asmnl',
+        start: RLStations.SavinHill,
+        end: RLStations.Ashmont,
         commands: [line(50)],
     }),
 ];
@@ -180,8 +194,8 @@ const redB = [
     ...redShared,
     wiggle(30, 20),
     stationRange({
-        start: 'place-nqncy',
-        end: 'place-brntn',
+        start: RLStations.NorthQuincy,
+        end: RLStations.Braintree,
         commands: [line(70)],
     }),
 ];
