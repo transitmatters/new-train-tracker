@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import classNames from 'classnames';
 import { Spring } from 'react-spring/renderprops';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';

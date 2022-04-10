@@ -1,7 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
 const CopyPlugin = require('copy-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 // eslint-disable-next-line no-undef
@@ -47,9 +46,6 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-        new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: ['./js/build/*', './css/build/*'],
-        }),
         new HtmlWebpackPlugin({
             template: 'static/template.html',
         }),

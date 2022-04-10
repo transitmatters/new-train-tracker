@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab } from 'reakit';
 
 import { getTrainRoutePairsForLine } from './util';

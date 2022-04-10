@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useLayoutEffect, useEffect } from 'react';
+import { useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
 import * as timeago from 'timeago.js';
 

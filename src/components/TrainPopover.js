@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import { renderTrainLabel } from '../labels';

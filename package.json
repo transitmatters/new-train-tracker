@@ -44,7 +44,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.0",
-    "clean-webpack-plugin": "^4.0.0",
     "concurrently": "^5.1.0",
     "copy-webpack-plugin": "^6.4.1",
     "css-loader": "^3.4.2",

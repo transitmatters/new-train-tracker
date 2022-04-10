@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import Favicon from 'react-favicon';
 import { useTabState } from 'reakit';
 
@@ -19,10 +19,13 @@ const lines = [greenLine, orangeLine, redLine];
 const App = () => {
     const api = useMbtaApi(lines);
     const tabState = useTabState({ loop: false });
-    const tabIndex = tabState.currentId
-        ? tabState.items.findIndex((i) => i.id === tabState.currentId)
-        : 0;
+    // const tabIndex2 = tabState.currentId
+    //     ? tabState.items.findIndex((i) => i.id === tabState?.currentId)
+    //     : 0;
+    // console.log(tabState);
+    const tabIndex = 0;
     const selectedLine = lines[tabIndex];
+    console.log(tabState);
 
     useLayoutEffect(() => {
         const backgroundColor = selectedLine.colorSecondary;
@@ -62,7 +65,7 @@ const App = () => {
             <>
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
-                <Line key={selectedLine.name} line={selectedLine} api={api} />
+                <Line key={selectedLine?.name} line={selectedLine} api={api} />
                 <Footer version={getInitialDataByKey('version')} />
             </>
         );
