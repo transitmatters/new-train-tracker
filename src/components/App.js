@@ -19,13 +19,16 @@ const lines = [greenLine, orangeLine, redLine];
 const App = () => {
     const api = useMbtaApi(lines);
     const tabState = useTabState({ loop: false });
-    // const tabIndex2 = tabState.currentId
-    //     ? tabState.items.findIndex((i) => i.id === tabState?.currentId)
-    //     : 0;
-    // console.log(tabState);
-    const tabIndex = 0;
+    // tabState.items is returning an empty array
+    const tabIndex =
+        tabState.currentId === 'tab-Green'
+            ? 0
+            : tabState.currentId === 'tab-Orange'
+            ? 1
+            : tabState.currentId === 'tab-Green'
+            ? 2
+            : 0;
     const selectedLine = lines[tabIndex];
-    console.log(tabState);
 
     useLayoutEffect(() => {
         const backgroundColor = selectedLine.colorSecondary;
