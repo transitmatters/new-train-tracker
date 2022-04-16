@@ -14,21 +14,16 @@ import { setCssVariable } from './util';
 
 import favicon from '../../static/images/favicon.png';
 
-const lines = [greenLine, orangeLine, redLine];
+const lineByTabId = {
+    'tab-Green': greenLine,
+    'tab-Orange': orangeLine,
+    'tab-Red': redLine,
+};
 
 const App = () => {
-    const api = useMbtaApi(lines);
+    const api = useMbtaApi(Object.values(lineByTabId));
     const tabState = useTabState({ loop: false });
-    // tabState.items is returning an empty array
-    const tabIndex =
-        tabState.currentId === 'tab-Green'
-            ? 0
-            : tabState.currentId === 'tab-Orange'
-            ? 1
-            : tabState.currentId === 'tab-Green'
-            ? 2
-            : 0;
-    const selectedLine = lines[tabIndex];
+    const selectedLine = lineByTabId[tabState?.currentId] || lineByTabId['tab-Green'];
 
     useLayoutEffect(() => {
         const backgroundColor = selectedLine.colorSecondary;
@@ -38,7 +33,7 @@ const App = () => {
 
     useEffect(() => {
         if (api.isReady) {
-            const lineWithTrains = lines.find((line) => {
+            const lineWithTrains = Object.values(lineByTabId).find((line) => {
                 const routeIds = Object.keys(line.routes);
                 return routeIds.some((routeId) => api.trainsByRoute[routeId].length > 0);
             });
@@ -60,7 +55,13 @@ const App = () => {
     }, []);
 
     const renderControls = () => {
-        return <TabPicker tabState={tabState} lines={lines} trainsByRoute={api.trainsByRoute} />;
+        return (
+            <TabPicker
+                tabState={tabState}
+                lines={Object.values(lineByTabId)}
+                trainsByRoute={api.trainsByRoute}
+            />
+        );
     };
 
     if (api.isReady) {
