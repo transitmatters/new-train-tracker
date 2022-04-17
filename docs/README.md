@@ -11,7 +11,7 @@ Dependencies:
 - `npm` `6.12.0`
 - `node` `12.13.0`
 - `python` `3.8`
-- [`pipenv`](https://pipenv.readthedocs.io/en/latest/)
+- [`poetry`](https://python-poetry.org/)
 - [`postgresql`](https://www.postgresql.org/)
 
 Run:
@@ -43,13 +43,13 @@ The Flask app is being run under gunicorn, and this process is controlled by sup
 ### For a fresh deploy
 - Copy `devops/tracker-nginx.conf` into `/etc/nginx/sites-enabled/`. Probably restart nginx (`sudo systemctl restart nginx`)
 - Copy `devops/tracker-supervisor.conf` into `/etc/supervisor/conf.d/`
-- Run `pipenv install`
+- Run `poetry install`
 - Run `npm run build`
 - Run `sudo supervisorctl reload`
 
 ### To deploy changes
 - If supervisor/nginx conf files changed, copy them to those directories and restart services accordingly.
-- If Pipfile has changed, run `pipenv update`. (N.B. If the source of a package has changed, you may have to manually run `pipenv run pip uninstall ____` before updating so the old one is removed)
+- If pyproject.toml has changed, run `poetry update`. (N.B. If the source of a package has changed, you may have to manually run `poetry run pip uninstall ____` before updating so the old one is removed)
 - `npm run build`
 - `sudo supervisorctl restart new-train-tracker`
 
