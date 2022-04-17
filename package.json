@@ -8,13 +8,13 @@
     "build": "webpack --mode production",
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-frontend": "eslint src",
-    "lint-backend": "cd server && pipenv run flake8 --ignore=E501,E731",
-    "postinstall": "pipenv install --python=3.8",
+    "lint-backend": "cd server && poetry run flake8 --ignore=E501,E731",
+    "postinstall": "poetry install",
     "start-prod": "npm run build && NODE_ENV=production npm run start-python",
-    "start-python": "pipenv run python -m server.application",
+    "start-python": "poetry run python -m server.application",
     "start": "concurrently npm:start-python npm:build-dev",
-    "create-history-db": "pipenv run python -m server.history.create_history_db",
-    "update-history-db": "pipenv run python -m server.history.update_history_db"
+    "create-history-db": "poetry run python -m server.history.create_history_db",
+    "update-history-db": "poetry run python -m server.history.update_history_db"
   },
   "repository": {
     "type": "git",
