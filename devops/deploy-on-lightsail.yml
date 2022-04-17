@@ -2,7 +2,7 @@
 - name: deploy latest new train tracker on lightsail
   hosts: all
   remote_user: ubuntu
-  become: yes
+  become_user: ubuntu
   tasks:
     - name: get latest github repo
       git:
@@ -43,8 +43,6 @@
       shell: npm ci
       args:
         chdir: /home/ubuntu/new-train-tracker
-      environment:
-        PATH: '/home/ubuntu/.local/bin:{{ ansible_env.PATH }}'
 
     - name: build application with npm
       shell: npm run build
