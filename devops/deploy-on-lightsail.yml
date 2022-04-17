@@ -39,13 +39,8 @@
         state: restarted
         daemon_reload: yes
 
-    - name: update pipenv dependencies
-      shell: pipenv update
-      args:
-        chdir: /home/ubuntu/new-train-tracker 
-
-    - name: update npm
-      shell: npm update
+    - name: update app dependencies
+      shell: npm install
       args:
         chdir: /home/ubuntu/new-train-tracker 
 
