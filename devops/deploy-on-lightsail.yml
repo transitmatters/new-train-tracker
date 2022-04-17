@@ -4,6 +4,9 @@
   remote_user: ubuntu
   become: yes
   tasks:
+    - name: ensure repo is recognized as safe
+      shell: git config --global --add safe.directory /home/ubuntu/new-train-tracker
+
     - name: get latest github repo
       git:
         repo: https://github.com/transitmatters/new-train-tracker.git
