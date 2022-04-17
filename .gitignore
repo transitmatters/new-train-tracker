@@ -4,6 +4,7 @@ node_modules
 dist/
 venv/
 hosts
+inventory
 *.pem
 traintracker-dev.nginx.conf
 __pycache__/
