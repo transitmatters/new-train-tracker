@@ -39,8 +39,8 @@
         state: restarted
         daemon_reload: yes
 
-    - name: update app dependencies
-      shell: npm install
+    - name: install app dependencies
+      shell: npm ci
       args:
         chdir: /home/ubuntu/new-train-tracker 
 
