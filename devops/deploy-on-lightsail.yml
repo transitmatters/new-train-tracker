@@ -2,7 +2,7 @@
 - name: deploy latest new train tracker on lightsail
   hosts: all
   remote_user: ubuntu
-  become: yes
+  become_user: ubuntu
   tasks:
     - name: get latest github repo
       git:
@@ -15,12 +15,16 @@
         src: /home/ubuntu/new-train-tracker/devops/tracker-supervisor.conf
         dest: /etc/supervisor/conf.d/
         remote_src: yes
+      become: yes
+      become_user: root
 
     - name: copy nginx config file
       copy:
         src: /home/ubuntu/new-train-tracker/devops/tracker-nginx.conf
         dest: /etc/nginx/sites-enabled/
         remote_src: yes
+      become: yes
+      become_user: root
 
     - name: copy secrets file
       copy:
@@ -32,12 +36,16 @@
       service:
         name: supervisor 
         state: restarted
+      become: yes
+      become_user: root
 
     - name: restart nginx
       systemd:
         name: nginx
         state: restarted
         daemon_reload: yes
+      become: yes
+      become_user: root
 
     - name: install app dependencies
       shell: npm ci
@@ -53,3 +61,5 @@
 
     - name: restart new train tracker service
       shell: supervisorctl restart new-train-tracker
+      become: yes
+      become_user: root
