@@ -23,28 +23,28 @@ const getTrainPositions = (routes, isTestMode, isFirstRequest) => {
         }
     }
     const testSuffix = isTestMode ? '?testMode=1' : '';
-    return fetch(`/trains/${routes.join(',')}${testSuffix}`).then(res => res.json());
+    return fetch(`/trains/${routes.join(',')}${testSuffix}`).then((res) => res.json());
 };
 
-const getStationsForRoute = route => {
+const getStationsForRoute = (route) => {
     const initialStopsData = getInitialDataByKey('stops');
     if (initialStopsData && initialStopsData[route]) {
         return Promise.resolve(initialStopsData[route]);
     }
-    return fetch(`/stops/${route}`).then(res => res.json());
+    return fetch(`/stops/${route}`).then((res) => res.json());
 };
 
-const getRoutesInfo = routes => {
+const getRoutesInfo = (routes) => {
     const initialRoutesData = getInitialDataByKey('routes');
     if (initialRoutesData) {
         return Promise.resolve(initialRoutesData);
     }
-    return fetch(`/routes/${routes.join(',')}`).then(res => res.json());
+    return fetch(`/routes/${routes.join(',')}`).then((res) => res.json());
 };
 
-export const useMbtaApi = lines => {
+export const useMbtaApi = (lines) => {
     const routeNames = lines
-        .map(line => Object.keys(line.routes))
+        .map((line) => Object.keys(line.routes))
         .reduce((a, b) => [...a, ...b], [])
         .sort((a, b) => (a > b ? 1 : -1));
 
@@ -58,11 +58,11 @@ export const useMbtaApi = lines => {
     const getTrains = useCallback(() => {
         const testMode = getIsTestMode();
         const nextTrainsByRoute = {};
-        routeNames.forEach(routeName => {
+        routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames, testMode, isInitialFetch).then(trains => {
-            trains.forEach(train => nextTrainsByRoute[train.route].push(train));
+        getTrainPositions(routeNames, testMode, isInitialFetch).then((trains) => {
+            trains.forEach((train) => nextTrainsByRoute[train.route].push(train));
             setTrainsByRoute(nextTrainsByRoute);
         });
         setIsInitialFetch(false);
@@ -71,8 +71,8 @@ export const useMbtaApi = lines => {
     useEffect(() => {
         const nextStopsByRoute = {};
         Promise.all(
-            routeNames.map(routeName =>
-                getStationsForRoute(routeName).then(data => {
+            routeNames.map((routeName) =>
+                getStationsForRoute(routeName).then((data) => {
                     nextStopsByRoute[routeName] = data;
                 })
             )
@@ -82,8 +82,8 @@ export const useMbtaApi = lines => {
 
     useEffect(() => {
         const nextRoutesInfo = {};
-        getRoutesInfo(routeNames).then(routes => {
-            routes.forEach(route => {
+        getRoutesInfo(routeNames).then((routes) => {
+            routes.forEach((route) => {
                 nextRoutesInfo[route.id] = route;
             });
             setRoutesInfoByRoute(nextRoutesInfo);

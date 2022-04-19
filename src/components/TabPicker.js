@@ -1,11 +1,11 @@
-import React, { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab } from 'reakit';
 
 import { getTrainRoutePairsForLine } from './util';
 
-export const getTabIdForLine = line => `tab-${line.name}`;
+export const getTabIdForLine = (line) => `tab-${line.name}`;
 
-const TabPicker = props => {
+const TabPicker = (props) => {
     const { lines, tabState, trainsByRoute } = props;
     const wrapperRef = useRef(null);
     const selectedIndicatorRef = useRef(null);
@@ -29,7 +29,7 @@ const TabPicker = props => {
     return (
         <TabList {...tabState} className="tab-picker" aria-label="Select a line" ref={wrapperRef}>
             <div className="selected-indicator" ref={selectedIndicatorRef} />
-            {lines.map(line => {
+            {lines.map((line) => {
                 const trains = getTrainRoutePairsForLine(trainsByRoute, line.routes);
                 return (
                     <Tab

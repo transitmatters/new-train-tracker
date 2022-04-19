@@ -1,6 +1,6 @@
 import React from 'react';
 
-const abbreviateStationName = station =>
+const abbreviateStationName = (station) =>
     station
         .replace('Boston University', 'BU')
         .replace('Hynes Convention Center', 'Hynes')
@@ -9,7 +9,7 @@ const abbreviateStationName = station =>
         .replace('Museum of Fine Arts', 'MFA')
         .replace('Massachusetts Avenue', 'Mass Ave');
 
-const getReadableStatusLabel = status => {
+const getReadableStatusLabel = (status) => {
     if (status === 'INCOMING_AT' || status === 'IN_TRANSIT_TO') {
         return 'Near';
     }
@@ -21,7 +21,7 @@ const getReadableStatusLabel = status => {
 
 const getStationNameAndStatusForTrain = (train, route) => {
     const { stations } = route;
-    const nearStation = stations.find(st => st.id === train.stationId);
+    const nearStation = stations.find((st) => st.id === train.stationId);
     if (!nearStation) {
         return { stationName: null, status: null };
     }

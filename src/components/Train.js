@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import classNames from 'classnames';
 import { Spring } from 'react-spring/renderprops';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
@@ -26,9 +26,9 @@ const getBoundingRectWithinParent = (element, parent) => {
     };
 };
 
-const drawEquilateralTriangle = radius =>
+const drawEquilateralTriangle = (radius) =>
     [0, 1, 2]
-        .map(idx => {
+        .map((idx) => {
             const theta = idx * (2 / 3) * Math.PI;
             const x = radius * Math.cos(theta);
             const y = radius * Math.sin(theta);
@@ -37,7 +37,7 @@ const drawEquilateralTriangle = radius =>
         .reduce((a, b) => `${a} ${b}`)
         .trim();
 
-const Train = props => {
+const Train = (props) => {
     const { train, route, colors, focusOnMount, labelPosition, onFocus, onBlur } = props;
     const { direction } = train;
     const { pathInterpolator, stations } = route;
@@ -97,7 +97,7 @@ const Train = props => {
 
     return (
         <Spring to={{ offset }} config={getSpringConfig()}>
-            {spring => {
+            {(spring) => {
                 const { x, y, theta } = pathInterpolator(spring.offset);
                 const correctedTheta = direction === 1 ? 180 + theta : theta;
                 return (

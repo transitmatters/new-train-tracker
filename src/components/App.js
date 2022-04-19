@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import Favicon from 'react-favicon';
 import { useTabState } from 'reakit';
 
@@ -14,15 +14,16 @@ import { setCssVariable } from './util';
 
 import favicon from '../../static/images/favicon.png';
 
-const lines = [greenLine, orangeLine, redLine];
+const lineByTabId = {
+    'tab-Green': greenLine,
+    'tab-Orange': orangeLine,
+    'tab-Red': redLine,
+};
 
 const App = () => {
-    const api = useMbtaApi(lines);
+    const api = useMbtaApi(Object.values(lineByTabId));
     const tabState = useTabState({ loop: false });
-    const tabIndex = tabState.currentId
-        ? tabState.items.findIndex(i => i.id === tabState.currentId)
-        : 0;
-    const selectedLine = lines[tabIndex];
+    const selectedLine = lineByTabId[tabState?.currentId] || lineByTabId['tab-Green'];
 
     useLayoutEffect(() => {
         const backgroundColor = selectedLine.colorSecondary;
@@ -32,9 +33,9 @@ const App = () => {
 
     useEffect(() => {
         if (api.isReady) {
-            const lineWithTrains = lines.find(line => {
+            const lineWithTrains = Object.values(lineByTabId).find((line) => {
                 const routeIds = Object.keys(line.routes);
-                return routeIds.some(routeId => api.trainsByRoute[routeId].length > 0);
+                return routeIds.some((routeId) => api.trainsByRoute[routeId].length > 0);
             });
             if (lineWithTrains) {
                 tabState.setCurrentId(getTabIdForLine(lineWithTrains));
@@ -44,7 +45,7 @@ const App = () => {
     }, [api.isReady]);
 
     useEffect(() => {
-        const listener = evt => {
+        const listener = (evt) => {
             if (evt.key === 'Tab') {
                 setCssVariable('--focus-outline-style', '0px 0px 0px 2px white');
             }
@@ -54,7 +55,13 @@ const App = () => {
     }, []);
 
     const renderControls = () => {
-        return <TabPicker tabState={tabState} lines={lines} trainsByRoute={api.trainsByRoute} />;
+        return (
+            <TabPicker
+                tabState={tabState}
+                lines={Object.values(lineByTabId)}
+                trainsByRoute={api.trainsByRoute}
+            />
+        );
     };
 
     if (api.isReady) {
@@ -62,7 +69,7 @@ const App = () => {
             <>
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
-                <Line key={selectedLine.name} line={selectedLine} api={api} />
+                <Line key={selectedLine?.name} line={selectedLine} api={api} />
                 <Footer version={getInitialDataByKey('version')} />
             </>
         );
