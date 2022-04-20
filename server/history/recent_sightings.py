@@ -13,6 +13,7 @@ def choose_between_sightings(best, next):
         return next
     return best
 
+
 # Get the last time that a new train was seen on each line
 # If the POSTGRES_ENABLED flag is True, query the database, otherwise generate test data
 def get_recent_sightings_for_lines(test_mode=False):
