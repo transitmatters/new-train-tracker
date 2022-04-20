@@ -21,6 +21,8 @@ Run:
 
 To use an API key, put it in `server/secrets.py` or as an environment variable `MBTA_V3_API_KEY`
 
+To disable the database, set the `POSTGRES_ENABLED` flag to `False` in `server/secrets.py`
+
 On Windows:
 - In `server/secrets.py`, update `POSTGRES_USER` and `POSTGRES_PASS` variables with your credentials.
 
