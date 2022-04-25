@@ -52,7 +52,7 @@
       args:
         chdir: /home/ubuntu/new-train-tracker
       environment:
-        PATH: '/home/ubuntu/.local/bin:{{ ansible_env.PATH }}'
+        PATH: /home/ubuntu/.local/bin:{{ ansible_env.PATH }}
 
     - name: build application with npm
       shell: npm run build
