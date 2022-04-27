@@ -1,9 +1,10 @@
 from functools import reduce
 import psycopg2.extras
-from datetime import datetime, timedelta
 
 from server.history.util import get_history_db_connection, HISTORY_TABLE_NAME
 from server.secrets import POSTGRES_ENABLED
+
+LINES = ["Orange", "Red", "Green"]
 
 
 def choose_between_sightings(best, next):
@@ -18,14 +19,7 @@ def choose_between_sightings(best, next):
 # If the POSTGRES_ENABLED flag is True, query the database, otherwise generate test data
 def get_recent_sightings_for_lines(test_mode=False):
     res = {}
-    lines = ["Orange", "Red", "Green"]
     if not POSTGRES_ENABLED:
-        res = {}
-        for line in lines:
-            res[line] = {
-                "car": "1234",
-                "time": datetime.utcnow() - timedelta(days=1, hours=1)
-            }
         return res
     cxn = get_history_db_connection()
     with cxn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
@@ -33,7 +27,7 @@ def get_recent_sightings_for_lines(test_mode=False):
             f"SELECT * FROM {HISTORY_TABLE_NAME} WHERE (%s OR is_new=true)", [test_mode]
         )
         rows = cursor.fetchall()
-    for line in lines:
+    for line in LINES:
         most_recent_sighting = reduce(
             choose_between_sightings,
             filter(lambda row: row["line"] == line, rows),
