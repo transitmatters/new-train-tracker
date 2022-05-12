@@ -10,7 +10,7 @@ import Line from './Line';
 import Header from './Header';
 import Footer from './Footer';
 import TabPicker, { getTabIdForLine } from './TabPicker';
-import { Stats } from './TrainStats';
+import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
 
 import favicon from '../../static/images/favicon.png';
@@ -71,7 +71,7 @@ const App = () => {
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
                 <Line key={selectedLine?.name} line={selectedLine} api={api} />
-                <Stats line={selectedLine?.name} />
+                <LineStats line={selectedLine?.name} />
                 <Footer version={getInitialDataByKey('version')} />
             </>
         );
