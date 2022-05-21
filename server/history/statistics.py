@@ -2,6 +2,7 @@ import csv
 import datetime
 from server.s3 import download
 
+BUCKET = "tm-mbta-performance"
 CACHE = {}
 CACHE_LAST_REFRESH_DAY = None
 ROUTES = ["Red", "Orange"]
@@ -10,7 +11,7 @@ S3_KEY_NEW_TRAINS = "NewTrains/run_counts/{}.csv"
 
 def download_history(route):
     key = S3_KEY_NEW_TRAINS.format(route)
-    return download(key, compressed=False)
+    return download(BUCKET, key, compressed=False)
 
 
 def get_cached_summaries():
