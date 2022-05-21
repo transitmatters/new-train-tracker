@@ -1,9 +1,9 @@
 import boto3
 import botocore
-from botocore.exceptions import ClientError
 import zlib
 
-s3 = boto3.client('s3', config=botocore.client.Config(max_pool_connections=15))
+s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
+
 
 def download(bucket, key, encoding="utf8", compressed=True):
     obj = s3.get_object(Bucket=bucket, Key=key)

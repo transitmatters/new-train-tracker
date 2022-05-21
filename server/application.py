@@ -52,6 +52,7 @@ def routes(route_ids_string):
     route_data = asyncio.run(mbta_api.routes_info(route_ids))
     return flask.Response(json.dumps(route_data), mimetype="application/json")
 
+
 @application.route("/statistics")
 def statistics():
     summaries_by_route = get_cached_summaries()

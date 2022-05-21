@@ -30,7 +30,7 @@ def get_cached_summaries():
 def summarize(route):
     csv_buffer = download_history(route).strip().splitlines(True)
     reader = csv.reader(csv_buffer)
-    next(reader, None) # Skip the csv header
+    next(reader, None)  # Skip the csv header
 
     max = 0
     max_date = None
