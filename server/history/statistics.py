@@ -10,7 +10,6 @@ S3_KEY_NEW_TRAINS = "NewTrains/run_counts/{}.csv"
 
 def download_history(route):
     key = S3_KEY_NEW_TRAINS.format(route)
-    print("Downloading", key)
     return download(key, compressed=False)
 
 
@@ -28,7 +27,7 @@ def get_cached_summaries():
 
 
 def summarize(route):
-    csv_buffer = download_history(route).splitlines(True)
+    csv_buffer = download_history(route).strip().splitlines(True)
     reader = csv.reader(csv_buffer)
     next(reader, None) # Skip the csv header
 
