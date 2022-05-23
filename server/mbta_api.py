@@ -74,7 +74,7 @@ def reverse_if_stops_out_of_order(stops, first_expected_stop_name, second_expect
         if index_of_first > index_of_second:
             return list(reversed(stops))
         return stops
-    except StopIteration:
+    except (StopIteration, RuntimeError):
         # This shouldn't happen if we specified our stops right
         return stops
 
