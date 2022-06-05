@@ -1,5 +1,4 @@
 import boto3
-import botocore
 import zlib
 
 s3 = boto3.client("s3")
