@@ -2,7 +2,7 @@ import boto3
 import botocore
 import zlib
 
-s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
+s3 = boto3.client("s3")
 
 
 def download(bucket, key, encoding="utf8", compressed=True):

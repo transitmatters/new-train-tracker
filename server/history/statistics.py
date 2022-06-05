@@ -19,7 +19,9 @@ def get_cached_summaries():
     global CACHE_LAST_REFRESH_DAY
     now = datetime.datetime.utcnow()
     todays_data_upload = now.replace(hour=10, minute=6, second=0, microsecond=0)
-    if CACHE_LAST_REFRESH_DAY is None or (CACHE_LAST_REFRESH_DAY != now.date() and now > todays_data_upload):
+
+    # If cache is empty, or never refreshed, or if it hasn't been refreshed today yet
+    if len(CACHE) == 0 or CACHE_LAST_REFRESH_DAY is None or (CACHE_LAST_REFRESH_DAY != now.date() and now > todays_data_upload):
         CACHE_LAST_REFRESH_DAY = now.date()
         for route in ROUTES:
             CACHE[route] = summarize(route)
