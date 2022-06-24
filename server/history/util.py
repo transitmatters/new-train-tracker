@@ -1,5 +1,4 @@
 import psycopg2
-import os
 
 import server.secrets as secrets
 
