@@ -1,12 +1,13 @@
-version: '3'
+version: ''
 
 services:
   ntt:
     build:
       context: .
-    depends_on:
-      postgres:
-          condition: service_healthy
+    restart: on-failure
+    # depends_on:
+    #   postgres:
+    #       condition: service_healthy
     ports:
       - "5001:5001"
 
