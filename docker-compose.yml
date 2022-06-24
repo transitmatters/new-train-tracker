@@ -5,9 +5,6 @@ services:
     build:
       context: .
     restart: on-failure
-    # depends_on:
-    #   postgres:
-    #       condition: service_healthy
     ports:
       - "5001:5001"
 
