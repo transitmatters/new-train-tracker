@@ -20,8 +20,9 @@ CREATE INDEX {HISTORY_TABLE_NAME}_car ON {HISTORY_TABLE_NAME}(car);
 
 
 def get_history_db_connection(with_db_name=True):
+
     dbname = secrets.POSTGRES_DB if with_db_name else None
     if secrets.POSTGRES_PASS == '':
-        return psycopg2.connect(user=secrets.POSTGRES_USER, dbname=dbname)
+        return psycopg2.connect(user=secrets.POSTGRES_USER, dbname=dbname, host="postgres", port="5432")
     else:
-        return psycopg2.connect(user=secrets.POSTGRES_USER, password=secrets.POSTGRES_PASS, dbname=dbname)
+        return psycopg2.connect(user=secrets.POSTGRES_USER, password=secrets.POSTGRES_PASS, dbname=dbname,  host="postgres", port="5432")

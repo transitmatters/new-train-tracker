@@ -1,0 +1,28 @@
+version: ''
+
+services:
+  ntt:
+    build:
+      context: .
+    restart: on-failure
+    ports:
+      - "5001:5001"
+
+  postgres:
+    image: postgres:14.2
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - APP_DB_USER=ubuntu
+      - APP_DB_PASS=ubuntu
+      - APP_DB_NAME=newtrains
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    expose:
+      - "5432"
