@@ -9,6 +9,7 @@ services:
     restart: on-failure
     environment:
       - NEW_BUILD=true
+      - POSTGRES_HOST=postgres
     ports:
       - "5001:5001"
 
