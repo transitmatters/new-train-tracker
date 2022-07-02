@@ -3,7 +3,7 @@ import { createInterpolatorForSegments } from './interpolation';
 const createPathBuilder = () => {
     let path = '';
     return {
-        add: nextPath => {
+        add: (nextPath) => {
             if (path.length === 0) {
                 path = nextPath;
             }
@@ -50,7 +50,7 @@ const prerenderRoute = (shape, stationIds) => {
     }
     let { turtle } = start;
 
-    const consumeCommand = command => {
+    const consumeCommand = (command) => {
         const segment = command(turtle);
         const { path, length, turtle: nextTurtle } = segment;
         segments.push(segment);
@@ -60,13 +60,13 @@ const prerenderRoute = (shape, stationIds) => {
         return segment;
     };
 
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
         if (entry.type === 'stationRange') {
             const initialLength = totalLength;
             const segmentsInRange = [];
             const stationIdsWithinRange = getStationIdsWithinRange(entry, stationIds);
 
-            entry.commands.forEach(command => {
+            entry.commands.forEach((command) => {
                 const segment = consumeCommand(command);
                 segmentsInRange.push(segment);
             });
@@ -99,7 +99,7 @@ export const prerenderLine = (line, stationsByRoute, routesInfo) => {
     Object.entries(line.routes).forEach(([routeId, { shape }]) => {
         const stations = stationsByRoute[routeId];
         const routeInfo = routesInfo[routeId];
-        const stationIds = stations.map(s => s.id);
+        const stationIds = stations.map((s) => s.id);
         const { pathInterpolator, stationOffsets, pathDirective } = prerenderRoute(
             shape,
             stationIds
@@ -109,7 +109,7 @@ export const prerenderLine = (line, stationsByRoute, routesInfo) => {
             ...routeInfo,
             id: routeId,
             pathInterpolator: pathInterpolator,
-            stations: stations.map(station => {
+            stations: stations.map((station) => {
                 return {
                     id: station.id,
                     name: station.name,

@@ -1,4 +1,5 @@
 MBTA_V3_API_KEY = ''
+POSTGRES_ENABLED = True
 POSTGRES_DB = 'newtrains'
 # POSTGRES_HOST = 'postgres'
 

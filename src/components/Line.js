@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useLayoutEffect, useEffect } from 'react';
+import { useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
 import * as timeago from 'timeago.js';
 
@@ -9,7 +9,7 @@ import Train from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 import { getInitialDataByKey } from '../initialData';
 
-const abbreviateStationName = station =>
+const abbreviateStationName = (station) =>
     station
         .replace('Boston College', 'B.C.')
         .replace('Hynes Convention Center', 'Hynes')
@@ -17,7 +17,7 @@ const abbreviateStationName = station =>
 
 const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
     const distanceMap = new Map(
-        pairs.map(pair => {
+        pairs.map((pair) => {
             const { train } = pair;
             const station = stationPositions[train.stationId];
             if (station) {
@@ -31,7 +31,7 @@ const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
     return pairs.sort((a, b) => distanceMap.get(a) - distanceMap.get(b));
 };
 
-const renderEmptyNoticeForLine = line => {
+const renderEmptyNoticeForLine = (line) => {
     const sightings = getInitialDataByKey('sightings');
     const sightingForLine = sightings && sightings[line];
     if (sightingForLine) {
@@ -48,7 +48,7 @@ const getRouteColor = (colors, routeId, focusedRouteId) => {
         : colors.unfocusedRoute;
 };
 
-const Line = props => {
+const Line = (props) => {
     const { api, line } = props;
     const { getStationLabelPosition, fixedTrainLabelPosition } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
@@ -138,7 +138,7 @@ const Line = props => {
         ));
     };
 
-    const renderStationLabelsForRouteId = routeId => {
+    const renderStationLabelsForRouteId = (routeId) => {
         const { stationPositions } = routes[routeId];
         const isRouteFocused = routeId === focusedRouteId;
         return Object.entries(stationPositions).map(([stationId, pos]) => {
@@ -175,7 +175,7 @@ const Line = props => {
 
     const renderLabelsForUnfocusedStations = () => {
         return Object.keys(routes)
-            .filter(routeId => routeId !== focusedRouteId)
+            .filter((routeId) => routeId !== focusedRouteId)
             .map(renderStationLabelsForRouteId);
     };
 

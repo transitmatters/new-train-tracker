@@ -1,8 +1,6 @@
-import React from 'react';
-
 import logo from '../../static/images/logo.svg';
 
-const Header = props => {
+const Header = (props) => {
     const { controls } = props;
     return (
         <div className="header">

@@ -1,20 +1,13 @@
-import React, { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import { renderTrainLabel } from '../labels';
 
 const popoverDistance = 15;
 
-const TrainPopover = props => {
-    const {
-        colors,
-        container,
-        fixedPositionStrategy,
-        isVisible,
-        referenceRect,
-        route,
-        train,
-    } = props;
+const TrainPopover = (props) => {
+    const { colors, container, fixedPositionStrategy, isVisible, referenceRect, route, train } =
+        props;
     const { direction } = train;
 
     const containerWidth = container.getBoundingClientRect().width;

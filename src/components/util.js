@@ -7,7 +7,7 @@ export const getTrainRoutePairsForLine = (trainsByRoute, routes) => {
     Object.entries(trainsByRoute).forEach(([routeId, trains]) => {
         const route = routes[routeId];
         if (route) {
-            trains.forEach(train => {
+            trains.forEach((train) => {
                 pairs.push({ train, route });
             });
         }

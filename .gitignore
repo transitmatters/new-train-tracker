@@ -1,8 +1,10 @@
+.DS_Store
 node_modules
 .vscode
 dist/
 venv/
 hosts
+inventory
 *.pem
 traintracker-dev.nginx.conf
 __pycache__/
