@@ -9,11 +9,11 @@ ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:/root/.local/bin:${PATH}"
 RUN node --version
 RUN npm --version
 
-RUN pip3 install pipenv
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
 COPY . /new-train-tracker
 WORKDIR /new-train-tracker

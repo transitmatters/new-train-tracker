@@ -7,4 +7,4 @@ else
     echo "old build"
 fi 
 
-/usr/local/bin/pipenv run gunicorn -b localhost:5001 -w 1 server.application:application
+/root/.local/bin/poetry run gunicorn -b localhost:5001 -w 1 server.application:application
