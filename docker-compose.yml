@@ -1,10 +1,14 @@
-version: ''
+version: '2'
 
 services:
   ntt:
+    depends_on:
+        - postgres
     build:
       context: .
     restart: on-failure
+    environment:
+      - NEW_BUILD=true
     ports:
       - "5001:5001"
 
@@ -26,3 +30,7 @@ services:
       - ./db:/docker-entrypoint-initdb.d/
     expose:
       - "5432"
+
+networks:
+  default:
+    name: transit

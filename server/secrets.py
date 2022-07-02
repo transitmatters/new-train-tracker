@@ -1,7 +1,7 @@
 MBTA_V3_API_KEY = ''
 POSTGRES_DB = 'newtrains'
 POSTGRES_HOST = 'postgres'
-POSTGRES_PORT = '5432'
+
 # current set to root as the postgres db on docker doesn't by default create a separate user
 POSTGRES_USER = 'root'  # Update to your Postgres user account if not using ubuntu
 POSTGRES_PASS = 'password'  # Add password if required; Uses account auth on linux

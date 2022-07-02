@@ -17,9 +17,10 @@ RUN pip3 install pipenv
 
 COPY . /new-train-tracker
 WORKDIR /new-train-tracker
+RUN chmod 755 wait-for-it.sh
 RUN npm install
 # needs to be run within the terminal after startup.
 # RUN npm run create-history-db
 
 EXPOSE 5001/tcp
-CMD ["/usr/local/bin/pipenv", "run", "gunicorn", "-b", "localhost:5001", "-w", "1", "server.application:application"]
+CMD ["/bin/bash", "wait-for-it.sh"]
