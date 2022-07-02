@@ -19,8 +19,6 @@ COPY . /new-train-tracker
 WORKDIR /new-train-tracker
 RUN chmod 755 wait-for-it.sh
 RUN npm install
-# needs to be run within the terminal after startup.
-# RUN npm run create-history-db
 
 EXPOSE 5001/tcp
 CMD ["/bin/bash", "wait-for-it.sh"]
