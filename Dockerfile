@@ -9,17 +9,16 @@ ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:/root/.local/bin:${PATH}"
 RUN node --version
 RUN npm --version
 
-RUN pip3 install pipenv
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
 COPY . /new-train-tracker
 WORKDIR /new-train-tracker
+RUN chmod 755 wait-for-it.sh
 RUN npm install
-# needs to be run within the terminal after startup.
-# RUN npm run create-history-db
 
 EXPOSE 5001/tcp
-CMD ["/usr/local/bin/pipenv", "run", "gunicorn", "-b", "localhost:5001", "-w", "1", "server.application:application"]
+CMD ["/bin/bash", "wait-for-it.sh"]
