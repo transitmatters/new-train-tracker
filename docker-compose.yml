@@ -1,4 +1,4 @@
-version: '2'
+version: '3.1'
 
 services:
   ntt:
@@ -7,9 +7,8 @@ services:
     build:
       context: .
     restart: on-failure
-    environment:
-      - NEW_BUILD=true
-      - POSTGRES_HOST=postgres
+    env_file:
+      - .env
     ports:
       - "5001:5001"
 
@@ -21,12 +20,8 @@ services:
       interval: 10s
       retries: 10
     restart: always
-    environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=password
-      - APP_DB_USER=ubuntu
-      - APP_DB_PASS=ubuntu
-      - APP_DB_NAME=newtrains
+    env_file:
+      - .env
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
     expose:
