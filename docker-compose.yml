@@ -1,9 +1,10 @@
-version: '2'
+version: '3.9'
 
 services:
   ntt:
     depends_on:
-        - postgres
+      postgres:
+        condition: service_healthy
     build:
       context: .
     restart: on-failure
@@ -16,7 +17,7 @@ services:
   postgres:
     image: postgres:14.2
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      test: [ "CMD", "pg_isready"]
       timeout: 45s
       interval: 10s
       retries: 10
