@@ -7,4 +7,4 @@ else
     echo "old build"
 fi 
 
-/root/.local/bin/poetry run gunicorn -b localhost:5001 -w 1 server.application:application
+/root/.local/bin/poetry run gunicorn -b 0.0.0.0:5001 -w 1 server.application:application
