@@ -1,6 +1,6 @@
-FROM python:3.8
+FROM python:3.8.13-bullseye
 
-RUN apt-get update && apt-get install -y iputils-ping
+RUN apt-get update && apt-get install -y iputils-ping libpq-dev python3-dev
 
 ARG NEW_BUILD
 ENV NODE_VERSION=16.14.2
