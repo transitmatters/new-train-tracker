@@ -10,7 +10,7 @@ const getTrainDistanceFraction = (fromStation, toStation, train) => {
 
 export const interpolateTrainOffset = (train, stations) => {
     const { stationId, direction, currentStatus } = train;
-    const toStation = stations.find(station => station.id === stationId);
+    const toStation = stations.find((station) => station.id === stationId);
     if (!toStation) {
         // The train is leaving its specified route; this can happen e.g. when a Green-B train
         // turns around at Park but is perceived to be moving toward Government Center.
@@ -49,8 +49,8 @@ export const interpolateTrainOffset = (train, stations) => {
     return toStation.offset;
 };
 
-export const createInterpolatorForSegments = segments => {
-    return partialLength => {
+export const createInterpolatorForSegments = (segments) => {
+    return (partialLength) => {
         let accumulatedLength = 0;
         let ptr = 0;
         while (accumulatedLength <= partialLength) {

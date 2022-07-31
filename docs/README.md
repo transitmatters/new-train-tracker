@@ -8,10 +8,9 @@ Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 
 ## Install & Run
 Dependencies:
-- `npm` `6.12.0`
-- `node` `12.13.0`
+- `node` `16.x`
 - `python` `3.8`
-- [`pipenv`](https://pipenv.readthedocs.io/en/latest/)
+- [`poetry`](https://python-poetry.org/)
 - [`postgresql`](https://www.postgresql.org/)
 
 Run:
@@ -21,6 +20,8 @@ Run:
 - visit [http://localhost:5000/](http://localhost:5000/)
 
 To use an API key, put it in `server/secrets.py` or as an environment variable `MBTA_V3_API_KEY`
+
+To disable the database, set the `POSTGRES_ENABLED` flag to `False` in `server/secrets.py`
 
 On Windows:
 - In `server/secrets.py`, update `POSTGRES_USER` and `POSTGRES_PASS` variables with your credentials.
@@ -43,13 +44,13 @@ The Flask app is being run under gunicorn, and this process is controlled by sup
 ### For a fresh deploy
 - Copy `devops/tracker-nginx.conf` into `/etc/nginx/sites-enabled/`. Probably restart nginx (`sudo systemctl restart nginx`)
 - Copy `devops/tracker-supervisor.conf` into `/etc/supervisor/conf.d/`
-- Run `pipenv install`
+- Run `poetry install`
 - Run `npm run build`
 - Run `sudo supervisorctl reload`
 
 ### To deploy changes
 - If supervisor/nginx conf files changed, copy them to those directories and restart services accordingly.
-- If Pipfile has changed, run `pipenv update`. (N.B. If the source of a package has changed, you may have to manually run `pipenv run pip uninstall ____` before updating so the old one is removed)
+- If pyproject.toml has changed, run `poetry update`. (N.B. If the source of a package has changed, you may have to manually run `poetry run pip uninstall ____` before updating so the old one is removed)
 - `npm run build`
 - `sudo supervisorctl restart new-train-tracker`
 

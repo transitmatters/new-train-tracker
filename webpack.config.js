@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 // eslint-disable-next-line no-undef
@@ -9,14 +9,26 @@ module.exports = {
         filename: '[name].[contenthash].bundle.js',
         chunkFilename: '[name].[contenthash].bundle.js',
     },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    },
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(t|j)sx?$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader',
+                    loader: 'ts-loader',
+                    options: {
+                        transpileOnly: true,
+                    },
                 },
+            },
+            {
+                enforce: 'pre',
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'source-map-loader',
             },
             {
                 test: /\.css$/i,
@@ -32,10 +44,13 @@ module.exports = {
             },
         ],
     },
+    devtool: 'source-map',
     plugins: [
-        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: 'static/template.html',
+        }),
+        new CopyPlugin({
+            patterns: [{ from: 'static/images/apple-touch-icon.png', to: 'apple-touch-icon.png' }],
         }),
         new PwaManifestPlugin({
             name: 'TransitMatters New Train Tracker',
