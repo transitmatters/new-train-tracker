@@ -48,16 +48,18 @@
       become_user: root
 
     - name: install app dependencies
-      shell: /home/ubuntu/n/bin/npm ci
+      shell: npm ci
       args:
         chdir: /home/ubuntu/new-train-tracker
       environment:
-        PATH: /home/ubuntu/.local/bin:{{ ansible_env.PATH }}
+        PATH: /home/ubuntu/n/bin:/home/ubuntu/.local/bin:{{ ansible_env.PATH }}
 
     - name: build application with npm
-      shell: /home/ubuntu/n/bin/npm run build
+      shell: npm run build
       args:
         chdir: /home/ubuntu/new-train-tracker      
+      environment:
+        PATH: /home/ubuntu/n/bin:/home/ubuntu/.local/bin:{{ ansible_env.PATH }}
 
     - name: restart new train tracker service
       shell: supervisorctl restart new-train-tracker
