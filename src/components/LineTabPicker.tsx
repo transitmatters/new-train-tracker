@@ -1,14 +1,20 @@
 import { useRef, useLayoutEffect } from 'react';
-import { TabList, Tab } from 'reakit';
+import { TabList, Tab, TabStateReturn } from 'reakit';
+import { Line, Train } from '../types';
 
 import { getTrainRoutePairsForLine } from './util';
 
-export const getTabIdForLine = (line) => `tab-${line.name}`;
+export const getTabIdForLine = (line: Line) => `tab-${line.name}`;
 
-const TabPicker = (props) => {
-    const { lines, tabState, trainsByRoute } = props;
-    const wrapperRef = useRef(null);
-    const selectedIndicatorRef = useRef(null);
+interface LineTabPickerProps {
+    lines: Line[];
+    tabState: TabStateReturn;
+    trainsByRoute: { [key: string]: Train[]};
+}
+
+export const LineTabPicker: React.FC<LineTabPickerProps> = ({ lines, tabState, trainsByRoute }) => {
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    const selectedIndicatorRef = useRef<HTMLDivElement>(null);
 
     // Used to ensure the size of the selected indicator changes when trains appear.
     const totalTrainCount = Object.values(trainsByRoute).reduce((a, b) => a + b.length, 0);
@@ -17,11 +23,11 @@ const TabPicker = (props) => {
         const { current: wrapper } = wrapperRef;
         const { current: selectedIndicator } = selectedIndicatorRef;
         if (wrapper && selectedIndicator) {
-            const selectedEl = wrapper.querySelector(`#${tabState.selectedId}`);
+            const selectedEl = wrapper.querySelector(`#${tabState.selectedId}`) as HTMLElement | null;
             if (selectedEl) {
                 selectedIndicator.style.width = selectedEl.clientWidth + 'px';
                 selectedIndicator.style.transform = `translateX(${selectedEl.offsetLeft}px)`;
-                selectedIndicator.style.backgroundColor = selectedEl.getAttribute('data-color');
+                selectedIndicator.style.backgroundColor = selectedEl.getAttribute('data-color') as string;
             }
         }
     }, [tabState.selectedId, totalTrainCount]);
@@ -56,5 +62,3 @@ const TabPicker = (props) => {
         </TabList>
     );
 };
-
-export default TabPicker;

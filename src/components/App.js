@@ -9,10 +9,11 @@ import { getInitialDataByKey } from '../initialData';
 import Line from './Line';
 import Header from './Header';
 import Footer from './Footer';
-import TabPicker, { getTabIdForLine } from './TabPicker';
+import { LineTabPicker, getTabIdForLine } from './LineTabPicker';
 import { setCssVariable } from './util';
 
 import favicon from '../../static/images/favicon.png';
+import { AgeTabPicker } from './AgeTabPicker';
 
 const lineByTabId = {
     'tab-Green': greenLine,
@@ -21,8 +22,10 @@ const lineByTabId = {
 };
 
 const App = () => {
-    const api = useMbtaApi(Object.values(lineByTabId));
     const tabState = useTabState({ loop: false });
+    const ageTabState = useTabState({ currentId: 'new_vehicles', loop: false });
+
+    const api = useMbtaApi(Object.values(lineByTabId), ageTabState.currentId);
     const selectedLine = lineByTabId[tabState?.currentId] || lineByTabId['tab-Green'];
 
     useLayoutEffect(() => {
@@ -56,11 +59,14 @@ const App = () => {
 
     const renderControls = () => {
         return (
-            <TabPicker
-                tabState={tabState}
-                lines={Object.values(lineByTabId)}
-                trainsByRoute={api.trainsByRoute}
-            />
+            <div>
+                <AgeTabPicker tabState={ageTabState} />
+                <LineTabPicker
+                    tabState={tabState}
+                    lines={Object.values(lineByTabId)}
+                    trainsByRoute={api.trainsByRoute}
+                />
+            </div>
         );
     };
 

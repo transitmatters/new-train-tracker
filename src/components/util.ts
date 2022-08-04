@@ -1,9 +1,10 @@
-import React from 'react';
+import { createContext } from 'react';
+import { Route, Routes, Train } from '../types';
 
-export const PopoverContainerContext = React.createContext(null);
+export const PopoverContainerContext = createContext(null);
 
-export const getTrainRoutePairsForLine = (trainsByRoute, routes) => {
-    const pairs = [];
+export const getTrainRoutePairsForLine = (trainsByRoute: { [key: string]: Train[]}, routes: Routes) => {
+    const pairs: { train: Train, route: Route }[] = [];
     Object.entries(trainsByRoute).forEach(([routeId, trains]) => {
         const route = routes[routeId];
         if (route) {
@@ -15,11 +16,11 @@ export const getTrainRoutePairsForLine = (trainsByRoute, routes) => {
     return pairs;
 };
 
-export const setCssVariable = (variable, value) => {
+export const setCssVariable = (variable: string, value: string | null) => {
     document.documentElement.style.setProperty(variable, value);
 };
 
-let doesPreferReducedMotion = null;
+let doesPreferReducedMotion: boolean | null = null;
 export const prefersReducedMotion = () => {
     if (doesPreferReducedMotion === null) {
         doesPreferReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

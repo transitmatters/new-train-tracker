@@ -143,6 +143,10 @@ def filter_new(vehicle_array):
     return list(filter(lambda veh: veh["isNewTrain"], vehicle_array))
 
 
+def filter_old(vehicle_array):
+    return list(filter(lambda veh: not veh["isNewTrain"], vehicle_array))
+
+
 def filter_route(line, vehicle_array):
     return list(filter(lambda veh: line in veh["route"], vehicle_array))
 
@@ -242,7 +246,9 @@ async def initial_request_data(route_ids, test_mode=False):
         "version": git_tag,
         "sightings": sightings,
         "routes": routes,
-        "vehicles": vehicle_data if test_mode else filter_new(vehicle_data),
+        "vehicles": vehicle_data,
+        "old_vehicles": filter_old(vehicle_data),
+        "new_vehicles": filter_new(vehicle_data),
         "vehicle_stats": calc_stats(vehicle_data),
         "stops": dict(zip(route_ids, stops)),
     }

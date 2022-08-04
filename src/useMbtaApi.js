@@ -15,11 +15,11 @@ const getIsTestMode = () => {
 
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via Flask route defined in application.py
-const getTrainPositions = (routes, isTestMode, isFirstRequest) => {
+const getTrainPositions = (routes, isTestMode, isFirstRequest, fetchKey = 'new_vehicles') => {
     if (isFirstRequest) {
-        const initialTrainsData = getInitialDataByKey('vehicles');
+        const initialTrainsData = getInitialDataByKey(fetchKey);
         if (initialTrainsData) {
-            return Promise.resolve(initialTrainsData);
+            return Promise.resolve({ [fetchKey]: initialTrainsData });
         }
     }
     const testSuffix = isTestMode ? '?testMode=1' : '';
@@ -42,7 +42,7 @@ const getRoutesInfo = (routes) => {
     return fetch(`/routes/${routes.join(',')}`).then((res) => res.json());
 };
 
-export const useMbtaApi = (lines) => {
+export const useMbtaApi = (lines, trainType) => {
     const routeNames = lines
         .map((line) => Object.keys(line.routes))
         .reduce((a, b) => [...a, ...b], [])
@@ -61,12 +61,12 @@ export const useMbtaApi = (lines) => {
         routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames, testMode, isInitialFetch).then((trains) => {
-            trains.forEach((train) => nextTrainsByRoute[train.route].push(train));
+        getTrainPositions(routeNames, testMode, isInitialFetch, trainType).then((trains) => {
+            trains[trainType].forEach((train) => nextTrainsByRoute[train.route].push(train));
             setTrainsByRoute(nextTrainsByRoute);
         });
         setIsInitialFetch(false);
-    }, [routeNames, isInitialFetch]);
+    }, [routeNames, isInitialFetch, trainType]);
 
     useEffect(() => {
         const nextStopsByRoute = {};
@@ -91,7 +91,7 @@ export const useMbtaApi = (lines) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routeNamesKey]);
 
-    useEffect(getTrains, [routeNamesKey]);
+    useEffect(getTrains, [routeNamesKey, trainType]);
 
     useEffect(() => {
         const timeout = setTimeout(getTrains, 10 * 1000);
