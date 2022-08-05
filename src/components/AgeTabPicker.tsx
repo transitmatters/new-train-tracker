@@ -37,14 +37,14 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState }) => {
                         className="tab"
                         key={trainType.key}
                         as="div"
-                        data-color={'brown'}
+                        data-color={'lightgrey'}
                     >
                         <div
                             aria-label={trainType.label}
-                            className="icon"
-                            style={{ backgroundColor: 'grey' }}
+                            className="icon age"
+                            style={{ backgroundColor: 'lightgrey' }}
                         >
-                            {trainType.label}
+                            {trainType.label.toUpperCase()}
                         </div>
                         <div className="label">
                             trains

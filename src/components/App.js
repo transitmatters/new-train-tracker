@@ -59,7 +59,7 @@ const App = () => {
 
     const renderControls = () => {
         return (
-            <div>
+            <div className={'selectors'}>
                 <AgeTabPicker tabState={ageTabState} />
                 <LineTabPicker
                     tabState={tabState}
