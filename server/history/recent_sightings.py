@@ -4,7 +4,7 @@ import psycopg2.extras
 from server.history.util import get_history_db_connection, HISTORY_TABLE_NAME
 from server.secrets import POSTGRES_ENABLED
 
-LINES = ["Orange", "Red", "Green"]
+LINES = ["Orange", "Red", "Green", "Blue"]
 
 
 def choose_between_sightings(best, next):

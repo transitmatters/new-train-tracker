@@ -87,6 +87,8 @@ def maybe_reverse(stops, route):
         return reverse_if_stops_out_of_order(stops, "Park Street", "Downtown Crossing")
     if route == "Orange":
         return reverse_if_stops_out_of_order(stops, "Oak Grove", "Wellington")
+    if route == "Blue":
+        return reverse_if_stops_out_of_order(stops, "Bowdoin", "Wonderland")
     return stops
 
 
@@ -151,6 +153,7 @@ def calc_stats(vehicle_array):
     totalGreen = filter_route("Green", vehicle_array)
     totalOrange = filter_route("Orange", vehicle_array)
     totalRed = filter_route("Red", vehicle_array)
+    totalBlue = filter_route("Blue", vehicle_array)
 
     # intialize dictionary of stats
     vehicle_stats = {
@@ -165,6 +168,10 @@ def calc_stats(vehicle_array):
         "Red": {
             "totalActive": len(totalRed),
             "totalNew": len(filter_new(totalRed))
+        },
+        "Blue": {
+            "totalActive": len(totalBlue),
+            "totalNew": len(filter_new(totalBlue))
         }
     }
 

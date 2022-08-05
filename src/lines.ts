@@ -21,7 +21,7 @@ const GLStations = {
     StMarysStreet: 'place-smary',
     Fenway: 'place-fenwy',
     Prudential: 'place-prmnl',
-} as const
+} as const;
 
 const glSharedStations = [
     GLStations.UnionSquare,
@@ -214,6 +214,32 @@ export const redLine = {
         'Red-B': {
             derivedFromRouteId: 'Red',
             shape: redB,
+        },
+    },
+};
+
+const enum BLStations {
+    Bowdoin = 'place-bomnl',
+    Wonderland = 'place-wondl',
+}
+
+export const blueLine = {
+    name: 'Blue',
+    abbreviation: 'BL',
+    colorSecondary: '#3434D1',
+    color: '#7CA5E3',
+    getStationLabelPosition: () => 'right',
+    fixedTrainLabelPosition: 'right',
+    routes: {
+        Blue: {
+            shape: [
+                start(0, 0, 90),
+                stationRange({
+                    end: BLStations.Bowdoin,
+                    start: BLStations.Wonderland,
+                    commands: [line(250)],
+                }),
+            ],
         },
     },
 };
