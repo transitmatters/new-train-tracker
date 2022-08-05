@@ -31,4 +31,6 @@ td:nth-child(2) {
     text-align: right; 
 }
 
-
+.updated {
+    font-size: smaller;
+}
