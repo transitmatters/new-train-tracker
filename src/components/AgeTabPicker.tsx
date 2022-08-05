@@ -7,9 +7,11 @@ const trainTypes: TrainAge[] = [{ key: 'old_vehicles', label: 'Old'}, { key: 'ne
 
 interface AgeTabPickerProps {
     tabState: TabStateReturn;
+    tabColor: string;
+
 }
 
-export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState }) => {
+export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState, tabColor }) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const selectedIndicatorRef = useRef<HTMLDivElement>(null);
 
@@ -21,10 +23,23 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState }) => {
             if (selectedEl) {
                 selectedIndicator.style.width = selectedEl.clientWidth + 'px';
                 selectedIndicator.style.transform = `translateX(${selectedEl.offsetLeft}px)`;
-                selectedIndicator.style.backgroundColor = selectedEl.getAttribute('data-color') as string;
+                selectedIndicator.style.transition = '500ms all cubic-bezier(0.86, 0, 0.07, 1)';
             }
         }
     }, [tabState.selectedId]);
+
+    // Handle color change immediate transition
+    useLayoutEffect(() => {
+        const { current: wrapper } = wrapperRef;
+        const { current: selectedIndicator } = selectedIndicatorRef;
+        if (wrapper && selectedIndicator) {
+            const selectedEl = wrapper.querySelector(`#${tabState.selectedId}`) as HTMLElement | null;
+            if (selectedEl) {
+                selectedIndicator.style.backgroundColor = tabColor;
+                selectedIndicator.style.transition = '0ms background-color';
+            }
+        }
+    }, [tabColor]);
 
     return (
         <TabList {...tabState} className="tab-picker" aria-label="Select a line" ref={wrapperRef}>
@@ -37,12 +52,12 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState }) => {
                         className="tab"
                         key={trainType.key}
                         as="div"
-                        data-color={'lightgrey'}
+                        data-color={tabColor}
                     >
                         <div
                             aria-label={trainType.label}
                             className="icon age"
-                            style={{ backgroundColor: 'lightgrey' }}
+                            style={{ backgroundColor: tabColor }}
                         >
                             {trainType.label.toUpperCase()}
                         </div>

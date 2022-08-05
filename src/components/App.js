@@ -57,10 +57,13 @@ const App = () => {
         return () => document.removeEventListener('keydown', listener);
     }, []);
 
+    const selectedLineColor = lineByTabId[tabState.currentId]?.color;
+    console.log(lineByTabId, tabState.currentId, lineByTabId[tabState.currentId]);
+
     const renderControls = () => {
         return (
             <div className={'selectors'}>
-                <AgeTabPicker tabState={ageTabState} />
+                <AgeTabPicker tabState={ageTabState} tabColor={selectedLineColor} />
                 <LineTabPicker
                     tabState={tabState}
                     lines={Object.values(lineByTabId)}
