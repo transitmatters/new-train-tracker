@@ -15,7 +15,7 @@ red_is_new = lambda x: int(x) >= 1900 and int(x) <= 2151
 green_is_new = lambda x: int(x) >= 3900 and int(x) <= 3924
 orange_is_new = lambda x: int(x) >= 1400 and int(x) <= 1551
 silver_is_new = lambda x: int(x) >= 1294 and int(x) <= 1299
-blue_is_new = False
+blue_is_new = lambda _: False
 
 
 def get_is_new_dict(route_ids, test_fn):
