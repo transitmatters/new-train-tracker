@@ -1,0 +1,26 @@
+{
+    "categories": [
+      {
+        "title": "## 🚄 Enhancements",
+        "labels": ["enhancement"]
+      },
+      {
+        "title": "## 🚂 Bug Fixes",
+        "labels": ["bug fix"]
+      },
+      {
+        "title": "### 🚉 Dependencies",
+        "labels": ["dependencies"]
+      },
+      {
+        "title": "### 🚆 CI/CD",
+        "labels": ["ci/cd"]
+      }
+    ],
+    "ignore_labels": ["release"],
+    "pr_template": "- ${{TITLE}} (#${{NUMBER}})",
+    "tag_resolver": {
+      "method": "sort"
+    },
+    "base_branches": ["master"]
+  }

@@ -1,0 +1,55 @@
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  # It is also possible to trigger via the API:
+  # https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "The tag of the version that is being deployed"
+        required: true
+        type: string
+
+name: Make a GitHub release with a deployment changelog
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Retrieve the tag of the latest release
+        uses: actions/github-script@v6
+        id: latest-release
+        with:
+          result-encoding: string
+          script: |
+            const release = await github.rest.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            })
+            return release.data.tag_name
+
+      - name: Build Release Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          fromTag: ${{ steps.latest-release.outputs.result }} # From the latest release
+          toTag: ${{ inputs.tag }} # To the deployed version
+          ignorePreReleases: true
+          configuration: ".github/release-config.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          # Default token (secrets.GITHUB_TOKEN) is sufficient
+          # because this step does not require access to another private repo
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.tag }}
+          release_name: Release ${{ inputs.tag }}
+          draft: false
+          prerelease: ${{ contains(github.ref, '-') }}
+          body: ${{steps.github_release.outputs.changelog}}
