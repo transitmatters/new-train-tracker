@@ -41,6 +41,14 @@ Additional requirements:
 Nginx serves as a reverse-proxy for the app running on localhost:5001.
 The Flask app is being run under gunicorn, and this process is controlled by supervisor, which will restart after failure or reboot automatically. (Supervisor is similar to systemd in this regard)
 
+### Cut a new release
+1. Add a new release commit bumping to the version in package.json
+2. Add a new tag tied to that version bump commit
+3. Push that commit and tag to master
+4. Profit! (CI runs on tag and creates new release)
+
+Alternatively run `release.bash` to automate these steps.
+
 ### For a fresh deploy
 - Copy `devops/tracker-nginx.conf` into `/etc/nginx/sites-enabled/`. Probably restart nginx (`sudo systemctl restart nginx`)
 - Copy `devops/tracker-supervisor.conf` into `/etc/supervisor/conf.d/`
