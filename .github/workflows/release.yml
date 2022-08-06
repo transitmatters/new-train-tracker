@@ -1,3 +1,5 @@
+name: Make a GitHub release with a deployment changelog
+
 on:
   # Allows you to run this workflow manually from the Actions tab
   # It is also possible to trigger via the API:
@@ -8,8 +10,6 @@ on:
         description: "The tag of the version that is being deployed"
         required: true
         type: string
-
-name: Make a GitHub release with a deployment changelog
 
 jobs:
   release:

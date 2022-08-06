@@ -22,5 +22,5 @@
     "tag_resolver": {
       "method": "sort"
     },
-    "base_branches": ["master"]
+    "base_branches": ["master", "main"]
   }
