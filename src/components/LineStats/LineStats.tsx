@@ -24,12 +24,12 @@ export const LineStats = ({ line }: Props): JSX.Element => {
                 <table className="stats-table">
                     <tbody>
                         <tr>
-                            <td>Old Trains Active:</td>
-                            <td>{lineName?.totalOldActive}</td>
+                            <td>Maximum trains seen:</td>
+                            <td>{lineName?.max?.value}</td>
                         </tr>
                         <tr>
-                            <td>Old Trains Inactive:</td>
-                            <td>{lineName?.totalOldInactive}</td>
+                            <td>On date:</td>
+                            <td>{lineName?.max?.on_date}</td>
                         </tr>
                     </tbody>
                 </table>
