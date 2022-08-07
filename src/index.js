@@ -8,5 +8,6 @@ const container = document.getElementById('root');
 ReactDOM.render(
     <React.StrictMode>
         <App />
-    </React.StrictMode>, container
+    </React.StrictMode>,
+    container
 );
