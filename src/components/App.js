@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect } from 'react';
 import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine } from '../lines';
-import { useMbtaApi } from '../useMbtaApi';
+import { useMbtaApi } from '../hooks/useMbtaApi';
 import { getInitialDataByKey } from '../initialData';
 
 import Line from './Line';

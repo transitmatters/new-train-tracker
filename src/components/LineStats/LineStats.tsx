@@ -1,4 +1,4 @@
-import * as stats from '../../../static/static_data.json';
+import { useAPICall } from '../../hooks/useAPICall';
 import './LineStats.css';
 
 interface Props {
@@ -6,7 +6,16 @@ interface Props {
 }
 
 export const LineStats = ({ line }: Props): JSX.Element => {
-    const lineName = stats[line];
+    const { data, error, loading } = useAPICall(
+        'https://traintracker.transitmatters.org/statistics',
+        'GET',
+        null
+    );
+
+    console.log(line);
+    console.log(data);
+
+    const lineName = data[line];
 
     return (
         <details className="stats-container">
@@ -14,14 +23,6 @@ export const LineStats = ({ line }: Props): JSX.Element => {
             {lineName ? (
                 <table className="stats-table">
                     <tbody>
-                        <tr>
-                            <td>New Trains Delivered:</td>
-                            <td>{lineName?.totalNewDelivered}</td>
-                        </tr>
-                        <tr>
-                            <td>New Trains Awaiting Delivery:</td>
-                            <td>{lineName?.totalNewUndelivered}</td>
-                        </tr>
                         <tr>
                             <td>Old Trains Active:</td>
                             <td>{lineName?.totalOldActive}</td>
@@ -35,7 +36,7 @@ export const LineStats = ({ line }: Props): JSX.Element => {
             ) : null}
             <div className={'updated'}>
                 <span style={{ fontWeight: 'bold' }}>Delivery info last updated: </span>
-                <span>{new Date(stats.Updated).toDateString()}</span>
+                {/* <span>{new Date(stats.Updated).toDateString()}</span> */}
             </div>
         </details>
     );

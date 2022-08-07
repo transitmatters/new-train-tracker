@@ -5,7 +5,7 @@ Provides the __NTT_INITIAL_DATA__ JSON blob that is embedded in the initial serv
 
 import { useEffect, useState, useCallback } from 'react';
 
-import { getInitialDataByKey } from './initialData';
+import { getInitialDataByKey } from '../initialData';
 
 const getIsTestMode = () => {
     const params = new URLSearchParams(window.location.search);
