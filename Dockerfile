@@ -3,7 +3,7 @@ FROM python:3.8.13-bullseye
 RUN apt-get update && apt-get install -y iputils-ping libpq-dev python3-dev
 
 ARG NEW_BUILD
-ENV NODE_VERSION=16.14.2
+ENV NODE_VERSION=16.16.0
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
