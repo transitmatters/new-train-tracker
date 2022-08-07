@@ -8,9 +8,12 @@ import { getInitialDataByKey } from '../initialData';
 import Line from './Line';
 import Header from './Header';
 import Footer from './Footer';
+import Favicon from 'react-favicon';
 import TabPicker, { getTabIdForLine } from './TabPicker';
 import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
+
+import favicon from '../../static/images/favicon.png';
 
 const lineByTabId = {
     'tab-Green': greenLine,
@@ -65,6 +68,7 @@ const App = () => {
     if (api.isReady) {
         return (
             <>
+                <Favicon url={favicon} />
                 <Header controls={renderControls()} />
                 <Line key={selectedLine?.name} line={selectedLine} api={api} />
                 <LineStats line={selectedLine?.name} />
