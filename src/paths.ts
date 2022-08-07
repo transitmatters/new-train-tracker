@@ -120,7 +120,7 @@ export const wiggle =
 interface IStationRange {
     start?: string;
     end?: string;
-    stations?: any;
+    stations?: string[];
     commands?: Array<any>;
 }
 
