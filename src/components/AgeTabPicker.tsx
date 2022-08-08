@@ -1,14 +1,20 @@
 import { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab, TabStateReturn } from 'reakit';
 
-type TrainAge = { key: 'old_vehicles', label: 'Old' } | { key: 'new_vehicles', label: 'New'} | { key: 'vehicles', label: 'All'};
+type TrainAge =
+    | { key: 'old_vehicles'; label: 'Old' }
+    | { key: 'new_vehicles'; label: 'New' }
+    | { key: 'vehicles'; label: 'All' };
 
-const trainTypes: TrainAge[] = [{ key: 'old_vehicles', label: 'Old'}, { key: 'new_vehicles', label: 'New'}, { key: 'vehicles', label: 'All'}];
+const trainTypes: TrainAge[] = [
+    { key: 'old_vehicles', label: 'Old' },
+    { key: 'new_vehicles', label: 'New' },
+    { key: 'vehicles', label: 'All' },
+];
 
 interface AgeTabPickerProps {
     tabState: TabStateReturn;
     tabColor: string;
-
 }
 
 export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState, tabColor }) => {
@@ -19,7 +25,9 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState, tabColor }
         const { current: wrapper } = wrapperRef;
         const { current: selectedIndicator } = selectedIndicatorRef;
         if (wrapper && selectedIndicator) {
-            const selectedEl = wrapper.querySelector(`#${tabState.selectedId}`) as HTMLElement | null;
+            const selectedEl = wrapper.querySelector(
+                `#${tabState.selectedId}`
+            ) as HTMLElement | null;
             if (selectedEl) {
                 selectedIndicator.style.width = selectedEl.clientWidth + 'px';
                 selectedIndicator.style.transform = `translateX(${selectedEl.offsetLeft}px)`;
@@ -33,12 +41,15 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState, tabColor }
         const { current: wrapper } = wrapperRef;
         const { current: selectedIndicator } = selectedIndicatorRef;
         if (wrapper && selectedIndicator) {
-            const selectedEl = wrapper.querySelector(`#${tabState.selectedId}`) as HTMLElement | null;
+            const selectedEl = wrapper.querySelector(
+                `#${tabState.selectedId}`
+            ) as HTMLElement | null;
             if (selectedEl) {
                 selectedIndicator.style.backgroundColor = tabColor;
                 selectedIndicator.style.transition = '0ms background-color';
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tabColor]);
 
     return (
@@ -61,9 +72,7 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabState, tabColor }
                         >
                             {trainType.label.toUpperCase()}
                         </div>
-                        <div className="label">
-                            trains
-                        </div>
+                        <div className="label">trains</div>
                     </Tab>
                 );
             })}

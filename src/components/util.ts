@@ -3,8 +3,11 @@ import { Route, Routes, Train } from '../types';
 
 export const PopoverContainerContext = createContext(null);
 
-export const getTrainRoutePairsForLine = (trainsByRoute: { [key: string]: Train[]}, routes: Routes) => {
-    const pairs: { train: Train, route: Route }[] = [];
+export const getTrainRoutePairsForLine = (
+    trainsByRoute: { [key: string]: Train[] },
+    routes: Routes
+) => {
+    const pairs: { train: Train; route: Route }[] = [];
     Object.entries(trainsByRoute).forEach(([routeId, trains]) => {
         const route = routes[routeId];
         if (route) {

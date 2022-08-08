@@ -8,11 +8,11 @@ export interface Line {
 }
 
 export interface Route {
-    shape: Shape
+    shape: Shape;
 }
 
 export interface Routes {
-    [name: string]: Route
+    [name: string]: Route;
 }
 
 export type CurrentStatus = 'IN_TRANSIT_TO' | 'INCOMING_AT' | 'STOPPED_AT';

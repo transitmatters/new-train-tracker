@@ -9,7 +9,7 @@ export const getTabIdForLine = (line: Line) => `tab-${line.name}`;
 interface LineTabPickerProps {
     lines: Line[];
     tabState: TabStateReturn;
-    trainsByRoute: { [key: string]: Train[]};
+    trainsByRoute: { [key: string]: Train[] };
 }
 
 export const LineTabPicker: React.FC<LineTabPickerProps> = ({ lines, tabState, trainsByRoute }) => {
@@ -23,11 +23,15 @@ export const LineTabPicker: React.FC<LineTabPickerProps> = ({ lines, tabState, t
         const { current: wrapper } = wrapperRef;
         const { current: selectedIndicator } = selectedIndicatorRef;
         if (wrapper && selectedIndicator) {
-            const selectedEl = wrapper.querySelector(`#${tabState.selectedId}`) as HTMLElement | null;
+            const selectedEl = wrapper.querySelector(
+                `#${tabState.selectedId}`
+            ) as HTMLElement | null;
             if (selectedEl) {
                 selectedIndicator.style.width = selectedEl.clientWidth + 'px';
                 selectedIndicator.style.transform = `translateX(${selectedEl.offsetLeft}px)`;
-                selectedIndicator.style.backgroundColor = selectedEl.getAttribute('data-color') as string;
+                selectedIndicator.style.backgroundColor = selectedEl.getAttribute(
+                    'data-color'
+                ) as string;
             }
         }
     }, [tabState.selectedId, totalTrainCount]);
