@@ -195,8 +195,10 @@ a {
 }
 
 .tab-picker > .tab > .age {
-    font-size: 0.75em;
+    font-size: 0.65em;
+    height: 1.5em;
     width: 2.75em;
+    padding: 0.25em;
 }
 
 .tab-picker > .tab > .label {
