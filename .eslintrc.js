@@ -33,6 +33,7 @@ module.exports = {
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'warn',
         'react/react-in-jsx-scope': 'off',
+        'no-console': 'warn',
     },
     settings: {
         react: {

@@ -8,7 +8,10 @@ export interface Line {
 }
 
 export interface Route {
-    shape: Shape;
+    shape?: Shape;
+    directionDestinations?: string[];
+    directionNames?: string[];
+    id?: string;
 }
 
 export interface Routes {
@@ -29,6 +32,14 @@ export interface Train {
     tripId: string;
 }
 
+export interface Station {
+    id: string;
+    latitude: number;
+    longitude: number;
+    name: string;
+    route: { id: string; type: string };
+}
+
 interface Shape {
     type: ShapeType;
     path?: string;
@@ -47,3 +58,5 @@ interface Turtle {
     y: number;
     theta: number;
 }
+
+export type VehiclesAge = 'vehicles' | 'new_vehicles' | 'old_vehicles';

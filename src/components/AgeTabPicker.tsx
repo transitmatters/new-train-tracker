@@ -1,10 +1,8 @@
 import { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab, TabStateReturn } from 'reakit';
+import { VehiclesAge } from '../types';
 
-type TrainAge =
-    | { key: 'old_vehicles'; label: 'Old' }
-    | { key: 'new_vehicles'; label: 'New' }
-    | { key: 'vehicles'; label: 'All' };
+type TrainAge = { key: VehiclesAge; label: string };
 
 const trainTypes: TrainAge[] = [
     { key: 'old_vehicles', label: 'Old' },

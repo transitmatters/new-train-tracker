@@ -160,15 +160,18 @@ def calc_stats(vehicle_array):
     vehicle_stats = {
         "Green": {
             "totalActive": len(totalGreen),
-            "totalNew": len(filter_new(totalGreen))
+            "totalNew": len(filter_new(totalGreen)),
+            "totalOld": len(filter_old(totalGreen)),
         },
         "Orange": {
             "totalActive": len(totalOrange),
-            "totalNew": len(filter_new(totalOrange))
+            "totalNew": len(filter_new(totalOrange)),
+            "totalOld": len(filter_old(totalOrange)),
         },
         "Red": {
             "totalActive": len(totalRed),
-            "totalNew": len(filter_new(totalRed))
+            "totalNew": len(filter_new(totalRed)),
+            "totalOld": len(filter_old(totalRed)),
         }
     }
 
@@ -247,8 +250,6 @@ async def initial_request_data(route_ids, test_mode=False):
         "sightings": sightings,
         "routes": routes,
         "vehicles": vehicle_data,
-        "old_vehicles": filter_old(vehicle_data),
-        "new_vehicles": filter_new(vehicle_data),
         "vehicle_stats": calc_stats(vehicle_data),
         "stops": dict(zip(route_ids, stops)),
     }

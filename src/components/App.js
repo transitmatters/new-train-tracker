@@ -58,7 +58,6 @@ const App = () => {
     }, []);
 
     const selectedLineColor = lineByTabId[tabState.currentId]?.color;
-    console.log(lineByTabId, tabState.currentId, lineByTabId[tabState.currentId]);
 
     const renderControls = () => {
         return (
