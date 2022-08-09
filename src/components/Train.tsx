@@ -5,7 +5,7 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 
 import { interpolateTrainOffset } from '../interpolation';
 import { PopoverContainerContext, prefersReducedMotion } from './util';
-import TrainPopover from './TrainPopover';
+import { TrainPopover } from './TrainPopover';
 
 const getSpringConfig = () => {
     if (prefersReducedMotion()) {
@@ -14,7 +14,7 @@ const getSpringConfig = () => {
     return undefined;
 };
 
-const getBoundingRectWithinParent = (element, parent) => {
+const getBoundingRectWithinParent = (element: SVGGElement, parent) => {
     const elementRect = element.getBoundingClientRect();
     const parentRect = parent.getBoundingClientRect();
 
@@ -37,14 +37,13 @@ const drawEquilateralTriangle = (radius) =>
         .reduce((a, b) => `${a} ${b}`)
         .trim();
 
-const Train = (props) => {
-    const { train, route, colors, focusOnMount, labelPosition, onFocus, onBlur } = props;
+export const Train = ({ train, route, colors, focusOnMount, labelPosition, onFocus, onBlur }) => {
     const { direction } = train;
     const { pathInterpolator, stations } = route;
 
-    const [element, setElement] = useState(null);
-    const [isTracked, setIsTracked] = useState(false);
-    const [shouldAutoFocus, setShouldAutoFocus] = useState(focusOnMount);
+    const [element, setElement] = useState<SVGGElement | null>(null);
+    const [isTracked, setIsTracked] = useState<boolean>(false);
+    const [shouldAutoFocus, setShouldAutoFocus] = useState<boolean>(focusOnMount);
 
     const offset = interpolateTrainOffset(train, stations);
     const popoverContainer = useContext(PopoverContainerContext);
@@ -104,12 +103,12 @@ const Train = (props) => {
                     <>
                         <g
                             className={classNames('train', isTracked && 'tracked')}
-                            tabIndex="0"
+                            tabIndex={0}
                             role="listitem"
                             ref={setElement}
                             transform={`translate(${x}, ${y}) rotate(${correctedTheta})`}
                             onFocus={handleFocus}
-                            onClick={() => element.focus()}
+                            onClick={() => element?.focus()}
                             onBlur={handleBlur}
                         >
                             {renderTrainMarker()}
@@ -134,5 +133,3 @@ const Train = (props) => {
         </Spring>
     );
 };
-
-export default Train;

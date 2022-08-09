@@ -1,5 +1,4 @@
-const Footer = (props) => {
-    const { version } = props;
+export const Footer: React.FC<{ version: string }> = ({ version }) => {
     return (
         <div className="footer">
             <p>
@@ -15,4 +14,3 @@ const Footer = (props) => {
 };
 
 Footer.displayName = 'Footer';
-export default Footer;

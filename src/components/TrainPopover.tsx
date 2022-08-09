@@ -1,25 +1,25 @@
 import { useState, useLayoutEffect } from 'react';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { renderTrainLabel } from '../labels';
 
 const popoverDistance = 15;
 
-const TrainPopover = (props) => {
+export const TrainPopover = (props) => {
     const { colors, container, fixedPositionStrategy, isVisible, referenceRect, route, train } =
         props;
     const { direction } = train;
 
     const containerWidth = container.getBoundingClientRect().width;
     const [positionStyle, setPositionStyle] = useState({});
-    const [popoverElement, setPopoverElement] = useState(null);
+    const [popoverElement, setPopoverElement] = useState<HTMLDivElement | null>(null);
     const [positionStrategy, setPositionStrategy] = useState('');
 
     const trainX = referenceRect.left + referenceRect.width / 2;
     const trainY = referenceRect.top + referenceRect.height / 2;
 
-    let popoverWidth = null;
-    let popoverHeight = null;
+    let popoverWidth: number | null = null;
+    let popoverHeight: number | null = null;
 
     if (popoverElement) {
         const popoverBounds = popoverElement.getBoundingClientRect();
@@ -71,7 +71,7 @@ const TrainPopover = (props) => {
         trainY,
     ]);
 
-    return ReactDOM.createPortal(
+    return createPortal(
         <div
             ref={setPopoverElement}
             className={classNames('train-popover', positionStrategy, isVisible && 'visible')}
@@ -85,5 +85,3 @@ const TrainPopover = (props) => {
         container
     );
 };
-
-export default TrainPopover;

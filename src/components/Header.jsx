@@ -1,6 +1,6 @@
 import logo from '../../static/images/logo.svg';
 
-const Header = (props) => {
+export const Header = (props) => {
     const { controls } = props;
     return (
         <div className="header">
@@ -20,4 +20,3 @@ const Header = (props) => {
 };
 
 Header.displayName = 'Header';
-export default Header;
