@@ -24,7 +24,7 @@ module.exports = {
         ecmaVersion: 2020,
         sourceType: 'module',
     },
-    plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
+    plugins: ['react', 'react-hooks', '@typescript-eslint', 'import', 'prettier'],
     rules: {
         'prettier/prettier': 'error',
         'react/jsx-no-target-blank': 0,
@@ -33,6 +33,8 @@ module.exports = {
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'warn',
         'react/react-in-jsx-scope': 'off',
+        'import/no-default-export': 'warn',
+        '@typescript-eslint/no-explicit-any': 'warn',
     },
     settings: {
         react: {
