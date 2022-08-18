@@ -1,71 +1,71 @@
 {
-  "name": "new-train-tracker",
-  "version": "2.1.1",
-  "description": "New Train Tracker by TransitMattters",
-  "main": "index.js",
-  "scripts": {
-    "build-dev": "webpack --watch --mode development",
-    "build": "webpack --mode production",
-    "lint": "npm run lint-frontend && npm run lint-backend",
-    "lint-frontend": "eslint src",
-    "lint-backend": "cd server && poetry run flake8 --ignore=E501,E731",
-    "postinstall": "poetry install",
-    "start-prod": "npm run build && NODE_ENV=production npm run start-python",
-    "start-python": "poetry run python -m server.application",
-    "start": "concurrently npm:start-python npm:build-dev",
-    "create-history-db": "poetry run python -m server.history.create_history_db",
-    "update-history-db": "poetry run python -m server.history.update_history_db"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/transitmatters/new-train-tracker.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/transitmatters/new-train-tracker/issues"
-  },
-  "engines": {
-    "node": "16.x"
-  },
-  "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
-  "dependencies": {
-    "bezier-js": "^2.5.1",
-    "classnames": "^2.2.6",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-favicon": "1.0.1",
-    "react-spring": "^8.0.27",
-    "reakit": "^1.3.11",
-    "seamless-scroll-polyfill": "^1.0.10",
-    "timeago.js": "^4.0.2"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.17",
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
-    "autoprefixer": "^9.8.0",
-    "concurrently": "^5.1.0",
-    "copy-webpack-plugin": "^6.4.1",
-    "css-loader": "^3.4.2",
-    "eslint": "^8.21.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.30.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "file-loader": "^6.0.0",
-    "html-webpack-plugin": "^5.5.0",
-    "postcss-loader": "^3.0.0",
-    "prettier": "^2.7.1",
-    "source-map-loader": "^3.0.1",
-    "style-loader": "^1.1.3",
-    "ts-loader": "^9.2.8",
-    "typescript": "^4.6.3",
-    "url-loader": "^4.0.0",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-pwa-manifest": "^4.3.0"
-  }
+    "name": "new-train-tracker",
+    "version": "2.2.0",
+    "description": "New Train Tracker by TransitMattters",
+    "main": "index.js",
+    "scripts": {
+        "build-dev": "webpack --watch --mode development",
+        "build": "webpack --mode production",
+        "lint": "npm run lint-frontend && npm run lint-backend",
+        "lint-frontend": "eslint src",
+        "lint-backend": "cd server && poetry run flake8 --ignore=E501,E731",
+        "postinstall": "poetry install",
+        "start-prod": "npm run build && NODE_ENV=production npm run start-python",
+        "start-python": "poetry run python -m server.application",
+        "start": "concurrently npm:start-python npm:build-dev",
+        "create-history-db": "poetry run python -m server.history.create_history_db",
+        "update-history-db": "poetry run python -m server.history.update_history_db"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/transitmatters/new-train-tracker.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/transitmatters/new-train-tracker/issues"
+    },
+    "engines": {
+        "node": "16.x"
+    },
+    "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
+    "dependencies": {
+        "bezier-js": "^2.5.1",
+        "classnames": "^2.2.6",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-favicon": "1.0.1",
+        "react-spring": "^8.0.27",
+        "reakit": "^1.3.11",
+        "seamless-scroll-polyfill": "^1.0.10",
+        "timeago.js": "^4.0.2"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.39",
+        "@types/react-dom": "^17.0.17",
+        "@typescript-eslint/eslint-plugin": "^5.32.0",
+        "@typescript-eslint/parser": "^5.32.0",
+        "autoprefixer": "^9.8.0",
+        "concurrently": "^5.1.0",
+        "copy-webpack-plugin": "^6.4.1",
+        "css-loader": "^3.4.2",
+        "eslint": "^8.21.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-react": "^7.30.1",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "file-loader": "^6.0.0",
+        "html-webpack-plugin": "^5.5.0",
+        "postcss-loader": "^3.0.0",
+        "prettier": "^2.7.1",
+        "source-map-loader": "^3.0.1",
+        "style-loader": "^1.1.3",
+        "ts-loader": "^9.2.8",
+        "typescript": "^4.6.3",
+        "url-loader": "^4.0.0",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-pwa-manifest": "^4.3.0"
+    }
 }

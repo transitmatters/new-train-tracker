@@ -143,6 +143,10 @@ def filter_new(vehicle_array):
     return list(filter(lambda veh: veh["isNewTrain"], vehicle_array))
 
 
+def filter_old(vehicle_array):
+    return list(filter(lambda veh: not veh["isNewTrain"], vehicle_array))
+
+
 def filter_route(line, vehicle_array):
     return list(filter(lambda veh: line in veh["route"], vehicle_array))
 
@@ -156,15 +160,18 @@ def calc_stats(vehicle_array):
     vehicle_stats = {
         "Green": {
             "totalActive": len(totalGreen),
-            "totalNew": len(filter_new(totalGreen))
+            "totalNew": len(filter_new(totalGreen)),
+            "totalOld": len(filter_old(totalGreen)),
         },
         "Orange": {
             "totalActive": len(totalOrange),
-            "totalNew": len(filter_new(totalOrange))
+            "totalNew": len(filter_new(totalOrange)),
+            "totalOld": len(filter_old(totalOrange)),
         },
         "Red": {
             "totalActive": len(totalRed),
-            "totalNew": len(filter_new(totalRed))
+            "totalNew": len(filter_new(totalRed)),
+            "totalOld": len(filter_old(totalRed)),
         }
     }
 
@@ -242,7 +249,7 @@ async def initial_request_data(route_ids, test_mode=False):
         "version": git_tag,
         "sightings": sightings,
         "routes": routes,
-        "vehicles": vehicle_data if test_mode else filter_new(vehicle_data),
+        "vehicles": vehicle_data,
         "vehicle_stats": calc_stats(vehicle_data),
         "stops": dict(zip(route_ids, stops)),
     }
