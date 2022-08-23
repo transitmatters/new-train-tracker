@@ -11,6 +11,7 @@ export interface Route {
     shape?: Shape;
     directionDestinations?: string[];
     directionNames?: string[];
+    stations?: Station[];
     id?: string;
 }
 

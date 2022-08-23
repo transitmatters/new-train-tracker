@@ -6,9 +6,9 @@ import { greenLine, orangeLine, redLine } from '../lines';
 import { useMbtaApi } from '../useMbtaApi';
 import { getInitialDataByKey } from '../initialData';
 
-import Line from './Line';
-import Header from './Header';
-import Footer from './Footer';
+import { Line } from './Line';
+import { Header } from './Header';
+import { Footer } from './Footer';
 import { LineTabPicker, getTabIdForLine } from './LineTabPicker';
 import { setCssVariable } from './util';
 
