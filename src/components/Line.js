@@ -5,7 +5,7 @@ import * as timeago from 'timeago.js';
 import { prerenderLine } from '../prerender';
 import { renderTextTrainlabel } from '../labels';
 
-import Train from './Train';
+import { Train } from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 import { getInitialDataByKey } from '../initialData';
 
@@ -48,7 +48,7 @@ const getRouteColor = (colors, routeId, focusedRouteId) => {
         : colors.unfocusedRoute;
 };
 
-const Line = (props) => {
+export const Line = (props) => {
     const { api, line } = props;
     const { getStationLabelPosition, fixedTrainLabelPosition } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
@@ -224,5 +224,3 @@ const Line = (props) => {
         </div>
     );
 };
-
-export default Line;

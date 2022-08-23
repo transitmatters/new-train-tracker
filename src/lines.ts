@@ -21,7 +21,7 @@ const GLStations = {
     StMarysStreet: 'place-smary',
     Fenway: 'place-fenwy',
     Prudential: 'place-prmnl',
-} as const
+} as const;
 
 const glSharedStations = [
     GLStations.Lechemere,

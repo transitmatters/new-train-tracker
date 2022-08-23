@@ -27,12 +27,9 @@ def static_files(filename):
 @application.route("/trains/<route_ids_string>")
 def trains(route_ids_string):
     route_ids = route_ids_string.split(",")
-    test_mode = flask.request.args.get("testMode")
     vehicle_data = asyncio.run(
         mbta_api.vehicle_data_for_routes(route_ids)
     )
-    if not test_mode:
-        vehicle_data = mbta_api.filter_new(vehicle_data)
     return flask.Response(json.dumps(vehicle_data), mimetype="application/json")
 
 
