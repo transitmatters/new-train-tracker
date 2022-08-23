@@ -5,15 +5,21 @@ export interface Line {
     colorSecondary: string;
     routes: Routes;
     fixedTrainLabelPosition?: string;
+    getStationLabelPosition: ({ stationId, routeId, isRouteFocused }) => string | null;
 }
 
 export interface Route {
-    shape?: Shape;
+    shape: LineShape[];
     directionDestinations?: string[];
     directionNames?: string[];
     stations?: Station[];
+    stationPositions?: StationPositions;
+    derivedFromRouteId?: string;
+    pathDirective?: string;
     id?: string;
 }
+
+export type StationPositions = Record<string, Turtle>;
 
 export interface Routes {
     [name: string]: Route;
@@ -41,7 +47,7 @@ export interface Station {
     route: { id: string; type: string };
 }
 
-interface Shape {
+export interface Shape {
     type: ShapeType;
     path?: string;
     turtle?: Turtle;
@@ -50,14 +56,31 @@ interface Shape {
     commands?: null[];
     start?: string;
     end?: string;
+    get?: (frac: any) => { x; y };
 }
 
-type ShapeType = 'start' | 'stationRange';
+type ShapeType = 'start' | 'line' | 'branch' | 'stationRange';
 
-interface Turtle {
+export type LineShape = Shape | ((turtle: Turtle) => Shape);
+
+export interface Segment {
+    type: SegmentType;
+    path: string;
+    length: number;
+    turtle: Turtle;
+}
+
+type SegmentType = 'line' | 'branch';
+
+export interface Turtle {
     x: number;
     y: number;
     theta: number;
+}
+
+export interface Pair {
+    route: Route;
+    train: Train;
 }
 
 export type VehiclesAge = 'vehicles' | 'new_vehicles' | 'old_vehicles';
