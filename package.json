@@ -2,7 +2,7 @@
     "name": "new-train-tracker",
     "version": "2.2.0",
     "description": "New Train Tracker by TransitMattters",
-    "main": "index.js",
+    "main": "index.tsx",
     "scripts": {
         "build-dev": "webpack --watch --mode development",
         "build": "webpack --mode production",
