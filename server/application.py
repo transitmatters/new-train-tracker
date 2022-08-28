@@ -30,7 +30,9 @@ def trains(route_ids_string):
     vehicle_data = asyncio.run(
         mbta_api.vehicle_data_for_routes(route_ids)
     )
-    return flask.Response(json.dumps(vehicle_data), mimetype="application/json")
+    return flask.Response(json.dumps(vehicle_data), mimetype="application/json", headers={
+        "Cache-Control": "no-cache"
+    })
 
 
 # takes a single route id
@@ -70,7 +72,10 @@ def root():
         mbta_api.initial_request_data(DEFAULT_ROUTE_IDS, test_mode)
     )
     initial_data["static_data"] = get_static_data()
-    return flask.render_template("index.html", initial_data=initial_data)
+
+    response = flask.make_response(flask.render_template("index.html", initial_data=initial_data))
+    response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 def get_static_data():
