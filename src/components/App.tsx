@@ -12,21 +12,25 @@ import { Footer } from './Footer';
 import { LineTabPicker, getTabIdForLine } from './LineTabPicker';
 import { setCssVariable } from './util';
 
+// @ts-expect-error Favicon png seems to throw typescript error
 import favicon from '../../static/images/favicon.png';
 import { AgeTabPicker } from './AgeTabPicker';
+import { Line as TLine, VehiclesAge } from '../types';
 
-const lineByTabId = {
+const lineByTabId: Record<string, TLine> = {
     'tab-Green': greenLine,
     'tab-Orange': orangeLine,
     'tab-Red': redLine,
 };
 
-const App = () => {
+export const App: React.FC = () => {
     const tabState = useTabState({ loop: false });
     const ageTabState = useTabState({ currentId: 'new_vehicles', loop: false });
 
-    const api = useMbtaApi(Object.values(lineByTabId), ageTabState.currentId);
-    const selectedLine = lineByTabId[tabState?.currentId] || lineByTabId['tab-Green'];
+    const api = useMbtaApi(Object.values(lineByTabId), ageTabState.currentId as VehiclesAge);
+    const selectedLine = tabState.currentId
+        ? lineByTabId[tabState.currentId]
+        : lineByTabId['tab-Green'];
 
     useLayoutEffect(() => {
         const backgroundColor = selectedLine.colorSecondary;
@@ -38,7 +42,10 @@ const App = () => {
         if (api.isReady) {
             const lineWithTrains = Object.values(lineByTabId).find((line) => {
                 const routeIds = Object.keys(line.routes);
-                return routeIds.some((routeId) => api.trainsByRoute[routeId].length > 0);
+                if (api.trainsByRoute !== null) {
+                    // @ts-expect-error Despite the above check, Typescript fails to understand that trainsByRoute won't be null
+                    return routeIds.some((routeId) => api.trainsByRoute[routeId].length > 0);
+                }
             });
             if (lineWithTrains) {
                 tabState.setCurrentId(getTabIdForLine(lineWithTrains));
@@ -57,17 +64,21 @@ const App = () => {
         return () => document.removeEventListener('keydown', listener);
     }, []);
 
-    const selectedLineColor = lineByTabId[tabState.currentId]?.color;
+    const selectedLineColor: string = tabState.currentId
+        ? lineByTabId[tabState.currentId]?.color
+        : greenLine.color;
 
     const renderControls = () => {
         return (
             <div className={'selectors'}>
                 <AgeTabPicker tabState={ageTabState} tabColor={selectedLineColor} />
-                <LineTabPicker
-                    tabState={tabState}
-                    lines={Object.values(lineByTabId)}
-                    trainsByRoute={api.trainsByRoute}
-                />
+                {api.trainsByRoute && (
+                    <LineTabPicker
+                        tabState={tabState}
+                        lines={Object.values(lineByTabId)}
+                        trainsByRoute={api.trainsByRoute}
+                    />
+                )}
             </div>
         );
     };
@@ -85,5 +96,3 @@ const App = () => {
 
     return null;
 };
-
-export default App;

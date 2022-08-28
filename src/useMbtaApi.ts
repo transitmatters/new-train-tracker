@@ -8,6 +8,13 @@ import { useEffect, useState, useCallback } from 'react';
 import { getInitialDataByKey } from './initialData';
 import { Line, Route, Station, Train, VehiclesAge } from './types';
 
+export interface MBTAApi {
+    routesInfo: Record<string, Route> | null;
+    stationsByRoute: Record<string, Station> | null;
+    trainsByRoute: Record<string, Train[]> | null;
+    isReady: boolean;
+}
+
 const getIsTestMode = () => {
     const params = new URLSearchParams(window.location.search);
     const val = params.get('testMode');
@@ -70,7 +77,7 @@ const getRoutesInfo = (routes: string[]) => {
     return fetch(`/routes/${routes.join(',')}`).then((res) => res.json());
 };
 
-export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge) => {
+export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicles'): MBTAApi => {
     const routeNames = lines
         .map((line) => Object.keys(line.routes))
         .reduce((a, b) => [...a, ...b], [])
