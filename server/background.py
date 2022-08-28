@@ -2,7 +2,9 @@ import threading
 import time
 import schedule
 
+
 # Copied from https://schedule.readthedocs.io/en/stable/background-execution.html
+
 
 def run_continuously(interval=1):
     """Continuously run, while executing pending jobs at each

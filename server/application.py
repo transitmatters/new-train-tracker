@@ -22,6 +22,7 @@ application = flask.Flask(__name__, template_folder="../dist")
 background_thread = background.run_continuously()
 last_seen.initialize()
 
+
 # use dist as app root
 @application.route("/<path:filename>")
 def static_files(filename):

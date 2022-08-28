@@ -3,6 +3,7 @@ import subprocess
 from server.mbta_api import routes_info, vehicle_data_for_routes, stops_for_route
 from server.last_seen import get_recent_sightings_for_lines
 
+
 def get_git_tag():
     return str(subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]))[2:-3]
 

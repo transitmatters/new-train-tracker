@@ -8,6 +8,7 @@ import server.secrets as secrets
 from server.routes import get_line_for_route
 from server.routes import DEFAULT_ROUTE_IDS
 
+
 JSON_PATH = "last_seen.json"
 LAST_SEEN_TIMES = {}
 ROUTES = DEFAULT_ROUTE_IDS
@@ -48,7 +49,6 @@ async def update_recent_sightings():
             json.dump(LAST_SEEN_TIMES, file, indent=4, sort_keys=True, default=str)
     except Exception as e:
         print("Couldn't write last seen times to disk: ", e)
-
 
 
 # Get the last time that a new train was seen on each line
