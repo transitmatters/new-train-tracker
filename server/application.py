@@ -10,7 +10,6 @@ import flask
 
 import server.mbta_api as mbta_api
 from server.routes import DEFAULT_ROUTE_IDS
-from server.history.statistics import get_cached_summaries
 
 application = flask.Flask(__name__, template_folder="../dist")
 
@@ -48,12 +47,6 @@ def routes(route_ids_string):
     route_ids = route_ids_string.split(",")
     route_data = asyncio.run(mbta_api.routes_info(route_ids))
     return flask.Response(json.dumps(route_data), mimetype="application/json")
-
-
-@application.route("/statistics")
-def statistics():
-    summaries_by_route = get_cached_summaries()
-    return flask.Response(json.dumps(summaries_by_route), mimetype="application/json")
 
 
 # root function to serve landing page

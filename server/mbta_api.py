@@ -16,7 +16,6 @@ import tempfile
 import traceback
 import subprocess
 
-from server.history.recent_sightings import get_recent_sightings_for_lines
 import server.secrets as secrets
 import server.fleet as fleet
 from server.routes import (
@@ -243,7 +242,8 @@ async def initial_request_data(route_ids, test_mode=False):
             *[stops_for_route(route_id) for route_id in route_ids],
         ]
     )
-    sightings = get_recent_sightings_for_lines()
+    # sightings = get_recent_sightings_for_lines()
+    sightings = {}
     git_tag = get_git_tag()
     return {
         "version": git_tag,
