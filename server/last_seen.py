@@ -34,7 +34,7 @@ async def update_recent_sightings():
     now = datetime.datetime.utcnow()
 
     all_vehicles = await mbta_api.vehicle_data_for_routes(ROUTES)
-    new_vehicles = all_vehicles # mbta_api.filter_new(all_vehicles)
+    new_vehicles = mbta_api.filter_new(all_vehicles)
 
     for vehicle in new_vehicles:
         line = get_line_for_route(vehicle["route"])
