@@ -46,7 +46,7 @@
       become_user: root
       copy:
         src: nginx.conf
-        dest: /etc/nginx/sites-enabled/
+        dest: /etc/nginx/sites-enabled/default
 
     - name: Install nginx
       become: yes
