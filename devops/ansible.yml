@@ -1,0 +1,87 @@
+---
+- name: deploy latest new train tracker on EC2
+  hosts: all
+  remote_user: ubuntu
+  become_user: ubuntu
+  tasks:
+    - name: "Add nodejs apt key"
+      become: yes
+      become_user: root
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+
+    - name: "Add nodejs 16.x ppa for apt repo"
+      become: yes
+      become_user: root
+      apt_repository:
+        repo: deb https://deb.nodesource.com/node_16.x focal main
+        update_cache: yes
+
+    - name: Install nodejs
+      become: yes
+      become_user: root
+      ansible.builtin.apt:
+        name: nodejs
+
+    - name: install poetry
+      shell: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+
+    - name: get latest github repo
+      git:
+        repo: https://github.com/transitmatters/new-train-tracker.git
+        dest: /home/ubuntu/new-train-tracker
+        force: yes
+        version: ec2ify
+
+    - name: copy systemd service file
+      become: yes
+      become_user: root
+      copy:
+        src: systemd.conf
+        dest: /etc/systemd/system/new-train-tracker.service
+
+    - name: copy nginx config file
+      become: yes
+      become_user: root
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/sites-enabled/
+
+    - name: Install nginx
+      become: yes
+      become_user: root
+      ansible.builtin.apt:
+        name: nginx
+
+    - name: copy secrets file
+      copy:
+        src: ec2-secrets.py
+        dest: /home/ubuntu/new-train-tracker/server/secrets.py
+
+    - name: restart nginx
+      become: yes
+      become_user: root
+      systemd:
+        name: nginx
+        state: restarted
+        daemon_reload: yes
+
+    - name: install app dependencies
+      shell: npm ci
+      args:
+        chdir: /home/ubuntu/new-train-tracker
+      environment:
+        PATH: /home/ubuntu/.poetry/bin/:{{ ansible_env.PATH }}
+
+    - name: build application with npm
+      shell: npm run build
+      args:
+        chdir: /home/ubuntu/new-train-tracker
+      environment:
+        PATH: /home/ubuntu/.poetry/bin/:{{ ansible_env.PATH }}
+
+    - name: restart new train tracker service
+      become: yes
+      become_user: root
+      shell: systemctl restart new-train-tracker

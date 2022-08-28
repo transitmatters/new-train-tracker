@@ -1,0 +1,122 @@
+{
+  "Parameters": {
+    "NTTHostname": {
+      "Type": "String",
+      "Default": "ntt-beta.labs.transitmatters.org",
+      "AllowedPattern": "^traintracker\\.transitmatters\\.org$|^.*\\.labs\\.transitmatters\\.org$",
+      "Description": "The hostname for the site; for example: traintracker.transitmatters.org."
+    },
+    "NTTDomain": {
+      "Type": "String",
+      "Default": "labs.transitmatters.org",
+      "AllowedPattern": "^traintracker\\.transitmatters\\.org$|^labs\\.transitmatters\\.org$",
+      "Description": "The parent domain of the site. Most likely traintracker.transitmatters.org or labs.transitmatters.org."
+    },
+    "NTTCertArn": {
+      "Type": "String",
+      "Description": "The ACM ARN of the SSL certificate."
+    }
+  },
+  "Resources": {
+    "NTTInstance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ImageId": "ami-070650c005cce4203",
+        "InstanceType": "t4g.micro",
+        "KeyName": "transitmatters-ntt",
+        "SecurityGroupIds": [
+          { "Ref": "NTTSecurityGroup" }
+        ]
+      }
+    },
+    "NTTSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": "ntt-securitygroup",
+        "GroupDescription": "Allow HTTP and SSH inbound and outbound traffic",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    }
+  },
+  "NTTDNSRecord": {
+    "Type": "AWS::Route53::RecordSet",
+    "Properties": {
+      "Name": {"Fn::Sub": "${NTTHostname}."},
+      "HostedZoneName": {"Fn::Sub": "${NTTDomain}."},
+      "AliasTarget": {
+        "HostedZoneId": "Z2FDTNDATAQYW2",
+        "DNSName": {
+          "Fn::GetAtt": [
+            "NTTCloudFront",
+            "DomainName"
+          ]
+        }
+      },
+      "Type": "A"
+    }
+  },
+  "NTTCloudFront": {
+    "Type": "AWS::CloudFront::Distribution",
+    "Properties": {
+      "DistributionConfig": {
+        "Aliases": [
+          { "Ref": "NTTHostname" }
+        ],
+        "Enabled": "true",
+        "DefaultCacheBehavior": {
+          "Compress": true,
+          "ForwardedValues": {
+            "QueryString": "true"
+          },
+          "TargetOriginId": "only-origin",
+          "ViewerProtocolPolicy": "redirect-to-https"
+        },
+        "DefaultRootObject": "",
+        "Origins": [
+          {
+            "CustomOriginConfig": {
+              "OriginProtocolPolicy": "http-only"
+            },
+            "DomainName": {
+              "Fn::GetAtt": [
+                "NTTInstance",
+                "PublicDnsName"
+              ]
+            },
+            "Id": "only-origin"
+          }
+        ],
+        "PriceClass": "PriceClass_100",
+        "ViewerCertificate": {
+          "MinimumProtocolVersion": "TLSv1.2_2018",
+          "AcmCertificateArn": { "Ref": "NTTCertArn" },
+          "SslSupportMethod": "sni-only"
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "InstanceHostname": {
+      "Description": "NTT's public hostname",
+      "Value": {
+        "Fn::GetAtt": [
+          "NTTInstance",
+          "PublicDnsName"
+        ]
+      }
+    }
+  }
+}

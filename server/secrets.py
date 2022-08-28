@@ -1,8 +1,4 @@
 MBTA_V3_API_KEY = ''
-POSTGRES_ENABLED = True
-POSTGRES_DB = 'newtrains'
-POSTGRES_USER = 'ubuntu'  # Update to your Postgres user account if not using ubuntu
-POSTGRES_PASS = ''  # Add password if required; Uses account auth on linux
 '''
 If you put your api key here, you may want to run
 `git update-index --assume-unchanged server/secrets.py`

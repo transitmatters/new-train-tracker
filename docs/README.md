@@ -11,20 +11,14 @@ Dependencies:
 - `node` `16.x`
 - `python` `3.8`
 - [`poetry`](https://python-poetry.org/)
-- [`postgresql`](https://www.postgresql.org/)
 
 Run:
 - `npm install`
-- `npm run create-history-db` if it is your first time running the application, `npm run update-history-db` otherwise
 - `npm start`
 - visit [http://localhost:5000/](http://localhost:5000/)
 
 To use an API key, put it in `server/secrets.py` or as an environment variable `MBTA_V3_API_KEY`
 
-To disable the database, set the `POSTGRES_ENABLED` flag to `False` in `server/secrets.py`
-
-On Windows:
-- In `server/secrets.py`, update `POSTGRES_USER` and `POSTGRES_PASS` variables with your credentials.
 
 ### Linting
 To lint frontend and backend code, run `npm run lint` in the root directory

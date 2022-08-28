@@ -12,9 +12,7 @@
     "postinstall": "poetry install",
     "start-prod": "npm run build && NODE_ENV=production npm run start-python",
     "start-python": "poetry run python -m server.application",
-    "start": "concurrently npm:start-python npm:build-dev",
-    "create-history-db": "poetry run python -m server.history.create_history_db",
-    "update-history-db": "poetry run python -m server.history.update_history_db"
+    "start": "concurrently npm:start-python npm:build-dev"
   },
   "repository": {
     "type": "git",
