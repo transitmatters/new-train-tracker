@@ -1,6 +1,6 @@
-import React from 'react';
+import { Route, Train } from './types';
 
-const abbreviateStationName = (station) =>
+const abbreviateStationName = (station: string) =>
     station
         .replace('Boston University', 'BU')
         .replace('Hynes Convention Center', 'Hynes')
@@ -19,9 +19,9 @@ const getReadableStatusLabel = (status) => {
     return '';
 };
 
-const getStationNameAndStatusForTrain = (train, route) => {
+const getStationNameAndStatusForTrain = (train: Train, route: Route) => {
     const { stations } = route;
-    const nearStation = stations.find((st) => st.id === train.stationId);
+    const nearStation = stations?.find((st) => st.id === train.stationId);
     if (!nearStation) {
         return { stationName: null, status: null };
     }
@@ -30,7 +30,7 @@ const getStationNameAndStatusForTrain = (train, route) => {
     return { stationName, statusLabel };
 };
 
-const renderStationLabel = (train, route) => {
+const renderStationLabel = (train: Train, route: Route) => {
     const { stationName, statusLabel } = getStationNameAndStatusForTrain(train, route);
     if (!stationName) {
         return null;
@@ -43,13 +43,13 @@ const renderStationLabel = (train, route) => {
     );
 };
 
-const renderDestinationLabel = (train, route) => {
+const renderDestinationLabel = (train: Train, route: Route) => {
     const { directionDestinations } = route;
-    const destinationName = directionDestinations[train.direction];
+    const destinationName = directionDestinations?.[train.direction];
     return <div className="destination">to&nbsp;{destinationName}</div>;
 };
 
-const renderLeadCarLabel = (train, backgroundColor) => {
+const renderLeadCarLabel = (train: Train, backgroundColor) => {
     const { label } = train;
     if (!label) {
         return null;
@@ -61,7 +61,7 @@ const renderLeadCarLabel = (train, backgroundColor) => {
     );
 };
 
-export const renderTrainLabel = (train, route, accentColor) => {
+export const renderTrainLabel = (train: Train, route: Route, accentColor) => {
     return (
         <>
             {renderStationLabel(train, route)}
@@ -71,12 +71,12 @@ export const renderTrainLabel = (train, route, accentColor) => {
     );
 };
 
-export const renderTextTrainlabel = (train, route) => {
+export const renderTextTrainlabel = (train: Train, route: Route) => {
     const { directionDestinations } = route;
     const { stationName, statusLabel } = getStationNameAndStatusForTrain(train, route);
     if (!stationName) {
         return null;
     }
-    const destinationName = directionDestinations[train.direction];
+    const destinationName = directionDestinations?.[train.direction];
     return `${route.id} train ${statusLabel} ${stationName} bound for ${destinationName} with lead car ${train.label}`;
 };

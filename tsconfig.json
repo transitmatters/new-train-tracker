@@ -1,14 +1,15 @@
 {
     "compilerOptions": {
-      "outDir": "./dist/",
-      "sourceMap": true,
-      "strictNullChecks": true,
-      "module": "esnext",
-      "jsx": "react-jsx",
-      "target": "es5",
-      "allowJs": true,
-      "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node",
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "module": "esnext",
+        "jsx": "react-jsx",
+        "target": "es6",
+        "allowJs": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "noImplicitAny": false
     },
     "include": ["src"]
-  }
+}
