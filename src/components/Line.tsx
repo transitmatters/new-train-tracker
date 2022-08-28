@@ -8,14 +8,21 @@ import { renderTextTrainlabel } from '../labels';
 import { Train } from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 import { getInitialDataByKey } from '../initialData';
+import { Line as TLine, Pair, StationPositions } from '../types';
+import { MBTAApi } from '../useMbtaApi';
 
-const abbreviateStationName = (station) =>
+interface LineProps {
+    api: MBTAApi;
+    line: TLine;
+}
+
+const abbreviateStationName = (station: string) =>
     station
         .replace('Boston College', 'B.C.')
         .replace('Hynes Convention Center', 'Hynes')
         .replace('Heath Street', 'Heath');
 
-const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
+const sortTrainRoutePairsByDistance = (pairs: Pair[], stationPositions: StationPositions) => {
     const distanceMap = new Map(
         pairs.map((pair) => {
             const { train } = pair;
@@ -28,6 +35,7 @@ const sortTrainRoutePairsByDistance = (pairs, stationPositions) => {
             return [pair, 0];
         })
     );
+    // @ts-expect-error pair could in theory not exist in map, resulting in undefined subtraction, but unlikely
     return pairs.sort((a, b) => distanceMap.get(a) - distanceMap.get(b));
 };
 
@@ -48,14 +56,13 @@ const getRouteColor = (colors, routeId, focusedRouteId) => {
         : colors.unfocusedRoute;
 };
 
-export const Line = (props) => {
-    const { api, line } = props;
+export const Line: React.FC<LineProps> = ({ api, line }) => {
     const { getStationLabelPosition, fixedTrainLabelPosition } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
-    const [viewbox, setViewbox] = useState(undefined);
-    const [svg, setSvg] = useState(null);
+    const [viewbox, setViewbox] = useState<string>();
+    const [svg, setSvg] = useState<SVGSVGElement | null>(null);
     const [shouldFocusOnFirstTrain, setShouldFocusOnFirstTrain] = useState(true);
-    const [focusedRouteId, setFocusedRouteId] = useState(null);
+    const [focusedRouteId, setFocusedRouteId] = useState<string | undefined>();
 
     const colors = {
         route: 'white',
@@ -64,7 +71,7 @@ export const Line = (props) => {
         background: line.colorSecondary,
     };
 
-    const [container, setContainer] = useState(null);
+    const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
     const { routes, stationPositions, stations } = useMemo(
         () => prerenderLine(line, stationsByRoute, routesInfo),
@@ -90,8 +97,8 @@ export const Line = (props) => {
             const y = bbox.y - paddingY;
             const height = bbox.height + paddingY * 2;
             setViewbox(`${x} ${y} ${width} ${height}`);
-            setCssVariable('--line-bbox-height', height);
-            setCssVariable('--line-bbox-width', width);
+            setCssVariable('--line-bbox-height', height.toString());
+            setCssVariable('--line-bbox-width', width.toString());
         }
     }, [svg]);
 
@@ -107,18 +114,20 @@ export const Line = (props) => {
         return Object.entries(routes)
             .map(([routeId, { stationPositions }]) => {
                 const routeColor = getRouteColor(colors, routeId, focusedRouteId);
-                return Object.entries(stationPositions).map(([stationId, pos]) => {
-                    return (
-                        <circle
-                            cx={0}
-                            cy={0}
-                            r={1}
-                            key={`${routeId}-${stationId}-dot`}
-                            transform={`translate(${pos.x}, ${pos.y})`}
-                            fill={routeColor}
-                        />
-                    );
-                });
+                if (stationPositions) {
+                    return Object.entries(stationPositions).map(([stationId, pos]) => {
+                        return (
+                            <circle
+                                cx={0}
+                                cy={0}
+                                r={1}
+                                key={`${routeId}-${stationId}-dot`}
+                                transform={`translate(${pos.x}, ${pos.y})`}
+                                fill={routeColor}
+                            />
+                        );
+                    });
+                }
             })
             .flat();
     };
@@ -133,7 +142,7 @@ export const Line = (props) => {
                 colors={colors}
                 labelPosition={fixedTrainLabelPosition}
                 onFocus={() => setFocusedRouteId(route.id)}
-                onBlur={() => setFocusedRouteId(null)}
+                onBlur={() => setFocusedRouteId(undefined)}
             />
         ));
     };
@@ -141,36 +150,38 @@ export const Line = (props) => {
     const renderStationLabelsForRouteId = (routeId) => {
         const { stationPositions } = routes[routeId];
         const isRouteFocused = routeId === focusedRouteId;
-        return Object.entries(stationPositions).map(([stationId, pos]) => {
-            if (renderedStationLabelIds.has(stationId)) {
+        if (stationPositions) {
+            return Object.entries(stationPositions).map(([stationId, pos]) => {
+                if (renderedStationLabelIds.has(stationId)) {
+                    return null;
+                }
+                const labelPosition = getStationLabelPosition({
+                    stationId,
+                    routeId,
+                    isRouteFocused,
+                });
+                const stationName =
+                    stations[stationId] && abbreviateStationName(stations[stationId].name);
+                if (labelPosition && stationName) {
+                    renderedStationLabelIds.add(stationId);
+                    return (
+                        <text
+                            key={`station-label-${stationId}`}
+                            fontSize={4}
+                            fill={colors.route}
+                            textAnchor={labelPosition === 'right' ? 'start' : 'end'}
+                            x={labelPosition === 'right' ? 4 : -4}
+                            y={1.5}
+                            aria-hidden="true"
+                            transform={`translate(${pos.x}, ${pos.y})`}
+                        >
+                            {stationName}
+                        </text>
+                    );
+                }
                 return null;
-            }
-            const labelPosition = getStationLabelPosition({
-                stationId,
-                routeId,
-                isRouteFocused,
             });
-            const stationName =
-                stations[stationId] && abbreviateStationName(stations[stationId].name);
-            if (labelPosition && stationName) {
-                renderedStationLabelIds.add(stationId);
-                return (
-                    <text
-                        key={`station-label-${stationId}`}
-                        fontSize={4}
-                        fill={colors.route}
-                        textAnchor={labelPosition === 'right' ? 'start' : 'end'}
-                        x={labelPosition === 'right' ? 4 : -4}
-                        y={1.5}
-                        aria-hidden="true"
-                        transform={`translate(${pos.x}, ${pos.y})`}
-                    >
-                        {stationName}
-                    </text>
-                );
-            }
-            return null;
-        });
+        }
     };
 
     const renderLabelsForUnfocusedStations = () => {
