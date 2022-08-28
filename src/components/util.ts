@@ -1,21 +1,23 @@
 import { createContext } from 'react';
 import { Route, Routes, Train } from '../types';
 
-export const PopoverContainerContext = createContext(null);
+export const PopoverContainerContext = createContext<HTMLDivElement | null>(null);
 
 export const getTrainRoutePairsForLine = (
-    trainsByRoute: Record<string, Train[]>,
+    trainsByRoute: Record<string, Train[]> | null,
     routes: Routes
 ) => {
     const pairs: { train: Train; route: Route }[] = [];
-    Object.entries(trainsByRoute).forEach(([routeId, trains]) => {
-        const route = routes[routeId];
-        if (route) {
-            trains.forEach((train) => {
-                pairs.push({ train, route });
-            });
-        }
-    });
+    if (trainsByRoute) {
+        Object.entries(trainsByRoute).forEach(([routeId, trains]) => {
+            const route = routes[routeId];
+            if (route) {
+                trains.forEach((train) => {
+                    pairs.push({ train, route });
+                });
+            }
+        });
+    }
     return pairs;
 };
 

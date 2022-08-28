@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
-import App from './components/App';
+import { App } from './components/App';
 import './main.css';
 
 const container = document.getElementById('root');
