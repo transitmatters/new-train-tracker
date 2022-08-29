@@ -36,7 +36,6 @@ export const LineStats = ({ line }: Props): JSX.Element => {
             ) : null}
             <div className={'updated'}>
                 <span style={{ fontWeight: 'bold' }}>Delivery info last updated: </span>
-                {/* <span>{new Date(stats.Updated).toDateString()}</span> */}
             </div>
         </details>
     );
