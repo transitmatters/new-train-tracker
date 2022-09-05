@@ -25,7 +25,7 @@
         name: nodejs
 
     - name: install poetry
-      shell: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+      shell: curl -sSL https://install.python-poetry.org | python3 -
 
     - name: get latest github repo
       git:
@@ -41,18 +41,18 @@
         src: systemd.conf
         dest: /etc/systemd/system/new-train-tracker.service
 
+    - name: Install nginx
+      become: yes
+      become_user: root
+      ansible.builtin.apt:
+        name: nginx
+
     - name: copy nginx config file
       become: yes
       become_user: root
       copy:
         src: nginx.conf
         dest: /etc/nginx/sites-enabled/default
-
-    - name: Install nginx
-      become: yes
-      become_user: root
-      ansible.builtin.apt:
-        name: nginx
 
     - name: copy secrets file
       copy:
@@ -72,14 +72,14 @@
       args:
         chdir: /home/ubuntu/new-train-tracker
       environment:
-        PATH: /home/ubuntu/.poetry/bin/:{{ ansible_env.PATH }}
+        PATH: /home/ubuntu/.local/bin/:{{ ansible_env.PATH }}
 
     - name: build application with npm
       shell: npm run build
       args:
         chdir: /home/ubuntu/new-train-tracker
       environment:
-        PATH: /home/ubuntu/.poetry/bin/:{{ ansible_env.PATH }}
+        PATH: /home/ubuntu/.local/bin/:{{ ansible_env.PATH }}
 
     - name: restart new train tracker service
       become: yes

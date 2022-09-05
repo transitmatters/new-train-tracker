@@ -8,17 +8,31 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      TM_NTT_CERT_ARN: ${{ secrets.TM_NTT_CERT_ARN }}
+      TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Run deploy-on-lightsail ansible playbook
-        uses: dawidd6/action-ansible-playbook@v2
+      - name: Set up Node 16.x
+        uses: actions/setup-node@v3
         with:
-          playbook: deploy-on-lightsail.yml
-          directory: ./devops/
-          key: ${{ secrets.AWS_PRIVATE_KEY }}
-          inventory: |
-            [all]
-            ${{ secrets.LIGHTSAIL_PUBLIC_IP }} ansible_python_interpreter="/usr/bin/python3"
-          options: |
-            --verbose
+          node-version: 16
+      - name: Generate AWS profile
+        run: |
+          mkdir ~/.aws
+          cat >> ~/.aws/credentials << EOF
+          [transitmatters]
+          aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          EOF
+
+          mkdir ~/.ssh
+          cat >> ~/.ssh/transitmatters-ntt.pem << EOF
+          ${{ secrets.SSH_PRIVATE_KEY }}
+          EOF
+          chmod 0600 ~/.ssh/transitmatters-ntt.pem
+      - name: Run deploy shell script
+        run: |
+          npm ci
+          cd devops && bash ./deploy.sh -p -c
