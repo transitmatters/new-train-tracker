@@ -18,7 +18,7 @@ application = flask.Flask(__name__, template_folder="../dist")
 
 
 # Start a background thread to run `schedule` (i.e. the package) jobs,
-#  which in our case is just the "last seen" update
+# which in our case is just the "last seen" update
 background_thread = background.run_continuously()
 last_seen.initialize()
 

@@ -7,12 +7,15 @@ import server.mbta_api as mbta_api
 import server.secrets as secrets
 from server.routes import get_line_for_route
 from server.routes import DEFAULT_ROUTE_IDS
+from server.util import filter_new
 
 
 JSON_PATH = "last_seen.json"
 LAST_SEEN_TIMES = {}
 ROUTES = DEFAULT_ROUTE_IDS
 
+def update_recent_sightings_sync():
+    asyncio.run(update_recent_sightings())
 
 def initialize():
     global LAST_SEEN_TIMES
@@ -27,7 +30,7 @@ def initialize():
     if not secrets.LAST_SEEN_UPDATE:
         print("LAST_SEEN_UPDATE is false, so I'm not continuously updating last seen times for you.")
         return
-    schedule.every().minute.do(update_recent_sightings)
+    schedule.every().minute.do(update_recent_sightings_sync)
 
 
 async def update_recent_sightings():
@@ -35,7 +38,7 @@ async def update_recent_sightings():
     now = datetime.datetime.utcnow()
 
     all_vehicles = await mbta_api.vehicle_data_for_routes(ROUTES)
-    new_vehicles = mbta_api.filter_new(all_vehicles)
+    new_vehicles = filter_new(all_vehicles)
 
     for vehicle in new_vehicles:
         line = get_line_for_route(vehicle["route"])

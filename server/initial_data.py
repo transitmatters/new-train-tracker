@@ -2,22 +2,11 @@ import asyncio
 import subprocess
 from server.mbta_api import routes_info, vehicle_data_for_routes, stops_for_route
 from server.last_seen import get_recent_sightings_for_lines
+from server.util import filter_new, filter_old, filter_route
 
 
 def get_git_tag():
     return str(subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]))[2:-3]
-
-
-def filter_new(vehicle_array):
-    return list(filter(lambda veh: veh["isNewTrain"], vehicle_array))
-
-
-def filter_old(vehicle_array):
-    return list(filter(lambda veh: not veh["isNewTrain"], vehicle_array))
-
-
-def filter_route(line, vehicle_array):
-    return list(filter(lambda veh: line in veh["route"], vehicle_array))
 
 
 def calc_stats(vehicle_array):

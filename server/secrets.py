@@ -1,4 +1,5 @@
 MBTA_V3_API_KEY = ''
+# False by default, because debug Flask spawns two processes, and two last seen updaters will trample each other!
 LAST_SEEN_UPDATE = False
 '''
 If you put your api key here, you may want to run
