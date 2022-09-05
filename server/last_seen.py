@@ -46,7 +46,8 @@ async def update_recent_sightings():
         line = get_line_for_route(vehicle["route"])
         LAST_SEEN_TIMES[line] = {
             "car": vehicle["label"],
-            "time": now.isoformat()
+            # Python isoformat() doesn't include TZ, but we know this is UTC because we used utcnow() above
+            "time": now.isoformat()[:-3] + "Z"
         }
 
     try:
