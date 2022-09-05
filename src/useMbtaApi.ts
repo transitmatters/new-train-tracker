@@ -8,30 +8,23 @@ import { useEffect, useState, useCallback } from 'react';
 import { getInitialDataByKey } from './initialData';
 import { Line, Route, Station, Train, VehiclesAge } from './types';
 
-const getIsTestMode = () => {
-    const params = new URLSearchParams(window.location.search);
-    const val = params.get('testMode');
-    if (val === null) {
-        return false;
-    }
-    return val === 'true' || !!parseInt(val);
-};
+export interface MBTAApi {
+    routesInfo: Record<string, Route> | null;
+    stationsByRoute: Record<string, Station> | null;
+    trainsByRoute: Record<string, Train[]> | null;
+    isReady: boolean;
+}
 
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via Flask route defined in application.py
-const getTrainPositions = (
-    routes: string[],
-    isTestMode: boolean,
-    isFirstRequest: boolean | null
-) => {
+const getTrainPositions = (routes: string[], isFirstRequest: boolean | null) => {
     if (isFirstRequest) {
         const initialTrainsData = getInitialDataByKey('vehicles');
         if (initialTrainsData) {
             return Promise.resolve(initialTrainsData);
         }
     }
-    const testSuffix = isTestMode ? '?testMode=1' : '';
-    return fetch(`/trains/${routes.join(',')}${testSuffix}`).then((res) => res.json());
+    return fetch(`/trains/${routes.join(',')}`).then((res) => res.json());
 };
 
 const filterNew = (trains: Train[]) => {
@@ -70,7 +63,7 @@ const getRoutesInfo = (routes: string[]) => {
     return fetch(`/routes/${routes.join(',')}`).then((res) => res.json());
 };
 
-export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge) => {
+export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicles'): MBTAApi => {
     const routeNames = lines
         .map((line) => Object.keys(line.routes))
         .reduce((a, b) => [...a, ...b], [])
@@ -84,12 +77,11 @@ export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge) => {
     const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
 
     const getTrains = useCallback(() => {
-        const testMode = getIsTestMode();
         const nextTrainsByRoute: Record<string, Train[]> = {};
         routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames, testMode, isInitialFetch).then((trains: Train[]) => {
+        getTrainPositions(routeNames, isInitialFetch).then((trains: Train[]) => {
             filterTrains(trains, vehiclesAge).forEach((train) =>
                 nextTrainsByRoute[train.route].push(train)
             );
