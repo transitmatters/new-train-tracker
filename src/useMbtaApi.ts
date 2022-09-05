@@ -15,30 +15,16 @@ export interface MBTAApi {
     isReady: boolean;
 }
 
-const getIsTestMode = () => {
-    const params = new URLSearchParams(window.location.search);
-    const val = params.get('testMode');
-    if (val === null) {
-        return false;
-    }
-    return val === 'true' || !!parseInt(val);
-};
-
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via Flask route defined in application.py
-const getTrainPositions = (
-    routes: string[],
-    isTestMode: boolean,
-    isFirstRequest: boolean | null
-) => {
+const getTrainPositions = (routes: string[], isFirstRequest: boolean | null) => {
     if (isFirstRequest) {
         const initialTrainsData = getInitialDataByKey('vehicles');
         if (initialTrainsData) {
             return Promise.resolve(initialTrainsData);
         }
     }
-    const testSuffix = isTestMode ? '?testMode=1' : '';
-    return fetch(`/trains/${routes.join(',')}${testSuffix}`).then((res) => res.json());
+    return fetch(`/trains/${routes.join(',')}`).then((res) => res.json());
 };
 
 const filterNew = (trains: Train[]) => {
@@ -91,12 +77,11 @@ export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicl
     const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
 
     const getTrains = useCallback(() => {
-        const testMode = getIsTestMode();
         const nextTrainsByRoute: Record<string, Train[]> = {};
         routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames, testMode, isInitialFetch).then((trains: Train[]) => {
+        getTrainPositions(routeNames, isInitialFetch).then((trains: Train[]) => {
             filterTrains(trains, vehiclesAge).forEach((train) =>
                 nextTrainsByRoute[train.route].push(train)
             );

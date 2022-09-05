@@ -6,5 +6,6 @@ venv/
 hosts
 inventory
 *.pem
+last_seen.json
 traintracker-dev.nginx.conf
 __pycache__/
