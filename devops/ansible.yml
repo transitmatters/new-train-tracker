@@ -4,24 +4,24 @@
   remote_user: ubuntu
   become_user: ubuntu
   tasks:
-    - name: "Add nodejs apt key"
+    - name: add nodejs apt key
       become: yes
       become_user: root
       apt_key:
         url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
         state: present
 
-    - name: "Add nodejs 16.x ppa for apt repo"
+    - name: add nodejs 16.x ppa for apt repo
       become: yes
       become_user: root
       apt_repository:
         repo: deb https://deb.nodesource.com/node_16.x focal main
         update_cache: yes
 
-    - name: Install nodejs
+    - name: install nodejs
       become: yes
       become_user: root
-      ansible.builtin.apt:
+      apt:
         name: nodejs
 
     - name: install poetry
@@ -41,10 +41,10 @@
         src: systemd.conf
         dest: /etc/systemd/system/new-train-tracker.service
 
-    - name: Install nginx
+    - name: install nginx
       become: yes
       become_user: root
-      ansible.builtin.apt:
+      apt:
         name: nginx
 
     - name: copy nginx config file
