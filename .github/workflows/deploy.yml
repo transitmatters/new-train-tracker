@@ -26,7 +26,8 @@ jobs:
           aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EOF
-
+      - name: Write SSH key
+        run: |
           mkdir ~/.ssh
           cat >> ~/.ssh/transitmatters-ntt.pem << EOF
           ${{ secrets.SSH_PRIVATE_KEY }}
