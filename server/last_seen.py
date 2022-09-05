@@ -14,8 +14,10 @@ JSON_PATH = "last_seen.json"
 LAST_SEEN_TIMES = {}
 ROUTES = DEFAULT_ROUTE_IDS
 
+
 def update_recent_sightings_sync():
     asyncio.run(update_recent_sightings())
+
 
 def initialize():
     global LAST_SEEN_TIMES
