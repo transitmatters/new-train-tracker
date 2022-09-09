@@ -1,6 +1,6 @@
 import logo from '../../static/images/logo.svg';
 
-const Header = (props) => {
+export const Header = (props) => {
     const { controls } = props;
     return (
         <div className="header">
@@ -13,11 +13,10 @@ const Header = (props) => {
                 <img src={logo} className="logo" alt="" />
             </a>
             <div className="title">New Train Tracker</div>
-            <div className="subtitle">See where the MBTA's new trains are right now</div>
+            <div className="subtitle">See where the MBTA's trains are right now</div>
             {controls}
         </div>
     );
 };
 
 Header.displayName = 'Header';
-export default Header;

@@ -5,7 +5,6 @@ mbta_api.py provides functions dealing with interactions with the MBTA V3 API
 
 
 from urllib.parse import urlencode
-import asyncio
 import datetime
 import pytz
 import json_api_doc
@@ -14,9 +13,7 @@ import os
 import aiohttp
 import tempfile
 import traceback
-import subprocess
 
-from server.history.recent_sightings import get_recent_sightings_for_lines
 import server.secrets as secrets
 import server.fleet as fleet
 from server.routes import (
@@ -139,38 +136,6 @@ async def vehicle_data_for_routes(route_ids):
     return vehicles_to_display
 
 
-def filter_new(vehicle_array):
-    return list(filter(lambda veh: veh["isNewTrain"], vehicle_array))
-
-
-def filter_route(line, vehicle_array):
-    return list(filter(lambda veh: line in veh["route"], vehicle_array))
-
-
-def calc_stats(vehicle_array):
-    totalGreen = filter_route("Green", vehicle_array)
-    totalOrange = filter_route("Orange", vehicle_array)
-    totalRed = filter_route("Red", vehicle_array)
-
-    # intialize dictionary of stats
-    vehicle_stats = {
-        "Green": {
-            "totalActive": len(totalGreen),
-            "totalNew": len(filter_new(totalGreen))
-        },
-        "Orange": {
-            "totalActive": len(totalOrange),
-            "totalNew": len(filter_new(totalOrange))
-        },
-        "Red": {
-            "totalActive": len(totalRed),
-            "totalNew": len(filter_new(totalRed))
-        }
-    }
-
-    return vehicle_stats
-
-
 # returns list of dicts for every stop in a given route, based on route_id
 # ensures stops are in expected order via maybe_reverse()
 async def stops_for_route(route_id):
@@ -220,29 +185,3 @@ async def routes_info(route_ids):
                     }
                 )
     return routes_to_return
-
-
-def get_git_tag():
-    return str(subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"]))[2:-3]
-
-
-# captures initial request data from MBTA API as well as server-side data such as git tags and static train data
-# returns JSON of all data
-async def initial_request_data(route_ids, test_mode=False):
-    routes, vehicle_data, *stops = await asyncio.gather(
-        *[
-            routes_info(route_ids),
-            vehicle_data_for_routes(route_ids),
-            *[stops_for_route(route_id) for route_id in route_ids],
-        ]
-    )
-    sightings = get_recent_sightings_for_lines()
-    git_tag = get_git_tag()
-    return {
-        "version": git_tag,
-        "sightings": sightings,
-        "routes": routes,
-        "vehicles": vehicle_data if test_mode else filter_new(vehicle_data),
-        "vehicle_stats": calc_stats(vehicle_data),
-        "stops": dict(zip(route_ids, stops)),
-    }

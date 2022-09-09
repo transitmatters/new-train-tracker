@@ -1,4 +1,5 @@
 import Bezier from 'bezier-js';
+import { Shape, Turtle } from './types';
 
 const d2r = (degrees: number) => degrees * (Math.PI / 180);
 const r2d = (radians: number) => radians * (180 / Math.PI);
@@ -24,7 +25,7 @@ const path = (strings, ...args) => {
     return strings.reduce((acc, next, i) => `${acc}${next}${roundedString(i)}`, '');
 };
 
-export const start = (x: number, y: number, theta: number) => {
+export const start = (x: number, y: number, theta: number): Shape => {
     return {
         type: 'start',
         path: '',
@@ -34,24 +35,26 @@ export const start = (x: number, y: number, theta: number) => {
     };
 };
 
-export const line = (length: number) => (turtle) => {
-    const { x, y, theta } = turtle;
-    const x2 = x + length * cosd(theta);
-    const y2 = y + length * sind(theta);
-    return {
-        type: 'line',
-        path: path`M ${x} ${y} L ${x2} ${y2}`,
-        turtle: { x: x2, y: y2, theta },
-        length: length,
-        get: (fraction) => {
-            return {
-                x: x + fraction * length * cosd(theta),
-                y: y + fraction * length * sind(theta),
-                theta: theta,
-            };
-        },
+export const line =
+    (length: number) =>
+    (turtle: Turtle): Shape => {
+        const { x, y, theta } = turtle;
+        const x2 = x + length * cosd(theta);
+        const y2 = y + length * sind(theta);
+        return {
+            type: 'line',
+            path: path`M ${x} ${y} L ${x2} ${y2}`,
+            turtle: { x: x2, y: y2, theta },
+            length: length,
+            get: (fraction) => {
+                return {
+                    x: x + fraction * length * cosd(theta),
+                    y: y + fraction * length * sind(theta),
+                    theta: theta,
+                };
+            },
+        };
     };
-};
 
 export const curve = (length: number, angle: number) => (turtle) => {
     const { x: x1, y: y1, theta } = turtle;
@@ -88,7 +91,7 @@ export const curve = (length: number, angle: number) => (turtle) => {
 
 export const wiggle =
     (length: number, width: number, angle = 0) =>
-    (turtle) => {
+    (turtle: Turtle): Shape => {
         const { x: x1, y: y1, theta } = turtle;
         const nextTheta = theta + angle;
         const x2 = x1 + length * cosd(theta) + width * cosd(theta - 90);
@@ -120,11 +123,11 @@ export const wiggle =
 interface IStationRange {
     start?: string;
     end?: string;
-    stations?: any;
+    stations?: string[];
     commands?: Array<any>;
 }
 
-export const stationRange = ({ start, end, stations, commands }: IStationRange) => {
+export const stationRange = ({ start, end, stations, commands }: IStationRange): Shape => {
     return {
         type: 'stationRange',
         start,
