@@ -12,9 +12,6 @@ export const LineStats = ({ line }: Props): JSX.Element => {
         null
     );
 
-    console.log(line);
-    console.log(data);
-
     const lineName = data[line];
 
     return (
