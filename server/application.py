@@ -58,9 +58,11 @@ def routes(route_ids_string):
     route_data = asyncio.run(mbta_api.routes_info(route_ids))
     return flask.Response(json.dumps(route_data), mimetype="application/json")
 
+
 @application.route("/healthcheck")
 def healthcheck():
     return server.healthcheck.run()
+
 
 # root function to serve landing page
 @application.route("/")
