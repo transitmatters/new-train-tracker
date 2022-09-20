@@ -36,21 +36,21 @@ def initialize():
 
 
 async def update_recent_sightings():
-    print("Updating recent sightings...")
-    now = datetime.datetime.utcnow()
-
-    all_vehicles = await mbta_api.vehicle_data_for_routes(ROUTES)
-    new_vehicles = filter_new(all_vehicles)
-
-    for vehicle in new_vehicles:
-        line = get_line_for_route(vehicle["route"])
-        LAST_SEEN_TIMES[line] = {
-            "car": vehicle["label"],
-            # Python isoformat() doesn't include TZ, but we know this is UTC because we used utcnow() above
-            "time": now.isoformat()[:-3] + "Z"
-        }
-
     try:
+        print("Updating recent sightings...")
+        now = datetime.datetime.utcnow()
+
+        all_vehicles = await mbta_api.vehicle_data_for_routes(ROUTES)
+        new_vehicles = filter_new(all_vehicles)
+
+        for vehicle in new_vehicles:
+            line = get_line_for_route(vehicle["route"])
+            LAST_SEEN_TIMES[line] = {
+                "car": vehicle["label"],
+                # Python isoformat() doesn't include TZ, but we know this is UTC because we used utcnow() above
+                "time": now.isoformat()[:-3] + "Z"
+            }
+
         with open(JSON_PATH, "w", encoding="utf-8") as file:
             json.dump(LAST_SEEN_TIMES, file, indent=4, sort_keys=True, default=str)
     except Exception as e:
