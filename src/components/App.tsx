@@ -88,7 +88,12 @@ export const App: React.FC = () => {
             <>
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
-                <Line key={selectedLine?.name} line={selectedLine} api={api} />
+                <Line
+                    key={selectedLine?.name}
+                    line={selectedLine}
+                    api={api}
+                    age={ageTabState.currentId ?? 'vehicles'}
+                />
                 <Footer version={getInitialDataByKey('version')} />
             </>
         );
