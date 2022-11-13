@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "new-train-tracker"
-version = "1.0.0"
-description = ""
+version = "2.2.0"
+description = "New Train Tracker by TransitMattters"
 authors = ["TransitMatters Labs Team"]
 license = "MIT"
 
