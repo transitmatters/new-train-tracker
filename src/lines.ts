@@ -1,4 +1,5 @@
-import { line, start, stationRange, wiggle } from './paths';
+import { start, line, wiggle, stationRange } from './paths';
+import { Line, LineShape } from './types';
 
 const GLStations = {
     UnionSquare: 'place-unsqu',
@@ -47,14 +48,14 @@ const labeledGreenLineStations = [
     GLStations.BostonCollege,
 ];
 
-const greenShared = [
+const greenShared: LineShape[] = [
     stationRange({
         stations: glSharedStations,
         commands: [line(100)],
     }),
 ];
 
-const greenBCDTrunk = [
+const greenBCDTrunk: LineShape[] = [
     line(20),
     stationRange({
         start: GLStations.Hynes,
@@ -63,7 +64,7 @@ const greenBCDTrunk = [
     }),
 ];
 
-const greenBShape = [
+const greenBShape: LineShape[] = [
     start(0, 0, 90),
     ...greenShared,
     ...greenBCDTrunk,
@@ -75,7 +76,7 @@ const greenBShape = [
     }),
 ];
 
-const greenCShape = [
+const greenCShape: LineShape[] = [
     start(0, 0, 90),
     ...greenShared,
     ...greenBCDTrunk,
@@ -87,7 +88,7 @@ const greenCShape = [
     }),
 ];
 
-const greenDShape = [
+const greenDShape: LineShape[] = [
     start(0, -25, 90),
     stationRange({
         stations: [GLStations.UnionSquare],
@@ -104,7 +105,7 @@ const greenDShape = [
     }),
 ];
 
-const greenEShape = [
+const greenEShape: LineShape[] = [
     start(35, -70, 90),
     stationRange({
         stations: ['place-eastsom', 'place-gilman', 'place-magoun', 'place-ball', 'place-tufts'],
@@ -120,7 +121,7 @@ const greenEShape = [
     }),
 ];
 
-export const greenLine = {
+export const greenLine: Line = {
     name: 'Green',
     abbreviation: 'GL',
     color: '#114529',
@@ -155,7 +156,7 @@ const enum OLStations {
     ForestHills = 'place-forhl',
 }
 
-export const orangeLine = {
+export const orangeLine: Line = {
     name: 'Orange',
     abbreviation: 'OL',
     colorSecondary: '#e66f00',
@@ -185,7 +186,7 @@ const enum RLStations {
     Braintree = 'place-brntn',
 }
 
-const redShared = [
+const redShared: LineShape[] = [
     start(0, 0, 90),
     stationRange({
         start: RLStations.Alewife,
@@ -194,7 +195,7 @@ const redShared = [
     }),
 ];
 
-const redA = [
+const redA: LineShape[] = [
     ...redShared,
     wiggle(30, -20),
     stationRange({
@@ -204,7 +205,7 @@ const redA = [
     }),
 ];
 
-const redB = [
+const redB: LineShape[] = [
     ...redShared,
     wiggle(30, 20),
     stationRange({
@@ -214,7 +215,7 @@ const redB = [
     }),
 ];
 
-export const redLine = {
+export const redLine: Line = {
     name: 'Red',
     abbreviation: 'RL',
     color: '#E37C7C',

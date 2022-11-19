@@ -8,11 +8,20 @@ import json
 import asyncio
 import flask
 
+import server.background as background
+import server.healthcheck
+import server.initial_data as initial_data
+import server.last_seen as last_seen
 import server.mbta_api as mbta_api
 from server.routes import DEFAULT_ROUTE_IDS
-from server.history.statistics import get_cached_summaries
 
 application = flask.Flask(__name__, template_folder="../dist")
+
+
+# Start a background thread to run `schedule` (i.e. the package) jobs,
+# which in our case is just the "last seen" update
+background_thread = background.run_continuously()
+last_seen.initialize()
 
 
 # use dist as app root
@@ -22,15 +31,15 @@ def static_files(filename):
 
 
 # takes a comma-delimited string of route ids
-# if test_mode is false, returns a JSON object containing new vehicles
-# if test_mode is true, returns a JSON object containing all vehicles
 @application.route("/trains/<route_ids_string>")
 def trains(route_ids_string):
     route_ids = route_ids_string.split(",")
     vehicle_data = asyncio.run(
         mbta_api.vehicle_data_for_routes(route_ids)
     )
-    return flask.Response(json.dumps(vehicle_data), mimetype="application/json")
+    return flask.Response(json.dumps(vehicle_data), mimetype="application/json", headers={
+        "Cache-Control": "no-cache"
+    })
 
 
 # takes a single route id
@@ -50,27 +59,25 @@ def routes(route_ids_string):
     return flask.Response(json.dumps(route_data), mimetype="application/json")
 
 
-@application.route("/statistics")
-def statistics():
-    summaries_by_route = get_cached_summaries()
-    return flask.Response(json.dumps(summaries_by_route), mimetype="application/json")
+@application.route("/healthcheck")
+def healthcheck():
+    return server.healthcheck.run()
 
 
 # root function to serve landing page
-# add ?testMode=1 to enable test mode
-#   if test mode is true, app will show all trains, not just new ones
-# if shell mode is true, app will generate without getting any intital API data
 @application.route("/")
 def root():
-    test_mode = flask.request.args.get("testMode")
     shell = flask.request.args.get("shell")
     if shell:
         return static_files("index.html")
-    initial_data = asyncio.run(
-        mbta_api.initial_request_data(DEFAULT_ROUTE_IDS, test_mode)
+    payload = asyncio.run(
+        initial_data.initial_request_data(DEFAULT_ROUTE_IDS)
     )
-    initial_data["static_data"] = get_static_data()
-    return flask.render_template("index.html", initial_data=initial_data)
+    payload["static_data"] = get_static_data()
+
+    response = flask.make_response(flask.render_template("index.html", initial_data=payload))
+    response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 def get_static_data():
