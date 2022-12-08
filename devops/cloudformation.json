@@ -26,7 +26,15 @@
         "KeyName": "transitmatters-ntt",
         "SecurityGroupIds": [
           { "Ref": "NTTSecurityGroup" }
-        ]
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Sub": "ntt-${NTTHostname}"
+            }
+          }
+        ],
       }
     },
     "NTTSecurityGroup": {
