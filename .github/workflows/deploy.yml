@@ -35,5 +35,6 @@ jobs:
           chmod 0600 ~/.ssh/transitmatters-ntt.pem
       - name: Run deploy shell script
         run: |
+          curl -sSL https://install.python-poetry.org | python3 -
           npm ci
           cd devops && bash ./deploy.sh -p -c
