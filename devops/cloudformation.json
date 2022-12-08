@@ -32,7 +32,9 @@
     "NTTSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupName": "ntt-securitygroup",
+        "GroupName": {
+          "Fn::Sub": "ntt-securitygroup-${NTTHostname}"
+        },
         "GroupDescription": "Allow HTTP and SSH inbound and outbound traffic",
         "SecurityGroupIngress": [
           {
