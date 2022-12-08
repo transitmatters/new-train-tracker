@@ -26,6 +26,10 @@ jobs:
           aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EOF
+          cat >> ./devops/ec2-secrets.py << EOF
+          MBTA_V3_API_KEY = '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+          LAST_SEEN_UPDATE = True
+          EOF
       - name: Write SSH key
         run: |
           mkdir ~/.ssh
