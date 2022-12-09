@@ -29,6 +29,14 @@ const GLStations = {
     Prudential: 'place-prmnl',
 } as const;
 
+const glxStations = [
+    GLStations.MedfordTufts,
+    GLStations.BallSqaure,
+    GLStations.MagounSquare,
+    GLStations.GilmanSquare,
+    GLStations.EastSomerville,
+];
+
 const glSharedStations = [
     GLStations.Lechemere,
     GLStations.SciencePark,
@@ -94,12 +102,12 @@ const greenCShape: LineShape[] = [
 ];
 
 const greenDShape: LineShape[] = [
-    start(35, -31, 90),
+    start(-20, -31, 90),
     stationRange({
         stations: [GLStations.UnionSquare],
         commands: [line(1)],
     }),
-    wiggle(30, -35),
+    wiggle(30, 20),
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, 20),
@@ -135,6 +143,9 @@ export const greenLine: Line = {
     getStationLabelPosition: ({ stationId, routeId, isRouteFocused }) => {
         if (labeledGreenLineStations.includes(stationId)) {
             return stationId === GLStations.Hynes ? 'left' : 'right';
+        }
+        if (isRouteFocused && glxStations.includes(stationId)) {
+            return 'right';
         }
         if (isRouteFocused) {
             return routeId === 'Green-E' ? 'left' : 'right';
