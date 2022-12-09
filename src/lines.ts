@@ -2,6 +2,11 @@ import { start, line, wiggle, stationRange } from './paths';
 import { Line, LineShape } from './types';
 
 const GLStations = {
+    MedfordTufts: 'place-mdftf',
+    BallSqaure: 'place-balsq',
+    MagounSquare: 'place-mgngl',
+    GilmanSquare: 'place-gilmn',
+    EastSomerville: 'place-esomr',
     UnionSquare: 'place-unsqu',
     Lechemere: 'place-lech',
     SciencePark: 'place-spmnl',
@@ -37,7 +42,7 @@ const glSharedStations = [
 ];
 
 const labeledGreenLineStations = [
-    'place-tufts',
+    GLStations.MedfordTufts,
     GLStations.UnionSquare,
     ...glSharedStations,
     GLStations.Hynes,
@@ -89,12 +94,12 @@ const greenCShape: LineShape[] = [
 ];
 
 const greenDShape: LineShape[] = [
-    start(0, -25, 90),
+    start(35, -31, 90),
     stationRange({
         stations: [GLStations.UnionSquare],
         commands: [line(1)],
     }),
-    line(24),
+    wiggle(30, -35),
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, 20),
@@ -106,12 +111,13 @@ const greenDShape: LineShape[] = [
 ];
 
 const greenEShape: LineShape[] = [
-    start(35, -70, 90),
+    start(0, -55, 90),
     stationRange({
-        stations: ['place-eastsom', 'place-gilman', 'place-magoun', 'place-ball', 'place-tufts'],
+        start: GLStations.MedfordTufts,
+        end: GLStations.EastSomerville,
         commands: [line(40)],
     }),
-    wiggle(30, -35),
+    line(15),
     ...greenShared,
     wiggle(60, 40),
     stationRange({
