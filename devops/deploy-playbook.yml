@@ -32,7 +32,6 @@
         repo: https://github.com/transitmatters/new-train-tracker.git
         dest: /home/ubuntu/new-train-tracker
         force: yes
-        version: ec2ify
 
     - name: copy systemd service file
       become: yes
