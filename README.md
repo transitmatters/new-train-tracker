@@ -29,27 +29,20 @@ To lint just backend code, run `npm run lint-backend`
 ## Server Deployment
 Additional requirements:
 - nginx
-- supervisord
 
 Nginx serves as a reverse-proxy for the app running on localhost:5001.
-The Flask app is being run under gunicorn, and this process is controlled by supervisor, which will restart after failure or reboot automatically. (Supervisor is similar to systemd in this regard)
+The Flask app is run under gunicorn and controlled by systemd, which will restart after failure or reboot automatically.
 
-### For a fresh deploy
-- Copy `devops/tracker-nginx.conf` into `/etc/nginx/sites-enabled/`. Probably restart nginx (`sudo systemctl restart nginx`)
-- Copy `devops/tracker-supervisor.conf` into `/etc/supervisor/conf.d/`
-- Run `poetry install`
-- Run `npm run build`
-- Run `sudo supervisorctl reload`
+### For a deploy on AWS (fresh, or not)
+1. Make sure AWS CLI is set up and working—i.e. `aws cloudformation describe-stacks | wc -l` should work.
+2. Make sure these environment variables are set up in your shell (ask a Labs member for values if needed):
+  - `TM_NTT_CERT_ARN` (for production)
+  - `TM_LABS_WILDCARD_CERT_ARN` (for beta)
+3. A key named `transitmatters-ntt` needs to be available in your AWS account and copied to `~/.ssh/transitmatters-ntt.pem`.
+4. Run `cd devops && ./deploy.sh` (add -p for production) to deploy.
+5. You're all set! Visit:
+- https://ntt-beta.labs.transitmatters.org for beta
+- https://traintracker.transitmatters.org for production
 
-### To deploy changes
-- If supervisor/nginx conf files changed, copy them to those directories and restart services accordingly.
-- If pyproject.toml has changed, run `poetry update`. (N.B. If the source of a package has changed, you may have to manually run `poetry run pip uninstall ____` before updating so the old one is removed)
-- `npm run build`
-- `sudo supervisorctl restart new-train-tracker`
-
-#### Deploy changes with Ansible
-You can deploy changes to this application on an AWS Lightsail instance running Ubuntu using the `deploy-on-lightsail.yaml` Ansible playbook.
-
-To do so, install Ansible, create an inventory file, and run the playbook with your AWS Private Key in the same directory using the command below:
-
-`$ ansible-playbook devops/deploy-on-lightsail.yml -i inventory --private-key aws_private_key.pem`
+### For a deploy elsewhere
+This project generally fits the "Flask app" mold. Contact us if you need help: labs@transitmatters.org
