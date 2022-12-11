@@ -32,6 +32,7 @@
         repo: https://github.com/transitmatters/new-train-tracker.git
         dest: /home/ubuntu/new-train-tracker
         force: yes
+        version: master
 
     - name: copy systemd service file
       become: yes
