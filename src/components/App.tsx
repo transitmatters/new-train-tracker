@@ -21,7 +21,7 @@ const lineByTabId: Record<string, TLine> = {
     'tab-Green': greenLine,
     'tab-Orange': orangeLine,
     'tab-Red': redLine,
-    'tab-Blue': blueLine
+    'tab-Blue': blueLine,
 };
 
 export const App: React.FC = () => {
