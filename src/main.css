@@ -113,6 +113,10 @@ a {
         padding-top: 5px;
         padding-bottom: 15px;
     }
+
+    .wide-screen {
+        display: none;
+    }
 }
 
 .line-pane {

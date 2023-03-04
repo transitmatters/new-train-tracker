@@ -11,6 +11,7 @@ GREEN_ROUTE_IDS = [
 
 DEFAULT_ROUTE_IDS = [
     "Orange",
+    "Blue",
     "Red-A",
     "Red-B",
     *GREEN_ROUTE_IDS,
