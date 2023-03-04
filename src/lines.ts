@@ -250,8 +250,6 @@ export const redLine: Line = {
     },
 };
 
-
-
 const enum BLStations {
     Bowdoin = 'place-bomnl',
     Wonderland = 'place-wondl',

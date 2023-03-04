@@ -58,7 +58,11 @@ export const LineTabPicker: React.FC<LineTabPickerProps> = ({ lines, tabState, t
                             {line.abbreviation}
                         </div>
                         <div className="label">
-                            {trains.length} <span className="wide-screen"> {trains.length === 1 ? 'train' : 'trains'} </span>
+                            {trains.length}{' '}
+                            <span className="wide-screen">
+                                {' '}
+                                {trains.length === 1 ? 'train' : 'trains'}{' '}
+                            </span>
                         </div>
                     </Tab>
                 );
