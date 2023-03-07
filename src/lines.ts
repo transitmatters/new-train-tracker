@@ -249,3 +249,29 @@ export const redLine: Line = {
         },
     },
 };
+
+const enum BLStations {
+    Bowdoin = 'place-bomnl',
+    Wonderland = 'place-wondl',
+}
+
+export const blueLine = {
+    name: 'Blue',
+    abbreviation: 'BL',
+    colorSecondary: '#3434D1',
+    color: '#7CA5E3',
+    getStationLabelPosition: () => 'right',
+    fixedTrainLabelPosition: 'right',
+    routes: {
+        Blue: {
+            shape: [
+                start(0, 0, 90),
+                stationRange({
+                    end: BLStations.Wonderland,
+                    start: BLStations.Bowdoin,
+                    commands: [line(150)],
+                }),
+            ],
+        },
+    },
+};

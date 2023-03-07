@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect } from 'react';
 import Favicon from 'react-favicon';
 import { useTabState } from 'reakit';
 
-import { greenLine, orangeLine, redLine } from '../lines';
+import { greenLine, orangeLine, redLine, blueLine } from '../lines';
 import { useMbtaApi } from '../useMbtaApi';
 import { getInitialDataByKey } from '../initialData';
 
@@ -21,6 +21,7 @@ const lineByTabId: Record<string, TLine> = {
     'tab-Green': greenLine,
     'tab-Orange': orangeLine,
     'tab-Red': redLine,
+    'tab-Blue': blueLine,
 };
 
 export const App: React.FC = () => {
