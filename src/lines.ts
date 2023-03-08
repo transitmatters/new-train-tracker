@@ -267,8 +267,8 @@ export const blueLine = {
             shape: [
                 start(0, 0, 90),
                 stationRange({
-                    end: BLStations.Wonderland,
-                    start: BLStations.Bowdoin,
+                    end: BLStations.Bowdoin,
+                    start: BLStations.Wonderland,
                     commands: [line(150)],
                 }),
             ],
