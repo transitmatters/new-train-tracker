@@ -85,7 +85,7 @@ def maybe_reverse(stops, route):
     if route == "Orange":
         return reverse_if_stops_out_of_order(stops, "Oak Grove", "Wellington")
     if route == "Blue":
-        return reverse_if_stops_out_of_order(stops, "Bowdoin", "Wonderland")
+        return reverse_if_stops_out_of_order(stops, "Wonderland", "Bowdoin")
     return stops
 
 
