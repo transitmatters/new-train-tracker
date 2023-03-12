@@ -11,6 +11,8 @@ jobs:
     env:
       TM_NTT_CERT_ARN: ${{ secrets.TM_NTT_CERT_ARN }}
       TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
+      REACT_APP_DATADOG_APP_ID: ${{ secrets.REACT_APP_DATADOG_APP_ID }}
+      REACT_APP_DATADOG_CLIENT_TOKEN: ${{ secrets.REACT_APP_DATADOG_CLIENT_TOKEN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
