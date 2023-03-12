@@ -28,6 +28,7 @@
     },
     "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
     "dependencies": {
+        "@datadog/browser-rum": "^4.35.0",
         "bezier-js": "^2.5.1",
         "classnames": "^2.2.6",
         "react": "^17.0.2",
