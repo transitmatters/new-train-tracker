@@ -1,6 +1,6 @@
 # New Train Tracker
-![lint](https://github.com/transitmatters/new-train-tracker/workflows/lint/badge.svg?branch=master)
-![deploy](https://github.com/transitmatters/new-train-tracker/workflows/deploy/badge.svg?branch=master)
+![lint](https://github.com/transitmatters/new-train-tracker/workflows/lint/badge.svg?branch=main)
+![deploy](https://github.com/transitmatters/new-train-tracker/workflows/deploy/badge.svg?branch=main)
 
 Developed by [TransitMatters](https://transitmatters.org/)
 
