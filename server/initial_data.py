@@ -13,6 +13,7 @@ def calc_stats(vehicle_array):
     totalGreen = filter_route("Green", vehicle_array)
     totalOrange = filter_route("Orange", vehicle_array)
     totalRed = filter_route("Red", vehicle_array)
+    totalBlue = filter_route("Blue", vehicle_array)
 
     # intialize dictionary of stats
     vehicle_stats = {
@@ -30,6 +31,11 @@ def calc_stats(vehicle_array):
             "totalActive": len(totalRed),
             "totalNew": len(filter_new(totalRed)),
             "totalOld": len(filter_old(totalRed)),
+        },
+        "Blue": {
+            "totalActive": len(totalBlue),
+            "totalNew": len(filter_new(totalBlue)),
+            "totalOld": len(filter_old(totalBlue))
         }
     }
 

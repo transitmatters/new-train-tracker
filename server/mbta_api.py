@@ -84,6 +84,8 @@ def maybe_reverse(stops, route):
         return reverse_if_stops_out_of_order(stops, "Park Street", "Downtown Crossing")
     if route == "Orange":
         return reverse_if_stops_out_of_order(stops, "Oak Grove", "Wellington")
+    if route == "Blue":
+        return reverse_if_stops_out_of_order(stops, "Wonderland", "Bowdoin")
     return stops
 
 
@@ -105,6 +107,10 @@ async def vehicle_data_for_routes(route_ids):
 
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
+        # Skip vehicles that don't have a stop
+        if vehicle["stop"] is None:
+            continue
+
         try:
             # derive Red Line vehicle branch if needed
             custom_route = derive_custom_route_name(vehicle)
