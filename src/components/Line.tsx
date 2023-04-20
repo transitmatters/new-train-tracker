@@ -8,12 +8,19 @@ import { renderTextTrainlabel } from '../labels';
 import { Train } from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 import { getInitialDataByKey } from '../initialData';
-import { Line as TLine, Pair, StationPositions } from '../types';
+import { Line as TLine, Pair, StationPositions, VehiclesAge } from '../types';
 import { MBTAApi } from '../useMbtaApi';
+
+const AGE_WORD_MAP = new Map<VehiclesAge, string>([
+    ['new_vehicles', ' new '],
+    ['old_vehicles', ' old '],
+    ['vehicles', ' '],
+]);
 
 interface LineProps {
     api: MBTAApi;
     line: TLine;
+    age: VehiclesAge;
 }
 
 const abbreviateStationName = (station: string) =>
@@ -39,7 +46,14 @@ const sortTrainRoutePairsByDistance = (pairs: Pair[], stationPositions: StationP
     return pairs.sort((a, b) => distanceMap.get(a) - distanceMap.get(b));
 };
 
-const renderEmptyNoticeForLine = (line) => {
+const renderEmptyNoticeForLine = (line, age) => {
+    const ageWord = AGE_WORD_MAP.get(age);
+    // What to show when old or all is selected
+    if (age !== 'new_vehicles') {
+        return `No${ageWord}trains on the ${line} Line right now.`;
+    }
+
+    // What to show when new is selected
     const sightings = getInitialDataByKey('sightings');
     const sightingForLine = sightings && sightings[line];
     if (sightingForLine) {
@@ -56,7 +70,7 @@ const getRouteColor = (colors, routeId, focusedRouteId) => {
         : colors.unfocusedRoute;
 };
 
-export const Line: React.FC<LineProps> = ({ api, line }) => {
+export const Line: React.FC<LineProps> = ({ api, line, age }) => {
     const { getStationLabelPosition, fixedTrainLabelPosition } = line;
     const { stationsByRoute, trainsByRoute, routesInfo } = api;
     const [viewbox, setViewbox] = useState<string>();
@@ -210,7 +224,7 @@ export const Line: React.FC<LineProps> = ({ api, line }) => {
     if (trainRoutePairs.length === 0) {
         return (
             <div className="line-pane empty">
-                <div className="empty-notice">{renderEmptyNoticeForLine(line.name)}</div>
+                <div className="empty-notice">{renderEmptyNoticeForLine(line.name, age)}</div>
             </div>
         );
     }
