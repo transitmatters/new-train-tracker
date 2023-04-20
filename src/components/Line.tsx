@@ -20,7 +20,7 @@ const AGE_WORD_MAP = new Map<VehiclesAge, string>([
 interface LineProps {
     api: MBTAApi;
     line: TLine;
-    age: string;
+    age: VehiclesAge;
 }
 
 const abbreviateStationName = (station: string) =>
