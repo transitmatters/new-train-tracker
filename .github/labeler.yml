@@ -1,0 +1,23 @@
+ci/cd:
+- .github/**/*
+- devops/**/*
+
+dependencies:
+- package.json
+- package-lock.json
+- poetry.lock
+
+backend:
+- '**/*.py'
+- server/**/*
+- .flake8
+
+frontend:
+- '**/*.js'
+- '**/*.jsx'
+- '**/*.ts'
+- '**/*.tsx'
+
+documentation:
+- README.md
+- LICENSE
