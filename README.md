@@ -4,7 +4,7 @@
 
 Developed by [TransitMatters Labs](https://transitmatters.org/transitmatters-labs)
 
-Shows new MBTA Orange, Red, and Green Line trains as they come into service.
+Shows new MBTA Orange, Red, Green, and Blue Line trains as they come into service.
 
 ## Install & Run
 Dependencies:
