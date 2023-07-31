@@ -1,18 +1,16 @@
-import { useAPICall } from '../../hooks/useAPICall';
 import './LineStats.css';
+import * as stats from '../../../static/static_data.json';
 
 interface Props {
     line: string;
 }
 
-export const LineStats = ({ line }: Props): JSX.Element => {
-    const { data, error, loading } = useAPICall(
-        'https://traintracker.transitmatters.org/statistics',
-        'GET',
-        null
-    );
+export const LineStats: React.FunctionComponent<Props> = ({ line }) => {
+    const lineName = stats[line];
 
-    const lineName = data[line];
+    if (line === 'Blue') {
+        return null;
+    }
 
     return (
         <details className="stats-container">
@@ -21,18 +19,27 @@ export const LineStats = ({ line }: Props): JSX.Element => {
                 <table className="stats-table">
                     <tbody>
                         <tr>
-                            <td>Maximum trains seen:</td>
-                            <td>{lineName?.max?.value}</td>
+                            <td>New Trains Delivered:</td>
+                            <td>{lineName?.totalNewDelivered}</td>
                         </tr>
                         <tr>
-                            <td>On date:</td>
-                            <td>{lineName?.max?.on_date}</td>
+                            <td>New Trains Awaiting Delivery:</td>
+                            <td>{lineName?.totalNewUndelivered}</td>
+                        </tr>
+                        <tr>
+                            <td>Old Trains Active:</td>
+                            <td>{lineName?.totalOldActive}</td>
+                        </tr>
+                        <tr>
+                            <td>Old Trains Inactive:</td>
+                            <td>{lineName?.totalOldInactive}</td>
                         </tr>
                     </tbody>
                 </table>
             ) : null}
             <div className={'updated'}>
                 <span style={{ fontWeight: 'bold' }}>Delivery info last updated: </span>
+                <span>{new Date(stats.Updated).toDateString()}</span>
             </div>
         </details>
     );
