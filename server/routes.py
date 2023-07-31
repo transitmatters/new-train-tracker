@@ -11,6 +11,7 @@ GREEN_ROUTE_IDS = [
 
 DEFAULT_ROUTE_IDS = [
     "Orange",
+    "Blue",
     "Red-A",
     "Red-B",
     *GREEN_ROUTE_IDS,
@@ -23,6 +24,19 @@ SILVER_ROUTE_IDS = [
     "751",
     "749",
     "746",
+]
+
+RED_A_STOP_IDS = [
+    "70085",
+    "70086",
+    "70087",
+    "70088",
+    "70089",
+    "70090",
+    "70091",
+    "70092",
+    "70093",
+    "70094",
 ]
 
 
@@ -43,11 +57,21 @@ def normalize_custom_route_ids(route_ids):
 def derive_custom_route_name(vehicle):
     default_route_id = vehicle["route"]["id"]
     if default_route_id == "Red":
+        # First try to figure it out by route pattern
         try:
             route_pattern_name = vehicle["trip"]["route_pattern"]["name"]
             return "Red-A" if "Ashmont" in route_pattern_name else "Red-B"
-        except TypeError:
+        except Exception:
             pass
+        # Second try to figure it out by whether its stop status is on the Ashmont branch
+        try:
+            if vehicle["stop"]["id"] in RED_A_STOP_IDS:
+                return "Red-A"
+            return "Red-B"
+        except Exception:
+            pass
+
+        # If that all fails, RIP
     return default_route_id
 
 

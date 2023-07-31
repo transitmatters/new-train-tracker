@@ -1,6 +1,6 @@
 {
     "name": "new-train-tracker",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "New Train Tracker by TransitMattters",
     "main": "index.tsx",
     "scripts": {
@@ -8,7 +8,7 @@
         "build": "webpack --mode production",
         "lint": "npm run lint-frontend && npm run lint-backend",
         "lint-frontend": "eslint src",
-        "lint-backend": "cd server && poetry run flake8 --ignore=E501,E731",
+        "lint-backend": "cd server && poetry run flake8",
         "postinstall": "poetry install",
         "start-prod": "npm run build && NODE_ENV=production npm run start-python",
         "start-python": "poetry run python -m server.application",

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect } from 'react';
 import Favicon from 'react-favicon';
 import { useTabState } from 'reakit';
 
-import { greenLine, orangeLine, redLine } from '../lines';
+import { greenLine, orangeLine, redLine, blueLine } from '../lines';
 import { useMbtaApi } from '../hooks/useMbtaApi';
 import { getInitialDataByKey } from '../initialData';
 
@@ -22,6 +22,7 @@ const lineByTabId: Record<string, TLine> = {
     'tab-Green': greenLine,
     'tab-Orange': orangeLine,
     'tab-Red': redLine,
+    'tab-Blue': blueLine,
 };
 
 export const App: React.FC = () => {
@@ -89,7 +90,12 @@ export const App: React.FC = () => {
             <>
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
-                <Line key={selectedLine?.name} line={selectedLine} api={api} />
+                <Line
+                    key={selectedLine?.name}
+                    line={selectedLine}
+                    api={api}
+                    age={ageTabState.currentId ?? 'vehicles'}
+                />
                 <LineStats line={selectedLine?.name} />
                 <Footer version={getInitialDataByKey('version')} />
             </>

@@ -8,10 +8,11 @@ import json
 import asyncio
 import flask
 
+import server.background as background
+import server.healthcheck
 import server.initial_data as initial_data
 import server.last_seen as last_seen
 import server.mbta_api as mbta_api
-import server.background as background
 from server.routes import DEFAULT_ROUTE_IDS
 
 application = flask.Flask(__name__, template_folder="../dist")
@@ -56,6 +57,11 @@ def routes(route_ids_string):
     route_ids = route_ids_string.split(",")
     route_data = asyncio.run(mbta_api.routes_info(route_ids))
     return flask.Response(json.dumps(route_data), mimetype="application/json")
+
+
+@application.route("/healthcheck")
+def healthcheck():
+    return server.healthcheck.run()
 
 
 # root function to serve landing page

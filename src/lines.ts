@@ -2,6 +2,11 @@ import { start, line, wiggle, stationRange } from './paths';
 import { Line, LineShape } from './types';
 
 const GLStations = {
+    MedfordTufts: 'place-mdftf',
+    BallSqaure: 'place-balsq',
+    MagounSquare: 'place-mgngl',
+    GilmanSquare: 'place-gilmn',
+    EastSomerville: 'place-esomr',
     UnionSquare: 'place-unsqu',
     Lechemere: 'place-lech',
     SciencePark: 'place-spmnl',
@@ -24,8 +29,15 @@ const GLStations = {
     Prudential: 'place-prmnl',
 } as const;
 
+const glxStations = [
+    GLStations.MedfordTufts,
+    GLStations.BallSqaure,
+    GLStations.MagounSquare,
+    GLStations.GilmanSquare,
+    GLStations.EastSomerville,
+];
+
 const glSharedStations = [
-    GLStations.UnionSquare,
     GLStations.Lechemere,
     GLStations.SciencePark,
     GLStations.NorthStation,
@@ -38,6 +50,8 @@ const glSharedStations = [
 ];
 
 const labeledGreenLineStations = [
+    GLStations.MedfordTufts,
+    GLStations.UnionSquare,
     ...glSharedStations,
     GLStations.Hynes,
     GLStations.Kenmore,
@@ -48,7 +62,6 @@ const labeledGreenLineStations = [
 ];
 
 const greenShared: LineShape[] = [
-    start(0, 0, 90),
     stationRange({
         stations: glSharedStations,
         commands: [line(100)],
@@ -65,6 +78,7 @@ const greenBCDTrunk: LineShape[] = [
 ];
 
 const greenBShape: LineShape[] = [
+    start(0, 0, 90),
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, -20),
@@ -76,6 +90,7 @@ const greenBShape: LineShape[] = [
 ];
 
 const greenCShape: LineShape[] = [
+    start(0, 0, 90),
     ...greenShared,
     ...greenBCDTrunk,
     line(30),
@@ -87,6 +102,12 @@ const greenCShape: LineShape[] = [
 ];
 
 const greenDShape: LineShape[] = [
+    start(-20, -31, 90),
+    stationRange({
+        stations: [GLStations.UnionSquare],
+        commands: [line(1)],
+    }),
+    wiggle(30, 20),
     ...greenShared,
     ...greenBCDTrunk,
     wiggle(30, 20),
@@ -98,6 +119,13 @@ const greenDShape: LineShape[] = [
 ];
 
 const greenEShape: LineShape[] = [
+    start(0, -55, 90),
+    stationRange({
+        start: GLStations.MedfordTufts,
+        end: GLStations.EastSomerville,
+        commands: [line(40)],
+    }),
+    line(15),
     ...greenShared,
     wiggle(60, 40),
     stationRange({
@@ -115,6 +143,9 @@ export const greenLine: Line = {
     getStationLabelPosition: ({ stationId, routeId, isRouteFocused }) => {
         if (labeledGreenLineStations.includes(stationId)) {
             return stationId === GLStations.Hynes ? 'left' : 'right';
+        }
+        if (isRouteFocused && glxStations.includes(stationId)) {
+            return 'right';
         }
         if (isRouteFocused) {
             return routeId === 'Green-E' ? 'left' : 'right';
@@ -215,6 +246,32 @@ export const redLine: Line = {
         'Red-B': {
             derivedFromRouteId: 'Red',
             shape: redB,
+        },
+    },
+};
+
+const enum BLStations {
+    Bowdoin = 'place-bomnl',
+    Wonderland = 'place-wondl',
+}
+
+export const blueLine = {
+    name: 'Blue',
+    abbreviation: 'BL',
+    colorSecondary: '#3434D1',
+    color: '#7CA5E3',
+    getStationLabelPosition: () => 'right',
+    fixedTrainLabelPosition: 'right',
+    routes: {
+        Blue: {
+            shape: [
+                start(0, 0, 90),
+                stationRange({
+                    end: BLStations.Bowdoin,
+                    start: BLStations.Wonderland,
+                    commands: [line(150)],
+                }),
+            ],
         },
     },
 };
