@@ -19,19 +19,19 @@ export const LineStats: React.FunctionComponent<Props> = ({ line }) => {
                 <table className="stats-table">
                     <tbody>
                         <tr>
-                            <td>New Trains Delivered:</td>
+                            <td>New Train Cars Delivered:</td>
                             <td>{lineName?.totalNewDelivered}</td>
                         </tr>
                         <tr>
-                            <td>New Trains Awaiting Delivery:</td>
+                            <td>New Train Cars Awaiting Delivery:</td>
                             <td>{lineName?.totalNewUndelivered}</td>
                         </tr>
                         <tr>
-                            <td>Old Trains Active:</td>
+                            <td>Old Train Cars Active:</td>
                             <td>{lineName?.totalOldActive}</td>
                         </tr>
                         <tr>
-                            <td>Old Trains Inactive:</td>
+                            <td>Old Train Cars Inactive:</td>
                             <td>{lineName?.totalOldInactive}</td>
                         </tr>
                     </tbody>
@@ -39,7 +39,8 @@ export const LineStats: React.FunctionComponent<Props> = ({ line }) => {
             ) : null}
             <div className={'updated'}>
                 <span style={{ fontWeight: 'bold' }}>Delivery info last updated: </span>
-                <span>{new Date(stats.Updated).toDateString()}</span>
+                <span>{new Date(stats.Updated).toDateString()}</span> (
+                <a href={stats.Sources.current_fleet_numbers}>source</a>)
             </div>
         </details>
     );
