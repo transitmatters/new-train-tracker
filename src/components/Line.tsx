@@ -9,7 +9,7 @@ import { Train } from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 import { getInitialDataByKey } from '../initialData';
 import { Line as TLine, Pair, StationPositions, VehiclesAge } from '../types';
-import { MBTAApi } from '../useMbtaApi';
+import { MBTAApi } from '../hooks/useMbtaApi';
 
 const AGE_WORD_MAP = new Map<VehiclesAge, string>([
     ['new_vehicles', ' new '],

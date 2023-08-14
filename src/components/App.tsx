@@ -3,13 +3,14 @@ import Favicon from 'react-favicon';
 import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine, blueLine } from '../lines';
-import { useMbtaApi } from '../useMbtaApi';
+import { useMbtaApi } from '../hooks/useMbtaApi';
 import { getInitialDataByKey } from '../initialData';
 
 import { Line } from './Line';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { LineTabPicker, getTabIdForLine } from './LineTabPicker';
+import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
 
 // @ts-expect-error Favicon png seems to throw typescript error
@@ -95,6 +96,7 @@ export const App: React.FC = () => {
                     api={api}
                     age={ageTabState.currentId ?? 'vehicles'}
                 />
+                <LineStats line={selectedLine?.name} />
                 <Footer version={getInitialDataByKey('version')} />
             </>
         );

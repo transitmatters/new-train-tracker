@@ -9,7 +9,8 @@
         "allowJs": true,
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "node",
-        "noImplicitAny": false
+        "noImplicitAny": false,
+        "resolveJsonModule": true,
     },
     "include": ["src"]
 }
