@@ -1,19 +1,19 @@
 {
     "Orange": {
-        "totalOldActive": 106,
-        "totalOldInactive": 14,
-        "totalNewDelivered": 46,
-        "totalNewUndelivered": 106
+        "totalOldActive": 0,
+        "totalOldInactive": 48,
+        "totalNewDelivered": 90,
+        "totalNewUndelivered": 62
     },
     "Red": {
-        "totalOldActive": 206,
-        "totalOldInactive": 10,
-        "totalNewDelivered": 6,
-        "totalNewUndelivered": 246
+        "totalOldActive": 196,
+        "totalOldInactive": 20,
+        "totalNewDelivered": 12,
+        "totalNewUndelivered": 240
     },
     "Green": {
-        "totalOldActive": 181,
-        "totalOldInactive": 20,
+        "totalOldActive": 183,
+        "totalOldInactive": 24,
         "totalNewDelivered": 24,
         "totalNewUndelivered": 0
     },
@@ -23,5 +23,6 @@
             "https://www.mbta.com/projects/orange-line-transformation-program",
             "https://www.mbta.com/projects/red-line-transformation-program"
         ]
-    }
+    },
+    "Updated": "2023-07-31"
 }
