@@ -25,6 +25,20 @@
         name: nodejs
         state: latest
 
+    - name: add python ppa for apt repo
+      become: yes
+      become_user: root
+      apt_repository:
+        repo: ppa:deadsnakes/ppa
+        update_cache: yes
+
+    - name: install python3.9
+      become: yes
+      become_user: root
+      apt:
+        name: python3
+        state: 3.9
+
     - name: install poetry
       shell: curl -sSL https://install.python-poetry.org | python3 -
 
