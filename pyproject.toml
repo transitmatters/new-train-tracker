@@ -8,7 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.9, <3.12"
 flask = "2.3.3"
-aiohttp = "3.8.5"
+aiohttp = "3.9.0"
 boto3 = "1.26.153"
 gunicorn = "20.1.0"
 json-api-doc = "0.15.0"
