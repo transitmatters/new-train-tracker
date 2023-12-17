@@ -23,6 +23,7 @@
       become_user: root
       apt:
         name: nodejs
+        state: latest
 
     - name: install poetry
       shell: curl -sSL https://install.python-poetry.org | python3 -
