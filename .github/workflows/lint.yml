@@ -35,6 +35,10 @@ jobs:
 
   backend:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18']
+        python-version: ['3.11']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
