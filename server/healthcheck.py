@@ -14,7 +14,7 @@ def file_age_s(pathname):
 def run():
     checks = [
         lambda: len(secrets.MBTA_V3_API_KEY) > 0,
-        lambda: file_age_s(LAST_SEEN_JSON_PATH) < 1800  # allow up to 30 minutes of outdated last_seen.json
+        lambda: file_age_s(LAST_SEEN_JSON_PATH) < 1800,  # allow up to 30 minutes of outdated last_seen.json
     ]
 
     for i in range(0, len(checks)):
@@ -24,11 +24,15 @@ def run():
             checks[i] = False
 
     if all(checks):
-        return Response(json.dumps({
-            "status": "pass"
-        }), mimetype="application/json", status=200)
+        return Response(json.dumps({"status": "pass"}), mimetype="application/json", status=200)
 
-    return Response(json.dumps({
-        "status": "fail",
-        "check_failed": checks.index(False),
-    }), mimetype="application/json", status=500)
+    return Response(
+        json.dumps(
+            {
+                "status": "fail",
+                "check_failed": checks.index(False),
+            }
+        ),
+        mimetype="application/json",
+        status=500,
+    )

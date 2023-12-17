@@ -34,12 +34,8 @@ def static_files(filename):
 @application.route("/trains/<route_ids_string>")
 def trains(route_ids_string):
     route_ids = route_ids_string.split(",")
-    vehicle_data = asyncio.run(
-        mbta_api.vehicle_data_for_routes(route_ids)
-    )
-    return flask.Response(json.dumps(vehicle_data), mimetype="application/json", headers={
-        "Cache-Control": "no-cache"
-    })
+    vehicle_data = asyncio.run(mbta_api.vehicle_data_for_routes(route_ids))
+    return flask.Response(json.dumps(vehicle_data), mimetype="application/json", headers={"Cache-Control": "no-cache"})
 
 
 # takes a single route id
@@ -70,9 +66,7 @@ def root():
     shell = flask.request.args.get("shell")
     if shell:
         return static_files("index.html")
-    payload = asyncio.run(
-        initial_data.initial_request_data(DEFAULT_ROUTE_IDS)
-    )
+    payload = asyncio.run(initial_data.initial_request_data(DEFAULT_ROUTE_IDS))
     payload["static_data"] = get_static_data()
 
     response = flask.make_response(flask.render_template("index.html", initial_data=payload))
@@ -81,7 +75,7 @@ def root():
 
 
 def get_static_data():
-    with open('./static/static_data.json') as f:
+    with open("./static/static_data.json") as f:
         static_data = json.load(f)
     return static_data
 

@@ -9,7 +9,7 @@ Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 ## Install & Run
 Dependencies:
 - `node` `18.x`
-- `python` `3.9`
+- `python` `3.11`
 - [`poetry`](https://python-poetry.org/)
 
 Run:

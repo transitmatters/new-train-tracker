@@ -28,7 +28,7 @@ vehicle_is_new_func = {
     "Orange": orange_is_new,
     **get_is_new_dict(GREEN_ROUTE_IDS, green_is_new),
     **get_is_new_dict(SILVER_ROUTE_IDS, silver_is_new),
-    "Blue": blue_is_new
+    "Blue": blue_is_new,
 }
 
 

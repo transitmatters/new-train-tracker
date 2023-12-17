@@ -48,7 +48,7 @@ async def update_recent_sightings():
             LAST_SEEN_TIMES[line] = {
                 "car": vehicle["label"],
                 # Python isoformat() doesn't include TZ, but we know this is UTC because we used utcnow() above
-                "time": now.isoformat()[:-3] + "Z"
+                "time": now.isoformat()[:-3] + "Z",
             }
 
         with open(JSON_PATH, "w", encoding="utf-8") as file:

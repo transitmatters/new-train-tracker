@@ -35,8 +35,8 @@ def calc_stats(vehicle_array):
         "Blue": {
             "totalActive": len(totalBlue),
             "totalNew": len(filter_new(totalBlue)),
-            "totalOld": len(filter_old(totalBlue))
-        }
+            "totalOld": len(filter_old(totalBlue)),
+        },
     }
 
     return vehicle_stats
