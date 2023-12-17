@@ -47,7 +47,7 @@
         repo: https://github.com/transitmatters/new-train-tracker.git
         dest: /home/ubuntu/new-train-tracker
         force: yes
-        version: main
+        version: python3.11-upgrade
 
     - name: copy systemd service file
       become: yes
@@ -71,7 +71,7 @@
 
     - name: copy secrets file
       copy:
-        src: ../server/secrets.py
+        src: ec2-secrets.py
         dest: /home/ubuntu/new-train-tracker/server/secrets.py
 
     - name: restart nginx
@@ -81,6 +81,11 @@
         name: nginx
         state: restarted
         daemon_reload: yes
+
+    - name: ensure using python 3.11 poetry environment
+      shell: /home/ubuntu/.local/bin/poetry env use 3.11
+      args:
+        chdir: /home/ubuntu/new-train-tracker
 
     - name: install app dependencies
       shell: npm ci
