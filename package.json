@@ -1,6 +1,6 @@
 {
     "name": "new-train-tracker",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "description": "New Train Tracker by TransitMattters",
     "main": "index.tsx",
     "scripts": {
