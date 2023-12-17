@@ -5,6 +5,7 @@ import schedule
 
 # Copied from https://schedule.readthedocs.io/en/stable/background-execution.html
 
+
 def run_continuously(interval_s=1) -> threading.Event:
     """Continuously run, while executing pending jobs at each
     elapsed time interval.

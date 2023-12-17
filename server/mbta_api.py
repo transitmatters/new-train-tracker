@@ -42,9 +42,7 @@ async def getV3(command, params={}, session=None):
             eastern = pytz.timezone("US/Eastern")
             now_eastern = datetime.datetime.now(eastern)
             if response.status >= 400:
-                print(
-                    f"[{now_eastern}] API returned {response.status} for {url} -- it says {response_json}"
-                )
+                print(f"[{now_eastern}] API returned {response.status} for {url} -- it says {response_json}")
             try:
                 return json_api_doc.parse(response_json)
             except Exception as e:
@@ -158,9 +156,7 @@ async def stops_for_route(route_id):
                     "route": stop["route"],
                 },
                 filter(
-                    lambda stop: stop_belongs_to_custom_route(
-                        stop["id"], route_id, normalized_route_name
-                    ),
+                    lambda stop: stop_belongs_to_custom_route(stop["id"], route_id, normalized_route_name),
                     stops,
                 ),
             )
