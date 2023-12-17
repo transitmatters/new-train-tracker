@@ -185,7 +185,10 @@ mypy-extensions = ">=0.4.3"
 pathspec = ">=0.9.0,<1"
 platformdirs = ">=2"
 tomli = ">=0.2.6,<2.0.0"
-typing-extensions = ">=3.10.0.0"
+typing-extensions = [
+    {version = ">=3.10.0.0,<3.10.0.1 || >3.10.0.1", markers = "python_version >= \"3.10\""},
+    {version = ">=3.10.0.0", markers = "python_version < \"3.10\""},
+]
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
@@ -1247,5 +1250,5 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 
 [metadata]
 lock-version = "2.0"
-python-versions = "~3.9"
-content-hash = "1576301a68f1d2b8b7347d43e52b83903a6ee7551b32b76d331b3cbd9e5d8933"
+python-versions = "^3.9, <3.12"
+content-hash = "b0a99b8c4d264865dca62dbf73452f7e942d7ad1fc179525e007cd5ab070b1cc"
