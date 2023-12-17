@@ -11,11 +11,11 @@
         url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
         state: present
 
-    - name: add nodejs 16.x ppa for apt repo
+    - name: add nodejs 18.x ppa for apt repo
       become: yes
       become_user: root
       apt_repository:
-        repo: deb https://deb.nodesource.com/node_16.x focal main
+        repo: deb https://deb.nodesource.com/node_18.x focal main
         update_cache: yes
 
     - name: install nodejs
@@ -23,6 +23,21 @@
       become_user: root
       apt:
         name: nodejs
+        state: latest
+
+    - name: add python ppa for apt repo
+      become: yes
+      become_user: root
+      apt_repository:
+        repo: ppa:deadsnakes/ppa
+        update_cache: yes
+
+    - name: install python3.9
+      become: yes
+      become_user: root
+      apt:
+        name: python3
+        state: 3.9
 
     - name: install poetry
       shell: curl -sSL https://install.python-poetry.org | python3 -
