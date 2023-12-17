@@ -14,10 +14,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Set up Node 16.x
+      - name: Set up Node 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0

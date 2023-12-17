@@ -33,8 +33,12 @@
             "Value": {
               "Fn::Sub": "ntt-${NTTHostname}"
             }
+          },
+          {
+            "Key": "service",
+            "Value": "new-train-tracker"
           }
-        ],
+        ]
       }
     },
     "NTTSecurityGroup": {
