@@ -8,16 +8,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18']
+        python-version: ['3.11']
     env:
       TM_NTT_CERT_ARN: ${{ secrets.TM_NTT_CERT_ARN }}
       TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Set up Node 18.x
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up Node ${{ matrix.node-version }}.x
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+            node-version: ${{ matrix.node-version }}
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
