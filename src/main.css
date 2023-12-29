@@ -50,7 +50,7 @@ a {
 }
 
 .header {
-    padding: 2vh 0;
+    padding: 1rem 0;
     z-index: 1;
     position: sticky;
     top: 0;
@@ -216,10 +216,6 @@ a {
 }
 
 @media screen and (max-height: 600px) {
-    :root {
-        font-size: 2vh;
-        --top-content-height: 20vh;
-    }
 }
 
 .line-pane svg {
