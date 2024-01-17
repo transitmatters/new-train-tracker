@@ -2,8 +2,8 @@
     "Orange": {
         "totalOldActive": 0,
         "totalOldInactive": 48,
-        "totalNewDelivered": 90,
-        "totalNewUndelivered": 62
+        "totalNewDelivered": 96,
+        "totalNewUndelivered": 56
     },
     "Red": {
         "totalOldActive": 196,
@@ -12,8 +12,8 @@
         "totalNewUndelivered": 240
     },
     "Green": {
-        "totalOldActive": 183,
-        "totalOldInactive": 24,
+        "totalOldActive": 182,
+        "totalOldInactive": 25,
         "totalNewDelivered": 24,
         "totalNewUndelivered": 0
     },
@@ -24,5 +24,5 @@
             "https://www.mbta.com/projects/red-line-transformation-program"
         ]
     },
-    "Updated": "2023-07-31"
+    "Updated": "2023-12-17"
 }
