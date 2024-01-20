@@ -157,7 +157,9 @@ a {
     left: 0;
     height: 100%;
     border-radius: 100px;
-    transition: 500ms all cubic-bezier(0.86, 0, 0.07, 1);
+    transition: transform 500ms cubic-bezier(0.86, 0, 0.07, 1), 
+        width 500ms cubic-bezier(0.86, 0, 0.07, 1),
+        background-color 0ms cubic-bezier(0.86, 0, 0.07, 1);
 }
 
 .selectors {
@@ -180,7 +182,7 @@ a {
     color: white;
     border-radius: 100px;
     z-index: 1;
-}
+    }
 
 .tab-picker > .tab:not(:last-child) {
     margin-right: 10px;

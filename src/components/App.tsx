@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect } from 'react';
 import Favicon from 'react-favicon';
-import { useTabState } from 'reakit';
 
 import { greenLine, orangeLine, redLine, blueLine } from '../lines';
 import { useMbtaApi } from '../hooks/useMbtaApi';
@@ -9,30 +8,32 @@ import { getInitialDataByKey } from '../initialData';
 import { Line } from './Line';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { LineTabPicker, getTabIdForLine } from './LineTabPicker';
+import { LineTabPicker } from './LineTabPicker';
 import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
 
 // @ts-expect-error Favicon png seems to throw typescript error
 import favicon from '../../static/images/favicon.png';
 import { AgeTabPicker } from './AgeTabPicker';
-import { Line as TLine, VehiclesAge } from '../types';
+import { Line as TLine } from '../types';
+
+import { useSearchParams } from 'react-router-dom';
+import { useLineSearchParam, useAgeSearchParam } from '../hooks/searchParams';
 
 const lineByTabId: Record<string, TLine> = {
-    'tab-Green': greenLine,
-    'tab-Orange': orangeLine,
-    'tab-Red': redLine,
-    'tab-Blue': blueLine,
+    Green: greenLine,
+    Orange: orangeLine,
+    Red: redLine,
+    Blue: blueLine,
 };
 
 export const App: React.FC = () => {
-    const tabState = useTabState({ loop: false });
-    const ageTabState = useTabState({ currentId: 'new_vehicles', loop: false });
+    const [searchParams] = useSearchParams();
+    const [lineSearchParam, setLineSearchParam] = useLineSearchParam();
+    const [ageSearchParam] = useAgeSearchParam();
 
-    const api = useMbtaApi(Object.values(lineByTabId), ageTabState.currentId as VehiclesAge);
-    const selectedLine = tabState.currentId
-        ? lineByTabId[tabState.currentId]
-        : lineByTabId['tab-Green'];
+    const api = useMbtaApi(Object.values(lineByTabId), ageSearchParam);
+    const selectedLine = lineByTabId[lineSearchParam];
 
     useLayoutEffect(() => {
         const backgroundColor = selectedLine.colorSecondary;
@@ -41,17 +42,25 @@ export const App: React.FC = () => {
     }, [selectedLine]);
 
     useEffect(() => {
-        if (api.isReady) {
-            const lineWithTrains = Object.values(lineByTabId).find((line) => {
-                const routeIds = Object.keys(line.routes);
-                if (api.trainsByRoute !== null) {
-                    // @ts-expect-error Despite the above check, Typescript fails to understand that trainsByRoute won't be null
-                    return routeIds.some((routeId) => api.trainsByRoute[routeId].length > 0);
-                }
-            });
-            if (lineWithTrains) {
-                tabState.setCurrentId(getTabIdForLine(lineWithTrains));
+        // Do not override the line if a query string param exists
+        if (searchParams.get('line') !== null) {
+            return;
+        }
+
+        // Do not run until api is ready
+        if (!api.isReady) {
+            return;
+        }
+
+        const lineWithTrains = Object.values(lineByTabId).find((line) => {
+            const routeIds = Object.keys(line.routes);
+            if (api.trainsByRoute) {
+                return routeIds.some((routeId) => api.trainsByRoute![routeId].length > 0);
             }
+        });
+
+        if (lineWithTrains) {
+            setLineSearchParam(lineWithTrains);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [api.isReady]);
@@ -66,17 +75,12 @@ export const App: React.FC = () => {
         return () => document.removeEventListener('keydown', listener);
     }, []);
 
-    const selectedLineColor: string = tabState.currentId
-        ? lineByTabId[tabState.currentId]?.color
-        : greenLine.color;
-
     const renderControls = () => {
         return (
             <div className={'selectors'}>
-                <AgeTabPicker tabState={ageTabState} tabColor={selectedLineColor} />
+                <AgeTabPicker tabColor={selectedLine.color} />
                 {api.trainsByRoute && (
                     <LineTabPicker
-                        tabState={tabState}
                         lines={Object.values(lineByTabId)}
                         trainsByRoute={api.trainsByRoute}
                     />
@@ -90,12 +94,7 @@ export const App: React.FC = () => {
             <>
                 <Favicon url={favicon} />
                 <Header controls={renderControls()} />
-                <Line
-                    key={selectedLine?.name}
-                    line={selectedLine}
-                    api={api}
-                    age={ageTabState.currentId ?? 'vehicles'}
-                />
+                <Line key={selectedLine?.name} line={selectedLine} api={api} age={ageSearchParam} />
                 <LineStats line={selectedLine?.name} />
                 <Footer version={getInitialDataByKey('version')} />
             </>
