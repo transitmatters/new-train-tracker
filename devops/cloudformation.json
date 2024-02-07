@@ -123,7 +123,13 @@
                         "AcmCertificateArn": { "Ref": "NTTCertArn" },
                         "SslSupportMethod": "sni-only"
                     }
-                }
+                },
+                "Tags": [
+                  {
+                      "Key": "service",
+                      "Value": "new-train-tracker"
+                  }
+              ]
             }
         }
     },
