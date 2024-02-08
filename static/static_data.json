@@ -2,27 +2,26 @@
     "Orange": {
         "totalOldActive": 0,
         "totalOldInactive": 48,
-        "totalNewDelivered": 96,
-        "totalNewUndelivered": 56
+        "totalNewDelivered": 104,
+        "totalNewUndelivered": 48
     },
     "Red": {
         "totalOldActive": 196,
         "totalOldInactive": 20,
-        "totalNewDelivered": 12,
-        "totalNewUndelivered": 240
+        "totalNewDelivered": 14,
+        "totalNewUndelivered": 238
     },
     "Green": {
-        "totalOldActive": 182,
-        "totalOldInactive": 25,
+        "totalOldActive": 175,
+        "totalOldInactive": 22,
         "totalNewDelivered": 24,
         "totalNewUndelivered": 0
     },
-    "Sources": {
-        "current_fleet_numbers": "http://roster.transithistory.org/",
-        "new_car_numbers_delivered": [
-            "https://www.mbta.com/projects/orange-line-transformation-program",
-            "https://www.mbta.com/projects/red-line-transformation-program"
-        ]
+    "Blue": {
+        "totalActive": 94
     },
-    "Updated": "2023-12-17"
+    "Sources": {
+        "fleet_numbers": "http://roster.transithistory.org/"
+    },
+    "Updated": "2024-02-07"
 }
