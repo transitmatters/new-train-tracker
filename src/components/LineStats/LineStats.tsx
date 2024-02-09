@@ -9,7 +9,26 @@ export const LineStats: React.FunctionComponent<Props> = ({ line }) => {
     const lineName = stats[line];
 
     if (line === 'Blue') {
-        return null;
+        return (
+            <details className="stats-container">
+                <summary className="stats-title">Stats for {line} line</summary>
+                {lineName ? (
+                    <table className="stats-table">
+                        <tbody>
+                            <tr>
+                                <td>Train Cars Active:</td>
+                                <td>{lineName?.totalActive}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                ) : null}
+                <div className={'updated'}>
+                    <span style={{ fontWeight: 'bold' }}>Delivery info last updated: </span>
+                    <span>{new Date(stats.Updated).toDateString()}</span> (
+                    <a href={stats.Sources.fleet_numbers}>source</a>)
+                </div>
+            </details>
+        );
     }
 
     return (
@@ -40,7 +59,7 @@ export const LineStats: React.FunctionComponent<Props> = ({ line }) => {
             <div className={'updated'}>
                 <span style={{ fontWeight: 'bold' }}>Delivery info last updated: </span>
                 <span>{new Date(stats.Updated).toDateString()}</span> (
-                <a href={stats.Sources.current_fleet_numbers}>source</a>)
+                <a href={stats.Sources.fleet_numbers}>source</a>)
             </div>
         </details>
     );
