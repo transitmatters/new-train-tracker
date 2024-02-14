@@ -43,8 +43,8 @@ export const TrainPopover = (props) => {
                             ? 'left'
                             : 'right'
                         : canPositionRight
-                        ? 'right'
-                        : 'left';
+                          ? 'right'
+                          : 'left';
             }
 
             const popoverX =
