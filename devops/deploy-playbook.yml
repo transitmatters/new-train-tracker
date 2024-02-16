@@ -32,11 +32,11 @@
         repo: ppa:deadsnakes/ppa
         update_cache: yes
 
-    - name: install python3.11
+    - name: install python3.12
       become: yes
       become_user: root
       apt:
-        name: python3.11
+        name: python3.12
         state: latest
 
     - name: install poetry
@@ -82,8 +82,8 @@
         state: restarted
         daemon_reload: yes
 
-    - name: ensure using python 3.11 poetry environment
-      shell: /home/ubuntu/.local/bin/poetry env use 3.11
+    - name: ensure using python 3.12 poetry environment
+      shell: /home/ubuntu/.local/bin/poetry env use 3.12
       args:
         chdir: /home/ubuntu/new-train-tracker
 
