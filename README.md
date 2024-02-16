@@ -9,8 +9,9 @@ Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 ## Install & Run
 Dependencies:
 - `node` `18.x`
-- `python` `3.11`
+- `python` `3.12`
 - [`poetry`](https://python-poetry.org/)
+- Ensure `poetry` is using the correct Python version by running `poetry env use <your python3.12 binary>`
 
 Run:
 - `$ npm install`
@@ -39,8 +40,9 @@ The Flask app is run under gunicorn and controlled by systemd, which will restar
   - `TM_NTT_CERT_ARN` (for production)
   - `TM_LABS_WILDCARD_CERT_ARN` (for beta)
 3. A key named `transitmatters-ntt` needs to be available in your AWS account and copied to `~/.ssh/transitmatters-ntt.pem`.
-4. Run `cd devops && ./deploy.sh` (add `-p` for production) to deploy.
-5. You're all set! Visit:
+4. You will also need to create an `ec2-secrets.py` file in the `devops/` directory.
+5. Run `cd devops && ./deploy.sh` (add `-p` for production) to deploy.
+6. You're all set! Visit:
 - https://ntt-beta.labs.transitmatters.org for beta
 - https://traintracker.transitmatters.org for production
 

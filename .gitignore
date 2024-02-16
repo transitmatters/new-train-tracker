@@ -9,3 +9,4 @@ inventory
 last_seen.json
 traintracker-dev.nginx.conf
 __pycache__/
+devops/ec2-secrets.py

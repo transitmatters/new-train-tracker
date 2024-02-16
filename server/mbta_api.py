@@ -42,7 +42,7 @@ async def getV3(command, params={}, session=None):
             eastern = pytz.timezone("US/Eastern")
             now_eastern = datetime.datetime.now(eastern)
             if response.status >= 400:
-                print(f"[{now_eastern}] API returned {response.status} for {url} -- it says {response_json}")
+                raise Exception(f"[{now_eastern}] API returned {response.status} for {url} -- it says {response_json}")
             try:
                 return json_api_doc.parse(response_json)
             except Exception as e:

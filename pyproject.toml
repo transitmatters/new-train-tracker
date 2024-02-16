@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "new-train-tracker"
-version = "2.3.2"
+version = "2.3.3"
 description = "New Train Tracker by TransitMattters"
 authors = ["TransitMatters Labs Team"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "~3.11"
+python = "~3.12"
 flask = "3.0.0"
 aiohttp = "3.9.1"
 boto3 = "1.34.2"
