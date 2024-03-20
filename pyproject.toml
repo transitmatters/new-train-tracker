@@ -18,7 +18,7 @@ schedule = "1.2.1"
 
 [tool.poetry.dev-dependencies]
 pip = ">=23.2"
-black = "^23.12.1"
+black = "^24.3.0"
 pylint = "2.13.5"
 flake8 = "6.1.0"
 
