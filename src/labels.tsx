@@ -19,6 +19,21 @@ const getReadableStatusLabel = (status) => {
     return '';
 };
 
+const getDepartureTimePrediction = (prediction: Date) => {
+    if (prediction) {
+        return `Next departure ${prediction.toLocaleTimeString()}`;
+    }
+
+    return '';
+};
+
+const getLastUpdatedAt = (updatedAt: Date) => {
+    if (updatedAt) {
+        return `Postion updated ${updatedAt.toLocaleTimeString()}`;
+    }
+    return '';
+};
+
 const getStationNameAndStatusForTrain = (train: Train, route: Route) => {
     const { stations } = route;
     const nearStation = stations?.find((st) => st.id === train.stationId);
@@ -35,6 +50,7 @@ const renderStationLabel = (train: Train, route: Route) => {
     if (!stationName) {
         return null;
     }
+
     return (
         <div className="station">
             {statusLabel}&nbsp;
@@ -61,12 +77,25 @@ const renderLeadCarLabel = (train: Train, backgroundColor) => {
     );
 };
 
+const renderDetailsLabel = (train: Train) => {
+    const departurePrediction = getDepartureTimePrediction(new Date(train.departurePrediction));
+    const lastUpdated = getLastUpdatedAt(new Date(train.updatedAt));
+
+    return (
+        <div className="details">
+            <p>{departurePrediction}</p>
+            <p>{lastUpdated}</p>
+        </div>
+    );
+};
+
 export const renderTrainLabel = (train: Train, route: Route, accentColor) => {
     return (
         <>
             {renderStationLabel(train, route)}
             {renderDestinationLabel(train, route)}
             {renderLeadCarLabel(train, accentColor)}
+            {renderDetailsLabel(train)}
         </>
     );
 };

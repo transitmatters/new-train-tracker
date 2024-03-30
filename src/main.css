@@ -318,6 +318,10 @@ a {
     font-size: 3em;
 }
 
+.train-popover .train-details .details {
+    font-size: 2em;
+}
+
 .train-popover .train-details .lead-car {
     font-size: 3em;
     color: white;

@@ -8,7 +8,6 @@ fleet.py provides functions used to determine whether vehicles are "new" or not
 
 """
 
-
 from server.routes import GREEN_ROUTE_IDS, SILVER_ROUTE_IDS
 
 red_is_new = lambda x: int(x) >= 1900 and int(x) <= 2151
