@@ -86,6 +86,20 @@ def maybe_reverse(stops, route):
         return reverse_if_stops_out_of_order(stops, "Wonderland", "Bowdoin")
     return stops
 
+async def departure_prediction_for_vehicle(vehicle_id, stop_id):
+    predictions = await getV3(
+            "predictions",
+            {
+                "filter[stop]": stop_id
+            }
+    )
+
+    for prediction in predictions:
+        if prediction["vehicle"]["id"] == vehicle_id:
+            return prediction["departure_time"]
+
+    return None
+
 
 # takes a list of route ids
 # uses getV3 to request real-time vehicle data for a given route id
@@ -116,6 +130,8 @@ async def vehicle_data_for_routes(route_ids):
             # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
+            departure_prediction = await departure_prediction_for_vehicle(vehicle["id"], vehicle["stop"]["id"])
+
             vehicles_to_display.append(
                 {
                     "label": vehicle["label"],
@@ -127,6 +143,8 @@ async def vehicle_data_for_routes(route_ids):
                     "stationId": vehicle["stop"]["parent_station"]["id"],
                     "tripId": vehicle["trip"]["id"],
                     "isNewTrain": is_new,
+                    "updatedAt": vehicle["updated_at"],
+                    "departurePrediction": departure_prediction
                 }
             )
 

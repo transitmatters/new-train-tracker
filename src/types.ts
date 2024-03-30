@@ -37,6 +37,8 @@ export interface Train {
     route: string;
     stationId: string;
     tripId: string;
+    departurePrediction: string;
+    updatedAt: string;
 }
 
 export interface Station {
