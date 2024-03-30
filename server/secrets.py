@@ -1,4 +1,4 @@
-MBTA_V3_API_KEY = ''
+MBTA_V3_API_KEY = ""
 # False by default, because debug Flask spawns two processes, and two last seen updaters will trample each other!
 LAST_SEEN_UPDATE = False
 """

@@ -3,7 +3,6 @@ mbta_api.py provides functions dealing with interactions with the MBTA V3 API
 
 """
 
-
 from urllib.parse import urlencode
 import datetime
 import pytz
@@ -86,13 +85,9 @@ def maybe_reverse(stops, route):
         return reverse_if_stops_out_of_order(stops, "Wonderland", "Bowdoin")
     return stops
 
+
 async def departure_prediction_for_vehicle(vehicle_id, stop_id):
-    predictions = await getV3(
-            "predictions",
-            {
-                "filter[stop]": stop_id
-            }
-    )
+    predictions = await getV3("predictions", {"filter[stop]": stop_id})
 
     for prediction in predictions:
         if prediction["vehicle"]["id"] == vehicle_id:
@@ -144,7 +139,7 @@ async def vehicle_data_for_routes(route_ids):
                     "tripId": vehicle["trip"]["id"],
                     "isNewTrain": is_new,
                     "updatedAt": vehicle["updated_at"],
-                    "departurePrediction": departure_prediction
+                    "departurePrediction": departure_prediction,
                 }
             )
 
