@@ -21,7 +21,7 @@ const getReadableStatusLabel = (status) => {
 
 const getDepartureTimePrediction = (prediction: Date) => {
     if (prediction) {
-        return `Departure at ${prediction.toLocaleTimeString()}`;
+        return `Next departure ${prediction.toLocaleTimeString()}`;
     }
 
     return '';
@@ -29,7 +29,7 @@ const getDepartureTimePrediction = (prediction: Date) => {
 
 const getLastUpdatedAt = (updatedAt: Date) => {
     if (updatedAt) {
-        return `Last updated ${updatedAt.toLocaleTimeString()}`;
+        return `Postion updated ${updatedAt.toLocaleTimeString()}`;
     }
     return '';
 };
