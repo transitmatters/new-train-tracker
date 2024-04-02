@@ -48,6 +48,16 @@
                 ]
             }
         },
+        {
+          "Type" : "AWS::EC2::InstanceConnectEndpoint",
+          "Properties" : {
+              "SecurityGroupIds" : { "Ref": "NTTSecurityGroup" },
+              "SubnetId" : "subnet-6169464f",
+              "Tags" : [
+                  { "Key": "service", "Value": "new-train-tracker" }
+              ]
+            }
+        },
         "NTTSecurityGroup": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
