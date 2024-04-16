@@ -29,7 +29,7 @@ const getDepartureTimePrediction = (prediction: Date) => {
 
 const getLastUpdatedAt = (updatedAt: Date) => {
     if (updatedAt) {
-        return `Postion updated ${updatedAt.toLocaleTimeString()}`;
+        return `Position updated ${updatedAt.toLocaleTimeString()}`;
     }
     return '';
 };
