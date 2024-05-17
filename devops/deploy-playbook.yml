@@ -121,13 +121,7 @@
         - "version:{{ lookup('env', 'GIT_SHA') }}"
       apm_config:
         enabled: true
-      process_config:
-        enabled: "true" # type: string
       logs_enabled: true
-    network_config:
-      enabled: true
-    system_probe_config:
-      enable_oom_kill: true
     datadog_checks:
       nginx:
         logs:
@@ -136,8 +130,3 @@
             service: "new-train-tracker"
             source: nginx
             sourcecategory: nginx
-      systemd:
-        init_config:
-        instances:
-          - unit_names:
-            - new-train-tracker.service
