@@ -119,6 +119,7 @@
         - "git.repository_url:github.com/transitmatters/new-train-tracker"
         - "git.commit.sha:{{ lookup('env', 'GIT_SHA') }}"
         - "version:{{ lookup('env', 'GIT_SHA') }}"
+      cmd_port: 5003
       apm_config:
         enabled: true
       logs_enabled: true
@@ -130,3 +131,8 @@
             service: "new-train-tracker"
             source: nginx
             sourcecategory: nginx
+      systemd:
+        init_config:
+        instances:
+          - unit_names:
+            - new-train-tracker.service
