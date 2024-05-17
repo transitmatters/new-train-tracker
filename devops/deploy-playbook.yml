@@ -42,6 +42,12 @@
     - name: install poetry
       shell: curl -sSL https://install.python-poetry.org | python3 -
 
+    - name: Install the Datadog Agent
+      become: yes
+      become_user: root
+      import_role:
+        name: datadog.dd.agent
+
     - name: get latest github repo
       git:
         repo: https://github.com/transitmatters/new-train-tracker.git
@@ -105,3 +111,33 @@
       become: yes
       become_user: root
       shell: systemctl restart new-train-tracker
+  vars:
+    datadog_api_key: "{{ lookup('env', 'DD_API_KEY') }}"
+    datadog_site: "datadoghq.com"
+    datadog_config:
+      tags:
+        - "git.repository_url:github.com/transitmatters/new-train-tracker"
+        - "git.commit.sha:{{ lookup('env', 'GIT_SHA') }}"
+        - "version:{{ lookup('env', 'GIT_SHA') }}"
+      apm_config:
+        enabled: true
+      process_config:
+        enabled: "true" # type: string
+      logs_enabled: true
+    network_config:
+      enabled: true
+    system_probe_config:
+      enable_oom_kill: true
+    datadog_checks:
+      nginx:
+        logs:
+          - type: file
+            path: "/var/log/nginx/error.log"
+            service: "new-train-tracker"
+            source: nginx
+            sourcecategory: nginx
+      systemd:
+        init_config:
+        instances:
+          - unit_names:
+            - new-train-tracker.service

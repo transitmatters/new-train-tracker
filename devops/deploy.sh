@@ -26,6 +26,16 @@ $PRODUCTION && CERT_ARN="$TM_NTT_CERT_ARN" || CERT_ARN="$TM_LABS_WILDCARD_CERT_A
 
 $PRODUCTION && STACK_NAME="ntt" || STACK_NAME="ntt-beta"
 
+# Ensure required secrets are set
+if [[ -z "$DD_API_KEY" ]]; then
+    echo "Must provide DD_API_KEY in environment to deploy" 1>&2
+    exit 1
+fi
+
+# Identify the version and commit of the current deploy
+export GIT_SHA=`git rev-parse HEAD`
+echo "Deploying version $GIT_SHA"
+
 echo "Deploying Train Tracker CloudFormation stack to $HOSTNAME..."
 echo "View stack log here: https://$AWS_REGION.console.aws.amazon.com/cloudformation/home?region=$AWS_REGION"
 
@@ -45,6 +55,7 @@ INSTANCE_PHYSICAL_ID=$(aws cloudformation list-stack-resources --stack-name $STA
 echo "Deploying the New Train Tracker to $INSTANCE_PHYSICAL_ID via Ansible..."
 export ANSIBLE_HOST_KEY_CHECKING=False # If it's a new host, ssh known_hosts not having the key fingerprint will cause an error. Silence it
 SSH_PROXY_ARGS="-o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id $INSTANCE_PHYSICAL_ID'"
+ansible-galaxy collection install datadog.dd
 ansible-playbook -v --ssh-extra-args "$SSH_PROXY_ARGS" -i $INSTANCE_PHYSICAL_ID, -u ubuntu --private-key ~/.ssh/transitmatters-ntt.pem deploy-playbook.yml
 
 # Grab the cloudfront ID and invalidate its cache
