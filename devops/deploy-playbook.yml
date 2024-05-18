@@ -119,15 +119,10 @@
         - "git.repository_url:github.com/transitmatters/new-train-tracker"
         - "git.commit.sha:{{ lookup('env', 'GIT_SHA') }}"
         - "version:{{ lookup('env', 'GIT_SHA') }}"
+      cmd_port: 5003
       apm_config:
         enabled: true
-      process_config:
-        enabled: "true" # type: string
       logs_enabled: true
-    network_config:
-      enabled: true
-    system_probe_config:
-      enable_oom_kill: true
     datadog_checks:
       nginx:
         logs:
