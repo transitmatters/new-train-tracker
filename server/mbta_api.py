@@ -86,14 +86,18 @@ def maybe_reverse(stops, route):
     return stops
 
 
-async def departure_prediction_for_vehicle(vehicle_id, stop_id):
-    predictions = await getV3("predictions", {"filter[stop]": stop_id})
+async def get_vehicle_departure_predictions(route_id: str):
+    try:
+        predictions = await getV3("predictions", {"filter[route]": route_id}) 
 
-    for prediction in predictions:
-        if prediction["vehicle"]["id"] == vehicle_id:
-            return prediction["departure_time"]
+        departure_times_by_vehicle_id = {}
+        for prediction in predictions:
+            departure_times_by_vehicle_id[prediction["vehicle"]["id"]] = prediction["departure_time"]
 
-    return None
+        return departure_times_by_vehicle_id
+    except Exception as e:
+        print(f"Error getting predictions for vehicles: {e}")
+        return None
 
 
 # takes a list of route ids
@@ -101,6 +105,12 @@ async def departure_prediction_for_vehicle(vehicle_id, stop_id):
 # returns list of all vehicles
 async def vehicle_data_for_routes(route_ids):
     route_ids = normalize_custom_route_ids(route_ids)
+
+    # route id => vehicle id => departure time
+    predictions = {}
+    for route in route_ids:
+        predictions[route] = await get_vehicle_departure_predictions(route)
+
     vehicles = await getV3(
         "vehicles",
         {
@@ -122,10 +132,15 @@ async def vehicle_data_for_routes(route_ids):
             # derive Red Line vehicle branch if needed
             custom_route = derive_custom_route_name(vehicle)
 
+            route = vehicle["route"]["id"]
+
             # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
-            departure_prediction = await departure_prediction_for_vehicle(vehicle["id"], vehicle["stop"]["id"])
+            departure_prediction = "N/A"
+            if predictions is not None and route in predictions: 
+                departure_prediction = predictions[route].get(vehicle["id"], "N/A")
+
 
             vehicles_to_display.append(
                 {
