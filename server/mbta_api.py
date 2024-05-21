@@ -123,12 +123,8 @@ async def vehicle_data_for_routes(route_ids):
             # derive Red Line vehicle branch if needed
             custom_route = derive_custom_route_name(vehicle)
 
-            route = vehicle["route"]["id"]
-
             # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
-
-
 
             vehicles_to_display.append(
                 {
