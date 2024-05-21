@@ -24,7 +24,10 @@ const getTrainPositions = (routes: string[], isFirstRequest: boolean | null) => 
             return Promise.resolve(initialTrainsData);
         }
     }
-    return fetch(`/trains/${routes.join(',')}`).then((res) => res.json());
+    return fetch(`/trains/${routes.join(',')}`).then((res) => {
+        res.json();
+        console.log(res);
+    });
 };
 
 const filterNew = (trains: Train[]) => {

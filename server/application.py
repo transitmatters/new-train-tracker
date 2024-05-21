@@ -55,6 +55,14 @@ def routes(route_ids_string):
     return flask.Response(json.dumps(route_data), mimetype="application/json")
 
 
+# takes a single vehicle id
+# returns the predicted departure of said vehicle from its current stop
+@application.route("/vehicles/<vehicle_id>/departure-predictions")
+def vehicles(vehicle_id):
+    departure = asyncio.run(mbta_api.vehicle_departure_predictions(vehicle_id))
+    return flask.Response(json.dumps(departure), mimetype="application/json")
+
+
 @application.route("/healthcheck")
 def healthcheck():
     return server.healthcheck.run()

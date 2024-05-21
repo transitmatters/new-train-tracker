@@ -28,6 +28,7 @@ export interface Routes {
 export type CurrentStatus = 'IN_TRANSIT_TO' | 'INCOMING_AT' | 'STOPPED_AT';
 
 export interface Train {
+    vehicleId: string;
     currentStatus: CurrentStatus;
     direction: number;
     isNewTrain: boolean;
@@ -37,7 +38,6 @@ export interface Train {
     route: string;
     stationId: string;
     tripId: string;
-    departurePrediction: string;
     updatedAt: string;
 }
 
@@ -86,3 +86,7 @@ export interface Pair {
 }
 
 export type VehiclesAge = 'vehicles' | 'new_vehicles' | 'old_vehicles';
+
+export interface Vehicle {
+    departure_time: Date;
+}

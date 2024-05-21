@@ -35,6 +35,8 @@ const getLastUpdatedAt = (updatedAt: Date) => {
 };
 
 const getStationNameAndStatusForTrain = (train: Train, route: Route) => {
+    console.log(train);
+    console.log(route);
     const { stations } = route;
     const nearStation = stations?.find((st) => st.id === train.stationId);
     if (!nearStation) {

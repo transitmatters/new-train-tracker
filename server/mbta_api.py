@@ -86,18 +86,13 @@ def maybe_reverse(stops, route):
     return stops
 
 
-async def get_vehicle_departure_predictions(route_id: str):
+async def vehicle_departure_predictions(vehicle_id: str):
     try:
-        predictions = await getV3("predictions", {"filter[route]": route_id}) 
-
-        departure_times_by_vehicle_id = {}
-        for prediction in predictions:
-            departure_times_by_vehicle_id[prediction["vehicle"]["id"]] = prediction["departure_time"]
-
-        return departure_times_by_vehicle_id
+        prediction = await getV3("predictions", {"filter[id]": vehicle_id}) 
+        return prediction
     except Exception as e:
         print(f"Error getting predictions for vehicles: {e}")
-        return None
+        return {"departure_time": "N/A"}
 
 
 # takes a list of route ids
@@ -105,11 +100,6 @@ async def get_vehicle_departure_predictions(route_id: str):
 # returns list of all vehicles
 async def vehicle_data_for_routes(route_ids):
     route_ids = normalize_custom_route_ids(route_ids)
-
-    # route id => vehicle id => departure time
-    predictions = {}
-    for route in route_ids:
-        predictions[route] = await get_vehicle_departure_predictions(route)
 
     vehicles = await getV3(
         "vehicles",
@@ -137,13 +127,11 @@ async def vehicle_data_for_routes(route_ids):
             # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
-            departure_prediction = "N/A"
-            if predictions is not None and route in predictions: 
-                departure_prediction = predictions[route].get(vehicle["id"], "N/A")
 
 
             vehicles_to_display.append(
                 {
+                    "vehicleId": vehicle["id"],
                     "label": vehicle["label"],
                     "route": custom_route,
                     "direction": vehicle["direction_id"],
@@ -153,8 +141,7 @@ async def vehicle_data_for_routes(route_ids):
                     "stationId": vehicle["stop"]["parent_station"]["id"],
                     "tripId": vehicle["trip"]["id"],
                     "isNewTrain": is_new,
-                    "updatedAt": vehicle["updated_at"],
-                    "departurePrediction": departure_prediction,
+                    "updatedAt": vehicle["updated_at"]
                 }
             )
 

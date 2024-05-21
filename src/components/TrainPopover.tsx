@@ -2,6 +2,7 @@ import { useState, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { renderTrainLabel } from '../labels';
+import { usePrediction } from '../hooks/useVehicleData';
 
 const popoverDistance = 15;
 
@@ -71,6 +72,8 @@ export const TrainPopover = (props) => {
         trainY,
     ]);
 
+    const vehicle = usePrediction(train.vehicleId);
+
     return createPortal(
         <div
             ref={setPopoverElement}
@@ -79,7 +82,9 @@ export const TrainPopover = (props) => {
             aria-hidden="true"
         >
             <div className="scale-container" style={{ border: `2px solid ${colors.train}` }}>
-                <div className="train-details">{renderTrainLabel(train, route, colors.train)}</div>
+                <div className="train-details">
+                    {renderTrainLabel(train, vehicle, route, colors.train)}
+                </div>
             </div>
         </div>,
         container
