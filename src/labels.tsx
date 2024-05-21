@@ -20,7 +20,7 @@ const getReadableStatusLabel = (status) => {
 };
 
 const getDepartureTimePrediction = (prediction: Date | null) => {
-    if (prediction) {
+    if (prediction && !isNaN(prediction)) {
         return `Next departure ${prediction.toLocaleTimeString()}`;
     }
 

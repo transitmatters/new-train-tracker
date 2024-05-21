@@ -2,7 +2,7 @@ import { useState, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { renderTrainLabel } from '../labels';
-import { usePrediction } from '../hooks/useVehicleData';
+import { usePrediction } from '../hooks/usePrediction';
 
 const popoverDistance = 15;
 
@@ -72,7 +72,7 @@ export const TrainPopover = (props) => {
         trainY,
     ]);
 
-    const vehicle = usePrediction(isVisible ? train.vehicleId : null);
+    const vehicle = usePrediction(isVisible ? train.tripId : null, train.stationId);
 
     return createPortal(
         <div

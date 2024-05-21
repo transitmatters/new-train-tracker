@@ -87,6 +87,6 @@ export interface Pair {
 
 export type VehiclesAge = 'vehicles' | 'new_vehicles' | 'old_vehicles';
 
-export interface Vehicle {
+export interface Prediction {
     departure_time: Date;
 }
