@@ -26,7 +26,6 @@ const getTrainPositions = (routes: string[], isFirstRequest: boolean | null) => 
     }
     return fetch(`/trains/${routes.join(',')}`).then((res) => {
         res.json();
-        console.log(res);
     });
 };
 

@@ -1,4 +1,4 @@
-import { Route, Train } from './types';
+import { Route, Train, Vehicle } from './types';
 
 const abbreviateStationName = (station: string) =>
     station
@@ -19,7 +19,7 @@ const getReadableStatusLabel = (status) => {
     return '';
 };
 
-const getDepartureTimePrediction = (prediction: Date) => {
+const getDepartureTimePrediction = (prediction: Date | null) => {
     if (prediction) {
         return `Next departure ${prediction.toLocaleTimeString()}`;
     }
@@ -35,8 +35,6 @@ const getLastUpdatedAt = (updatedAt: Date) => {
 };
 
 const getStationNameAndStatusForTrain = (train: Train, route: Route) => {
-    console.log(train);
-    console.log(route);
     const { stations } = route;
     const nearStation = stations?.find((st) => st.id === train.stationId);
     if (!nearStation) {
@@ -79,8 +77,10 @@ const renderLeadCarLabel = (train: Train, backgroundColor) => {
     );
 };
 
-const renderDetailsLabel = (train: Train) => {
-    const departurePrediction = getDepartureTimePrediction(new Date(train.departurePrediction));
+const renderDetailsLabel = (train: Train, prediction: Vehicle | null) => {
+    const departurePrediction = getDepartureTimePrediction(
+        prediction ? new Date(prediction.departure_time) : null
+    );
     const lastUpdated = getLastUpdatedAt(new Date(train.updatedAt));
 
     return (
@@ -91,13 +91,18 @@ const renderDetailsLabel = (train: Train) => {
     );
 };
 
-export const renderTrainLabel = (train: Train, route: Route, accentColor) => {
+export const renderTrainLabel = (
+    train: Train,
+    prediction: Vehicle | null,
+    route: Route,
+    accentColor
+) => {
     return (
         <>
             {renderStationLabel(train, route)}
             {renderDestinationLabel(train, route)}
             {renderLeadCarLabel(train, accentColor)}
-            {renderDetailsLabel(train)}
+            {renderDetailsLabel(train, prediction)}
         </>
     );
 };

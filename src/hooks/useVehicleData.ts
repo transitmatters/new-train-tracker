@@ -8,6 +8,9 @@ const getPrediction = (vehicleId: string) => {
 export const usePrediction = (vehicleId: string) => {
     const [vehicle, setVehicle] = useState<Vehicle | null>(null);
     useEffect(() => {
+        if (!vehicleId) {
+            return;
+        }
         getPrediction(vehicleId).then((pred) => setVehicle(pred.json()));
     }, [vehicleId]);
 

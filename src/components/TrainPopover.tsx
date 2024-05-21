@@ -72,7 +72,7 @@ export const TrainPopover = (props) => {
         trainY,
     ]);
 
-    const vehicle = usePrediction(train.vehicleId);
+    const vehicle = usePrediction(isVisible ? train.vehicleId : null);
 
     return createPortal(
         <div
