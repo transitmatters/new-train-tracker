@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Vehicle } from '../types';
+import { Prediction } from '../types';
 
 const getPrediction = (tripId: string, stopId: string) => {
     return fetch(`/predictions/${tripId}/${stopId}`).then((res) => {
@@ -8,7 +8,7 @@ const getPrediction = (tripId: string, stopId: string) => {
 };
 
 export const usePrediction = (tripId: string, stopId: string) => {
-    const [pred, setPrediction] = useState<Vehicle | null>(null);
+    const [pred, setPrediction] = useState<Prediction | null>(null);
     useEffect(() => {
         if (!tripId) {
             return;

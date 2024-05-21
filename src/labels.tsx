@@ -1,4 +1,4 @@
-import { Route, Train, Vehicle } from './types';
+import { Route, Train, Prediction } from './types';
 
 const abbreviateStationName = (station: string) =>
     station
@@ -77,7 +77,7 @@ const renderLeadCarLabel = (train: Train, backgroundColor) => {
     );
 };
 
-const renderDetailsLabel = (train: Train, prediction: Vehicle | null) => {
+const renderDetailsLabel = (train: Train, prediction: Prediction | null) => {
     const departurePrediction = getDepartureTimePrediction(
         prediction ? new Date(prediction.departure_time) : null
     );
@@ -93,7 +93,7 @@ const renderDetailsLabel = (train: Train, prediction: Vehicle | null) => {
 
 export const renderTrainLabel = (
     train: Train,
-    prediction: Vehicle | null,
+    prediction: Prediction | null,
     route: Route,
     accentColor
 ) => {

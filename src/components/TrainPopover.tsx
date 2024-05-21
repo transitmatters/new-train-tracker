@@ -72,7 +72,7 @@ export const TrainPopover = (props) => {
         trainY,
     ]);
 
-    const vehicle = usePrediction(isVisible ? train.tripId : null, train.stationId);
+    const prediction = usePrediction(isVisible ? train.tripId : null, train.stationId);
 
     return createPortal(
         <div
@@ -83,7 +83,7 @@ export const TrainPopover = (props) => {
         >
             <div className="scale-container" style={{ border: `2px solid ${colors.train}` }}>
                 <div className="train-details">
-                    {renderTrainLabel(train, vehicle, route, colors.train)}
+                    {renderTrainLabel(train, prediction, route, colors.train)}
                 </div>
             </div>
         </div>,
