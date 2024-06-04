@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Prediction } from '../types';
+import { APP_DATA_BASE_PATH } from '../constants';
 
 const getPrediction = (tripId: string, stopId: string) => {
-    return fetch(`/predictions/${tripId}/${stopId}`).then((res) => {
+    return fetch(`${APP_DATA_BASE_PATH}/predictions/${tripId}/${stopId}`).then((res) => {
         return res.json();
     });
 };

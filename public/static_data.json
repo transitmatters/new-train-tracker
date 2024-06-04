@@ -1,9 +1,9 @@
 {
     "Orange": {
         "totalOldActive": 0,
-        "totalOldInactive": 48,
-        "totalNewDelivered": 104,
-        "totalNewUndelivered": 48
+        "totalOldInactive": 22,
+        "totalNewDelivered": 108,
+        "totalNewUndelivered": 44
     },
     "Red": {
         "totalOldActive": 196,
@@ -23,5 +23,5 @@
     "Sources": {
         "fleet_numbers": "http://roster.transithistory.org/"
     },
-    "Updated": "2024-02-07"
+    "Updated": "2024-06-04"
 }

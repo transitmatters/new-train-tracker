@@ -3,11 +3,11 @@ import datetime
 import json
 import schedule
 
-import server.mbta_api as mbta_api
-import server.secrets as secrets
-from server.routes import get_line_for_route
-from server.routes import DEFAULT_ROUTE_IDS
-from server.util import filter_new
+import chalicelib.mbta_api as mbta_api
+import chalicelib.secrets as secrets
+from chalicelib.routes import get_line_for_route
+from chalicelib.routes import DEFAULT_ROUTE_IDS
+from chalicelib.util import filter_new
 
 
 JSON_PATH = "last_seen.json"

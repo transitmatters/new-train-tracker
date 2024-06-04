@@ -7,6 +7,7 @@ import { useEffect, useState, useCallback } from 'react';
 
 import { getInitialDataByKey } from '../initialData';
 import { Line, Route, Station, Train, VehiclesAge } from '../types';
+import { APP_DATA_BASE_PATH } from '../constants';
 
 export interface MBTAApi {
     routesInfo: Record<string, Route> | null;
@@ -16,7 +17,7 @@ export interface MBTAApi {
 }
 
 // if isFirstRequest is true, get train positions from intial request data JSON
-// if isFirstRequest is false, makes request for new train positions through backend server via Flask route defined in application.py
+// if isFirstRequest is false, makes request for new train positions through backend server via chalice route defined in app.py
 const getTrainPositions = (routes: string[], isFirstRequest: boolean | null) => {
     if (isFirstRequest) {
         const initialTrainsData = getInitialDataByKey('vehicles');
@@ -24,21 +25,19 @@ const getTrainPositions = (routes: string[], isFirstRequest: boolean | null) => 
             return Promise.resolve(initialTrainsData);
         }
     }
-    return fetch(`/trains/${routes.join(',')}`).then((res) => {
-        res.json();
-    });
+    return fetch(`${APP_DATA_BASE_PATH}/trains/${routes.join(',')}`).then((res) => res.json());
 };
 
-const filterNew = (trains: Train[]) => {
-    return trains.filter((train) => train.isNewTrain);
+const filterNew = (trains: Train[] | undefined) => {
+    return trains?.filter((train) => train.isNewTrain);
 };
 
-const filterOld = (trains: Train[]) => {
-    return trains.filter((train) => !train.isNewTrain);
+const filterOld = (trains: Train[] | undefined) => {
+    return trains?.filter((train) => !train.isNewTrain);
 };
 
-const filterTrains = (trains: Train[], vehiclesAge: VehiclesAge) => {
-    let selectedTrains: Train[] = [];
+const filterTrains = (trains: Train[] | undefined, vehiclesAge: VehiclesAge) => {
+    let selectedTrains: Train[] | undefined = [];
     if (vehiclesAge === 'new_vehicles') {
         selectedTrains = filterNew(trains);
     } else if (vehiclesAge === 'old_vehicles') {
@@ -54,7 +53,7 @@ const getStationsForRoute = (route: string) => {
     if (initialStopsData && initialStopsData[route]) {
         return Promise.resolve(initialStopsData[route]);
     }
-    return fetch(`/stops/${route}`).then((res) => res.json());
+    return fetch(`${APP_DATA_BASE_PATH}/stops/${route}`).then((res) => res.json());
 };
 
 const getRoutesInfo = (routes: string[]) => {
@@ -62,7 +61,7 @@ const getRoutesInfo = (routes: string[]) => {
     if (initialRoutesData) {
         return Promise.resolve(initialRoutesData);
     }
-    return fetch(`/routes/${routes.join(',')}`).then((res) => res.json());
+    return fetch(`${APP_DATA_BASE_PATH}/routes/${routes.join(',')}`).then((res) => res.json());
 };
 
 export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicles'): MBTAApi => {
@@ -84,7 +83,7 @@ export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicl
             nextTrainsByRoute[routeName] = [];
         });
         getTrainPositions(routeNames, isInitialFetch).then((trains: Train[]) => {
-            filterTrains(trains, vehiclesAge).forEach((train) =>
+            filterTrains(trains, vehiclesAge)?.forEach((train) =>
                 nextTrainsByRoute[train.route].push(train)
             );
             setTrainsByRoute(nextTrainsByRoute);

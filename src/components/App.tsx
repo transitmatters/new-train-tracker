@@ -3,7 +3,6 @@ import Favicon from 'react-favicon';
 
 import { greenLine, orangeLine, redLine, blueLine } from '../lines';
 import { useMbtaApi } from '../hooks/useMbtaApi';
-import { getInitialDataByKey } from '../initialData';
 
 import { Line } from './Line';
 import { Header } from './Header';
@@ -12,13 +11,13 @@ import { LineTabPicker } from './LineTabPicker';
 import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
 
-// @ts-expect-error Favicon png seems to throw typescript error
-import favicon from '../../static/images/favicon.png';
+import favicon from '../../public/images/favicon.png';
 import { AgeTabPicker } from './AgeTabPicker';
 import { Line as TLine } from '../types';
 
 import { useSearchParams } from 'react-router-dom';
 import { useLineSearchParam, useAgeSearchParam } from '../hooks/searchParams';
+import { TrophySpin } from 'react-loading-indicators';
 
 const lineByTabId: Record<string, TLine> = {
     Green: greenLine,
@@ -89,17 +88,19 @@ export const App: React.FC = () => {
         );
     };
 
-    if (api.isReady) {
-        return (
-            <>
-                <Favicon url={favicon} />
-                <Header controls={renderControls()} />
+    return (
+        <>
+            <Favicon url={favicon} />
+            <Header controls={renderControls()} />
+            {api.isReady ? (
                 <Line key={selectedLine?.name} line={selectedLine} api={api} age={ageSearchParam} />
-                <LineStats line={selectedLine?.name} />
-                <Footer version={getInitialDataByKey('version')} />
-            </>
-        );
-    }
-
-    return null;
+            ) : (
+                <div style={{ marginBottom: 'auto', marginTop: 'auto', alignSelf: 'center' }}>
+                    <TrophySpin color={selectedLine.color} size="large" text="Loading Trains" />
+                </div>
+            )}
+            <LineStats line={selectedLine?.name} />
+            <Footer version={process.env.GIT_VERSION} />
+        </>
+    );
 };

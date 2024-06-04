@@ -1,8 +1,8 @@
 import asyncio
 import subprocess
-from server.mbta_api import routes_info, vehicle_data_for_routes, stops_for_route
-from server.last_seen import get_recent_sightings_for_lines
-from server.util import filter_new, filter_old, filter_route
+from chalicelib.mbta_api import routes_info, vehicle_data_for_routes, stops_for_route
+from chalicelib.last_seen import get_recent_sightings_for_lines
+from chalicelib.util import filter_new, filter_old, filter_route
 
 
 def get_git_tag():

@@ -5,7 +5,7 @@ import { Line, VehiclesAge } from '../types';
 export const useLineSearchParam = (): [string, (newLine: Line) => void] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const line = searchParams.get('line') || 'Green';
+    const line = searchParams.get('line') || 'Red';
 
     const setLine = (newLine: Line) => {
         searchParams.set('line', newLine.name);
@@ -19,7 +19,7 @@ export const useLineSearchParam = (): [string, (newLine: Line) => void] => {
 export const useAgeSearchParam = (): [VehiclesAge, (newAge: VehiclesAge) => void] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const age = searchParams.get('age') || 'vehicles';
+    const age = searchParams.get('age') || 'new_vehicles';
 
     const setAge = (newAge: VehiclesAge) => {
         searchParams.set('age', newAge);

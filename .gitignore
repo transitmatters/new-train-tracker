@@ -1,6 +1,4 @@
-.DS_Store
 node_modules
-.vscode
 dist/
 venv/
 hosts
@@ -8,6 +6,24 @@ inventory
 *.pem
 last_seen.json
 traintracker-dev.nginx.conf
-__pycache__/
 devops/ec2-secrets.py
+
+requirements.txt
+__pycache__/
+*.pyc
+server/**/__pycache__
+requirements.txt
+server/cfn/*
+server/.chalice/deployments/*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 .envrc

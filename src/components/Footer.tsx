@@ -7,7 +7,7 @@ export const Footer: React.FC<{ version: string }> = ({ version }) => {
                 <a href="mailto:labs@transitmatters.org?subject=[Train%20Tracker%20Feedback]%20-%20">
                     Send feedback
                 </a>{' '}
-                | v{version}
+                | {version ? `v${version}` : 'dev'}
             </p>
         </div>
     );
