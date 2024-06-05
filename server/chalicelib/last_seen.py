@@ -1,69 +1,43 @@
 import asyncio
 import datetime
 import json
-import schedule
 
+import chalicelib.s3 as s3
 import chalicelib.mbta_api as mbta_api
-import chalicelib.secrets as secrets
-from chalicelib.routes import get_line_for_route
-from chalicelib.routes import DEFAULT_ROUTE_IDS
+from chalicelib.routes import DEFAULT_ROUTE_IDS, get_line_for_route
 from chalicelib.util import filter_new
 
 
 JSON_PATH = "last_seen.json"
-LAST_SEEN_TIMES = {}
 ROUTES = DEFAULT_ROUTE_IDS
-
-
-def update_recent_sightings_sync():
-    asyncio.run(update_recent_sightings())
-
-
-def initialize():
-    global LAST_SEEN_TIMES
-
-    # Read from disk if there's a previous file there
-    try:
-        with open(JSON_PATH, "r", encoding="utf-8") as file:
-            LAST_SEEN_TIMES = json.load(file)
-    except FileNotFoundError:
-        print("Last seen file doesn't exist; starting fresh")
-
-    if not secrets.LAST_SEEN_UPDATE:
-        print("LAST_SEEN_UPDATE is false, so I'm not continuously updating last seen times for you.")
-        return
-    schedule.every().minute.do(update_recent_sightings_sync)
 
 
 async def update_recent_sightings():
     try:
+        last_seen_times = json.loads(s3.download(JSON_PATH, "utf8", compressed=False))
+    except Exception as e:
+        print("Couldn't read last seen times from s3: ", e)
+        last_seen_times = {}
+    try:
         print("Updating recent sightings...")
         now = datetime.datetime.utcnow()
 
-        all_vehicles = await mbta_api.vehicle_data_for_routes(ROUTES)
+        all_vehicles = asyncio.run(mbta_api.vehicle_data_for_routes(ROUTES))
         new_vehicles = filter_new(all_vehicles)
 
         for vehicle in new_vehicles:
             line = get_line_for_route(vehicle["route"])
-            LAST_SEEN_TIMES[line] = {
+            last_seen_times[line] = {
                 "car": vehicle["label"],
                 # Python isoformat() doesn't include TZ, but we know this is UTC because we used utcnow() above
                 "time": now.isoformat()[:-3] + "Z",
             }
-
-        with open(JSON_PATH, "w", encoding="utf-8") as file:
-            json.dump(LAST_SEEN_TIMES, file, indent=4, sort_keys=True, default=str)
+        s3.upload(JSON_PATH, json.dumps(last_seen_times), compress=False)
     except Exception as e:
-        print("Couldn't write last seen times to disk: ", e)
+        print("Couldn't write last seen times to s3: ", e)
 
 
 # Get the last time that a new train was seen on each line
 # This is the function that other modules use
 def get_recent_sightings_for_lines():
-    return LAST_SEEN_TIMES
-
-
-# For development/testing only!
-if __name__ == "__main__":
-    initialize()
-    asyncio.run(update_recent_sightings())
+    return json.loads(s3.download(JSON_PATH, "utf8"))

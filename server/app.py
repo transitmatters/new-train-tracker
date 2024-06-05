@@ -7,10 +7,10 @@ import os
 import json
 import asyncio
 
-from chalicelib import (background, last_seen, mbta_api)
+from chalicelib import (last_seen, mbta_api)
 import chalicelib.healthcheck
 from datadog_lambda.wrapper import datadog_lambda_wrapper
-from chalice import Chalice, CORSConfig, ConvertToMiddleware, Response
+from chalice import Chalice, CORSConfig, ConvertToMiddleware, Response, Cron
 
 app = Chalice(app_name="new-train-tracker")
 
@@ -22,12 +22,6 @@ if TM_CORS_HOST != localhost:
     cors_config = CORSConfig(allow_origin=f"https://{TM_CORS_HOST}", max_age=3600)
 else:
     cors_config = CORSConfig(allow_origin="*", max_age=3600)
-
-
-# Start a background thread to run `schedule` (i.e. the package) jobs,
-# which in our case is just the "last seen" update
-background_thread = background.run_continuously()
-last_seen.initialize()
 
 
 # takes a comma-delimited string of route ids
@@ -61,6 +55,11 @@ def routes(route_ids_string):
 def vehicles(trip_id, stop_id):
     departure = asyncio.run(mbta_api.trip_departure_predictions(trip_id, stop_id))
     return Response(json.dumps(departure), headers={"Content-Type": "application/json"})
+
+
+@app.schedule(Cron("0/10", "0-6,9-23", "*", "*", "?", "*"))
+def update_last_seen(event):
+    asyncio.run(last_seen.update_recent_sightings())
 
 
 @app.route("/healthcheck", cors=cors_config)

@@ -1,4 +1,4 @@
-export const Footer: React.FC<{ version: string }> = ({ version }) => {
+export const Footer: React.FC<{ version?: string }> = ({ version }) => {
     return (
         <div className="footer">
             <p>

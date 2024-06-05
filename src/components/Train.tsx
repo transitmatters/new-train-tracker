@@ -67,7 +67,6 @@ export const Train = ({ train, route, colors, focusOnMount, labelPosition, onFoc
             elementScrollIntoView(element, {
                 behavior: prefersReducedMotion() ? 'auto' : 'smooth',
                 block: 'center',
-                duration: 250,
             });
         }
     }, [element, isTracked]);

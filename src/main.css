@@ -182,6 +182,10 @@ a {
     color: white;
     border-radius: 100px;
     z-index: 1;
+    background-color: unset;
+    border: unset;
+    font-family: 'Nunito', sans-serif;
+    padding: 0;
     }
 
 .tab-picker > .tab:not(:last-child) {
