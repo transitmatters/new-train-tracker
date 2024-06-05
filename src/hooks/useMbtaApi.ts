@@ -1,6 +1,5 @@
 /*
 File that contains a React hook that provides data from the MBTA API
-Provides the __NTT_INITIAL_DATA__ JSON blob that is embedded in the initial server response
 */
 
 import { useEffect, useState, useCallback } from 'react';
