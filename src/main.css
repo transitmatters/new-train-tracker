@@ -166,6 +166,7 @@ a {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    width: 100%;
 }
 
 @media (pointer: none) {
@@ -184,6 +185,7 @@ a {
     z-index: 1;
     background-color: unset;
     border: unset;
+    font-size: 0.9em;
     font-family: 'Nunito', sans-serif;
     padding: 0;
     }
