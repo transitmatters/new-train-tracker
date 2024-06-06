@@ -1,6 +1,5 @@
 import { useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
-import * as timeago from 'timeago.js';
 
 import { prerenderLine } from '../prerender';
 import { renderTextTrainlabel } from '../labels';
@@ -10,6 +9,8 @@ import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } fr
 import { Line as TLine, Pair, StationPositions, VehiclesAge } from '../types';
 import { MBTAApi } from '../hooks/useMbtaApi';
 import { useLastSightingByLine } from '../hooks/useLastSighting';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 const AGE_WORD_MAP = new Map<VehiclesAge, string>([
     ['new_vehicles', ' new '],
@@ -22,6 +23,8 @@ interface LineProps {
     line: TLine;
     age: VehiclesAge;
 }
+
+dayjs.extend(relativeTime);
 
 const abbreviateStationName = (station: string) =>
     station
@@ -58,7 +61,7 @@ const EmptyNoticeForLine: React.FC<{ line: string; age: VehiclesAge }> = ({ line
     // What to show when new is selected
     if (sightingForLine) {
         const { car, time } = sightingForLine;
-        const ago = timeago.format(time);
+        const ago = dayjs(time).fromNow();
         return <>{`A new ${line} Line train (#${car}) was last seen ${ago}.`}</>;
     }
     return <>{`No new trains on the ${line} Line right now.`}</>;

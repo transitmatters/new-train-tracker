@@ -59,7 +59,7 @@ def vehicles(trip_id, stop_id):
 
 @app.schedule(Cron("0/10", "0-6,9-23", "*", "*", "?", "*"))
 def update_last_seen(event):
-    asyncio.run(last_seen.update_recent_sightings())
+    last_seen.update_recent_sightings()
 
 
 @app.route("/healthcheck", cors=cors_config)

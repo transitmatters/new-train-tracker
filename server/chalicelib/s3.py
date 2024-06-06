@@ -8,7 +8,6 @@ BUCKET = os.environ.get("TM_CORS_HOST", "ntt-beta.labs.transitmatters.org")
 
 
 def download(key, encoding="utf8", compressed=True):
-    print(BUCKET)
     obj = s3.get_object(Bucket=BUCKET, Key=key)
     s3_data = obj["Body"].read()
     if not compressed:

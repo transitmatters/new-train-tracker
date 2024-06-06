@@ -51,7 +51,7 @@ GIT_ABR_VERSION=`git describe --tags --abbrev=0`
 echo "Deploying version $GIT_VERSION | $GIT_SHA"
 
 # Adding some datadog tags to get better data
-DD_TAGS="git.commit.sha:$GIT_SHA,git.repository_url:github.com/transitmatters/parking-explorer"
+DD_TAGS="git.commit.sha:$GIT_SHA,git.repository_url:github.com/transitmatters/new-train-tracker"
 
 npm run build
 

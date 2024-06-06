@@ -104,6 +104,21 @@
                 }
             }
         },
+        "UpdateLastSeen": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Description": "Update the last seen time for new trains on a schedule",
+                "Environment": {
+                    "Variables": {
+                        "MBTA_V3_API_KEY": { "Ref": "MbtaV3ApiKey" },
+                        "DD_API_KEY": { "Ref": "DDApiKey" },
+                        "DD_VERSION": { "Ref": "GitVersion" },
+                        "DD_TAGS": { "Ref": "DDTags" }
+                    }
+                }
+            }
+
+        },
         "FrontendBucket": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
