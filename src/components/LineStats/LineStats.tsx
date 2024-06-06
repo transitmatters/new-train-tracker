@@ -1,5 +1,5 @@
+import * as stats from '../../../public/static_data.json';
 import './LineStats.css';
-import * as stats from '../../../static/static_data.json';
 
 interface Props {
     line: string;

@@ -19,7 +19,7 @@ export const useLineSearchParam = (): [string, (newLine: Line) => void] => {
 export const useAgeSearchParam = (): [VehiclesAge, (newAge: VehiclesAge) => void] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const age = searchParams.get('age') || 'vehicles';
+    const age = searchParams.get('age') || 'new_vehicles';
 
     const setAge = (newAge: VehiclesAge) => {
         searchParams.set('age', newAge);

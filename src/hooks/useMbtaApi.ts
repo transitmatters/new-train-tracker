@@ -1,12 +1,11 @@
 /*
 File that contains a React hook that provides data from the MBTA API
-Provides the __NTT_INITIAL_DATA__ JSON blob that is embedded in the initial server response
 */
 
 import { useEffect, useState, useCallback } from 'react';
 
-import { getInitialDataByKey } from '../initialData';
 import { Line, Route, Station, Train, VehiclesAge } from '../types';
+import { APP_DATA_BASE_PATH } from '../constants';
 
 export interface MBTAApi {
     routesInfo: Record<string, Route> | null;
@@ -16,29 +15,21 @@ export interface MBTAApi {
 }
 
 // if isFirstRequest is true, get train positions from intial request data JSON
-// if isFirstRequest is false, makes request for new train positions through backend server via Flask route defined in application.py
-const getTrainPositions = (routes: string[], isFirstRequest: boolean | null) => {
-    if (isFirstRequest) {
-        const initialTrainsData = getInitialDataByKey('vehicles');
-        if (initialTrainsData) {
-            return Promise.resolve(initialTrainsData);
-        }
-    }
-    return fetch(`/trains/${routes.join(',')}`).then((res) => {
-        res.json();
-    });
+// if isFirstRequest is false, makes request for new train positions through backend server via chalice route defined in app.py
+const getTrainPositions = (routes: string[]) => {
+    return fetch(`${APP_DATA_BASE_PATH}/trains/${routes.join(',')}`).then((res) => res.json());
 };
 
-const filterNew = (trains: Train[]) => {
-    return trains.filter((train) => train.isNewTrain);
+const filterNew = (trains: Train[] | undefined) => {
+    return trains?.filter((train) => train.isNewTrain);
 };
 
-const filterOld = (trains: Train[]) => {
-    return trains.filter((train) => !train.isNewTrain);
+const filterOld = (trains: Train[] | undefined) => {
+    return trains?.filter((train) => !train.isNewTrain);
 };
 
-const filterTrains = (trains: Train[], vehiclesAge: VehiclesAge) => {
-    let selectedTrains: Train[] = [];
+const filterTrains = (trains: Train[] | undefined, vehiclesAge: VehiclesAge) => {
+    let selectedTrains: Train[] | undefined = [];
     if (vehiclesAge === 'new_vehicles') {
         selectedTrains = filterNew(trains);
     } else if (vehiclesAge === 'old_vehicles') {
@@ -50,19 +41,11 @@ const filterTrains = (trains: Train[], vehiclesAge: VehiclesAge) => {
 };
 
 const getStationsForRoute = (route: string) => {
-    const initialStopsData = getInitialDataByKey('stops');
-    if (initialStopsData && initialStopsData[route]) {
-        return Promise.resolve(initialStopsData[route]);
-    }
-    return fetch(`/stops/${route}`).then((res) => res.json());
+    return fetch(`${APP_DATA_BASE_PATH}/stops/${route}`).then((res) => res.json());
 };
 
 const getRoutesInfo = (routes: string[]) => {
-    const initialRoutesData = getInitialDataByKey('routes');
-    if (initialRoutesData) {
-        return Promise.resolve(initialRoutesData);
-    }
-    return fetch(`/routes/${routes.join(',')}`).then((res) => res.json());
+    return fetch(`${APP_DATA_BASE_PATH}/routes/${routes.join(',')}`).then((res) => res.json());
 };
 
 export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicles'): MBTAApi => {
@@ -75,7 +58,6 @@ export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicl
     const [routesInfoByRoute, setRoutesInfoByRoute] = useState<Record<string, Route> | null>(null);
     const [stationsByRoute, setStationsByRoute] = useState<Record<string, Station> | null>(null);
     const [trainsByRoute, setTrainsByRoute] = useState<Record<string, Train[]> | null>(null);
-    const [isInitialFetch, setIsInitialFetch] = useState<boolean | null>(true);
     const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
 
     const getTrains = useCallback(() => {
@@ -83,14 +65,13 @@ export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicl
         routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames, isInitialFetch).then((trains: Train[]) => {
-            filterTrains(trains, vehiclesAge).forEach((train) =>
+        getTrainPositions(routeNames).then((trains: Train[]) => {
+            filterTrains(trains, vehiclesAge)?.forEach((train) =>
                 nextTrainsByRoute[train.route].push(train)
             );
             setTrainsByRoute(nextTrainsByRoute);
         });
-        setIsInitialFetch(false);
-    }, [routeNames, isInitialFetch, vehiclesAge]);
+    }, [routeNames, vehiclesAge]);
 
     useEffect(() => {
         const nextStopsByRoute: Record<string, Station> = {};

@@ -166,6 +166,7 @@ a {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    width: 100%;
 }
 
 @media (pointer: none) {
@@ -182,6 +183,11 @@ a {
     color: white;
     border-radius: 100px;
     z-index: 1;
+    background-color: unset;
+    border: unset;
+    font-size: 0.9em;
+    font-family: 'Nunito', sans-serif;
+    padding: 0;
     }
 
 .tab-picker > .tab:not(:last-child) {

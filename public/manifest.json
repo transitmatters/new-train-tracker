@@ -1,0 +1,21 @@
+{
+  "short_name": "Train Tracker",
+  "name": "Transitmatters New Train Tracker",
+  "description": "Live tracking of MBTA's new Orange, Green, and Red Line trains brought to you by the TransitMatters Labs team.",
+  "icons": [
+    {
+      "src": "images/favicon_128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "images/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

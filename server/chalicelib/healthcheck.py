@@ -2,9 +2,9 @@ import json
 import os
 import stat
 import time
-from flask import Response
-import server.secrets as secrets
-from server.last_seen import JSON_PATH as LAST_SEEN_JSON_PATH
+from chalice import Response
+import chalicelib.secrets as secrets
+from chalicelib.last_seen import JSON_PATH as LAST_SEEN_JSON_PATH
 
 
 def file_age_s(pathname):

@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect } from 'react';
-import { TabList, Tab } from 'reakit';
+import { TabList, Tab, TabProvider } from '@ariakit/react';
 import { Line, Train } from '../types';
 
 import { getTrainRoutePairsForLine } from './util';
@@ -35,38 +35,39 @@ export const LineTabPicker: React.FC<LineTabPickerProps> = ({ lines, trainsByRou
     }, [lineSearchParam, totalTrainCount]);
 
     return (
-        <TabList className="tab-picker" aria-label="Select a line" ref={wrapperRef}>
-            <div className="selected-indicator" ref={selectedIndicatorRef} />
-            {lines.map((line) => {
-                const trains = getTrainRoutePairsForLine(trainsByRoute, line.routes);
-                return (
-                    <Tab
-                        id={line.name}
-                        className="tab"
-                        key={line.name}
-                        as="div"
-                        data-color={line.color}
-                        onClick={() => {
-                            setLineSearchParam(line);
-                        }}
-                    >
-                        <div
-                            aria-label={line.name + ' line'}
-                            className="icon"
-                            style={{ backgroundColor: line.color }}
+        <TabProvider>
+            <TabList className="tab-picker" aria-label="Select a line" ref={wrapperRef}>
+                <div className="selected-indicator" ref={selectedIndicatorRef} />
+                {lines.map((line) => {
+                    const trains = getTrainRoutePairsForLine(trainsByRoute, line.routes);
+                    return (
+                        <Tab
+                            id={line.name}
+                            className="tab"
+                            key={line.name}
+                            data-color={line.color}
+                            onClick={() => {
+                                setLineSearchParam(line);
+                            }}
                         >
-                            {line.abbreviation}
-                        </div>
-                        <div className="label">
-                            {trains.length}{' '}
-                            <span className="label-trains-text">
-                                {' '}
-                                {trains.length === 1 ? 'train' : 'trains'}{' '}
-                            </span>
-                        </div>
-                    </Tab>
-                );
-            })}
-        </TabList>
+                            <div
+                                aria-label={line.name + ' line'}
+                                className="icon"
+                                style={{ backgroundColor: line.color }}
+                            >
+                                {line.abbreviation}
+                            </div>
+                            <div className="label">
+                                {trains.length}{' '}
+                                <span className="label-trains-text">
+                                    {' '}
+                                    {trains.length === 1 ? 'train' : 'trains'}{' '}
+                                </span>
+                            </div>
+                        </Tab>
+                    );
+                })}
+            </TabList>
+        </TabProvider>
     );
 };

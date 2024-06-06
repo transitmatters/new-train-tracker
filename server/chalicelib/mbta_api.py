@@ -13,9 +13,9 @@ import aiohttp
 import tempfile
 import traceback
 
-import server.secrets as secrets
-import server.fleet as fleet
-from server.routes import (
+import chalicelib.secrets as secrets
+import chalicelib.fleet as fleet
+from chalicelib.routes import (
     derive_custom_direction_destinations,
     derive_custom_route_name,
     normalize_custom_route_ids,

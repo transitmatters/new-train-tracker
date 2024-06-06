@@ -1,4 +1,4 @@
-import logo from '../../static/images/logo.svg';
+import logo from '../../public/images/logo.svg';
 
 export const Header = (props) => {
     const { controls } = props;

@@ -1,0 +1,59 @@
+{
+  "version": "2.0",
+  "app_name": "new-train-tracker",
+  "api_gateway_endpoint_type": "REGIONAL",
+  "minimum_compression_size": 1000,
+  "lambda_timeout": 30,
+  "lambda_memory_size": 256,
+  "layers": [
+    "arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:58"
+  ],
+  "stages": {
+    "production": {
+      "api_gateway_stage": "production",
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json",
+      "environment_variables": {
+        "DD_LAMBDA_HANDLER": "app.app",
+        "DD_SERVICE": "new-train-tracker",
+        "DD_SITE": "datadoghq.com",
+        "DD_TRACE_ENABLED": "true",
+        "DD_PROFILING_ENABLED": "true",
+        "DD_ENV": "prod",
+        "TM_CORS_HOST": "traintracker.transitmatters.org"
+      },
+      "tags": {
+        "service": "new-train-tracker",
+        "env": "prod"
+      },
+      "api_gateway_custom_domain": {
+        "domain_name": "traintracker-api.labs.transitmatters.org",
+        "tls_version": "TLS_1_2",
+        "certificate_arn": ""
+      }
+    },
+    "beta": {
+      "api_gateway_stage": "beta",
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json",
+      "environment_variables": {
+        "DD_LAMBDA_HANDLER": "app.app",
+        "DD_SERVICE": "new-train-tracker",
+        "DD_SITE": "datadoghq.com",
+        "DD_TRACE_ENABLED": "true",
+        "DD_PROFILING_ENABLED": "true",
+        "DD_ENV": "beta",
+        "TM_FRONTEND_HOST": "ntt-beta.labs.transitmatters.org"
+      },
+      "tags": {
+        "service": "new-train-tracker",
+        "env": "beta"
+      },
+      "api_gateway_custom_domain": {
+        "domain_name": "ntt-api-beta.labs.transitmatters.org",
+        "tls_version": "TLS_1_2",
+        "certificate_arn": ""
+      }
+    }
+  }
+}

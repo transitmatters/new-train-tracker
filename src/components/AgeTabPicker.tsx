@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect } from 'react';
-import { TabList, Tab } from 'reakit';
+import { TabList, Tab, TabProvider } from '@ariakit/react';
 import { VehiclesAge } from '../types';
 import { useAgeSearchParam } from '../hooks/searchParams';
 
@@ -36,32 +36,33 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabColor }) => {
     }, [tabColor, ageSearchParam]);
 
     return (
-        <TabList className="tab-picker" aria-label="Select train age" ref={wrapperRef}>
-            <div className="selected-indicator" ref={selectedIndicatorRef} />
+        <TabProvider>
+            <TabList className="tab-picker" aria-label="Select train age" ref={wrapperRef}>
+                <div className="selected-indicator" ref={selectedIndicatorRef} />
 
-            {trainTypes.map((trainType) => {
-                return (
-                    <Tab
-                        id={trainType.key}
-                        className="tab"
-                        key={trainType.key}
-                        as="div"
-                        data-color={tabColor}
-                        onClick={() => {
-                            setAgeSearchParam(trainType.key);
-                        }}
-                    >
-                        <div
-                            aria-label={trainType.key}
-                            className="icon age"
-                            style={{ backgroundColor: tabColor }}
+                {trainTypes.map((trainType) => {
+                    return (
+                        <Tab
+                            id={trainType.key}
+                            className="tab"
+                            key={trainType.key}
+                            data-color={tabColor}
+                            onClick={() => {
+                                setAgeSearchParam(trainType.key);
+                            }}
                         >
-                            {trainType.label.toUpperCase()}
-                        </div>
-                        <div className="label">trains</div>
-                    </Tab>
-                );
-            })}
-        </TabList>
+                            <div
+                                aria-label={trainType.key}
+                                className="icon age"
+                                style={{ backgroundColor: tabColor }}
+                            >
+                                {trainType.label.toUpperCase()}
+                            </div>
+                            <div className="label">trains</div>
+                        </Tab>
+                    );
+                })}
+            </TabList>
+        </TabProvider>
     );
 };
