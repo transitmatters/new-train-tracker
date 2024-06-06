@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import json
+from zoneinfo import ZoneInfo
 
 import chalicelib.s3 as s3
 import chalicelib.mbta_api as mbta_api
@@ -10,9 +11,10 @@ from chalicelib.util import filter_new
 
 JSON_PATH = "last_seen.json"
 ROUTES = DEFAULT_ROUTE_IDS
+EASTERN_TIME = ZoneInfo("US/Eastern")
 
 
-async def update_recent_sightings():
+def update_recent_sightings():
     try:
         last_seen_times = json.loads(s3.download(JSON_PATH, "utf8", compressed=False))
     except Exception as e:
@@ -20,7 +22,7 @@ async def update_recent_sightings():
         last_seen_times = {}
     try:
         print("Updating recent sightings...")
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(EASTERN_TIME)
 
         all_vehicles = asyncio.run(mbta_api.vehicle_data_for_routes(ROUTES))
         new_vehicles = filter_new(all_vehicles)
@@ -29,8 +31,7 @@ async def update_recent_sightings():
             line = get_line_for_route(vehicle["route"])
             last_seen_times[line] = {
                 "car": vehicle["label"],
-                # Python isoformat() doesn't include TZ, but we know this is UTC because we used utcnow() above
-                "time": now.isoformat()[:-3] + "Z",
+                "time": now.isoformat(),
             }
         s3.upload(JSON_PATH, json.dumps(last_seen_times), compress=False)
     except Exception as e:

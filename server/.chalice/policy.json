@@ -9,6 +9,16 @@
       ],
       "Effect": "Allow",
       "Resource": "arn:*:logs:*:*:*"
+    },
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::traintracker.transitmatters.org",
+        "arn:aws:s3:::traintracker.transitmatters.org/*"
+      ]
     }
   ]
 }
