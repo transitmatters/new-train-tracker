@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          fetch-tags: true
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
@@ -38,13 +40,6 @@ jobs:
           aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EOF
-      - name: Write SSH key
-        run: |
-          mkdir ~/.ssh
-          cat >> ~/.ssh/transitmatters-ntt.pem << EOF
-          ${{ secrets.SSH_PRIVATE_KEY }}
-          EOF
-          chmod 0600 ~/.ssh/transitmatters-ntt.pem
       - name: Run deploy shell script
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
