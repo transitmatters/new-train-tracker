@@ -8,14 +8,19 @@ export AWS_DEFAULT_REGION=us-east-1
 export AWS_PAGER=""
 
 PRODUCTION=false
+CI=false
 
 # Argument parsing
 # pass "-p" flag to deploy to production
+# pass "-c" flag if deploying with CI
 
 while getopts "pc" opt; do
     case $opt in
         p)
             PRODUCTION=true
+            ;;
+        c)
+            CI=true
             ;;
   esac
 done
@@ -42,6 +47,15 @@ BACKEND_HOSTNAME=$BACKEND_DOMAIN_PREFIX$BACKEND_ZONE # Must match in .chalice/co
 if [[ -z "$DD_API_KEY" ]]; then
     echo "Must provide DD_API_KEY in environment to deploy" 1>&2
     exit 1
+fi
+
+# Fetch repository tags
+# Run unshallow if deploying in CI
+
+if $CI; then
+    git fetch --unshallow --tags
+else
+    git fetch --tags
 fi
 
 # Identify the version and commit of the current deploy
