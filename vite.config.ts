@@ -8,7 +8,7 @@ export default defineConfig({
     },
     define: {
         'process.env': {
-            GIT_VERSION: process.env.GIT_ABR_VERSION,
+            GIT_ABR_VERSION: process.env.GIT_ABR_VERSION,
         },
     },
     plugins: [react()],

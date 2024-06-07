@@ -47,7 +47,7 @@ fi
 # Identify the version and commit of the current deploy
 GIT_VERSION=`git describe --tags --always`
 GIT_SHA=`git rev-parse HEAD`
-GIT_ABR_VERSION=`git describe --tags --abbrev=0`
+export GIT_ABR_VERSION=`git describe --tags --abbrev=0`
 echo "Deploying version $GIT_VERSION | $GIT_SHA"
 
 # Adding some datadog tags to get better data

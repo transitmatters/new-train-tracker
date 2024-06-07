@@ -100,7 +100,7 @@ export const App: React.FC = () => {
                 </div>
             )}
             <LineStats line={selectedLine?.name} />
-            <Footer version={process.env.GIT_VERSION} />
+            <Footer version={process.env.GIT_ABR_VERSION} />
         </>
     );
 };
