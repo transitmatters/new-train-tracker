@@ -1,6 +1,7 @@
 ci/cd:
 - .github/**/*
 - devops/**/*
+- deploy.sh
 
 dependencies:
 - package.json
