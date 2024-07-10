@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { prerenderLine } from '../prerender';
 import { renderTextTrainlabel } from '../labels';
 
-import { TrainDisplay } from './Train';
+import { TrainDisplay } from './TrainDisplay';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 import { Line as TLine, Pair, StationPositions, VehicleCategory } from '../types';
 import { MBTAApi } from '../hooks/useMbtaApi';
@@ -15,6 +15,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 const AGE_WORD_MAP = new Map<VehicleCategory, string>([
     ['new_vehicles', ' new '],
     ['old_vehicles', ' old '],
+    ['googly_eyes_vehicles', ' googly-eyed '],
     ['vehicles', ' '],
 ]);
 

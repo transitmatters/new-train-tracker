@@ -106,12 +106,21 @@ export const TrainDisplay = ({
                     stroke={isTracked ? 'white' : undefined}
                     textAnchor="middle"
                 />
+                <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
+                <circle
+                    cx={2}
+                    cy={3}
+                    r={2}
+                    fill={'black'}
+                    stroke={isTracked ? 'white' : undefined}
+                    textAnchor="middle"
+                />
                 {hasGooglyEyes ? (
-                    <text fontSize={5} x={-3.2} y={1} transform="rotate(90)">
+                    <text fontSize={3} x={1} y={-1} transform="rotate(90)">
                         👀
                     </text>
                 ) : (
-                    <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
+                    <></>
                 )}
             </g>
         );

@@ -23,7 +23,7 @@ green_has_eyes = lambda x: int(x) in [3909, 3864, 3918]
 blue_has_eyes = lambda _: False
 orange_has_eyes = lambda _: False
 silver_has_eyes = lambda _: False
-blue_has_eyes = lambda _: False
+blue_has_eyes = lambda _: True
 
 
 def get_route_test_function_dict(route_ids, test_fn):
@@ -52,9 +52,10 @@ vehicle_has_eyes_func = {
 def vehicle_is_new(route_name, car):
     return vehicle_is_new_func[route_name](car)
 
+
 def vehicle_array_is_new(route_name, arr):
     return any(map(vehicle_is_new_func[route_name], arr))
 
+
 def vehicle_array_has_eyes(route_name, arr):
     return any(map(vehicle_has_eyes_func[route_name], arr))
-
