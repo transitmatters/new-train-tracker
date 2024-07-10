@@ -19,7 +19,7 @@ silver_is_new = lambda x: int(x) >= 1294 and int(x) <= 1299
 blue_is_new = lambda _: False
 
 red_has_eyes = lambda _: False
-green_has_eyes = lambda x: int(x) in [3909, 3864, 3918]
+green_has_eyes = lambda x: int(x) in [3909, 3864, 3918, 3639]
 blue_has_eyes = lambda _: False
 orange_has_eyes = lambda _: False
 silver_has_eyes = lambda _: False
