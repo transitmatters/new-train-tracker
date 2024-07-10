@@ -1,23 +1,24 @@
 import { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab, TabProvider } from '@ariakit/react';
-import { VehiclesAge } from '../types';
-import { useAgeSearchParam } from '../hooks/searchParams';
+import { VehicleCategory } from '../types';
+import { useCategorySearchParam } from '../hooks/searchParams';
 
-type TrainAge = { key: VehiclesAge; label: string };
+type TrainCategory = { key: VehicleCategory; label: string };
 
-const trainTypes: TrainAge[] = [
+const trainTypes: TrainCategory[] = [
     { key: 'old_vehicles', label: 'Old' },
     { key: 'new_vehicles', label: 'New' },
+    { key: 'googly_eyes_vehicles', label: '👀' },
     { key: 'vehicles', label: 'All' },
 ];
 
-interface AgeTabPickerProps {
+interface CategoryTabPickerProps {
     tabColor: string;
 }
 
-export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabColor }) => {
+export const CategoryTabPicker: React.FC<CategoryTabPickerProps> = ({ tabColor }) => {
     // Get train age ID from serach params
-    const [ageSearchParam, setAgeSearchParam] = useAgeSearchParam();
+    const [categorySearchParam, setCategorySearchParam] = useCategorySearchParam();
 
     const wrapperRef = useRef<HTMLDivElement>(null);
     const selectedIndicatorRef = useRef<HTMLDivElement>(null);
@@ -26,14 +27,16 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabColor }) => {
         const { current: wrapper } = wrapperRef;
         const { current: selectedIndicator } = selectedIndicatorRef;
         if (wrapper && selectedIndicator) {
-            const selectedEl = wrapper.querySelector(`#${ageSearchParam}`) as HTMLElement | null;
+            const selectedEl = wrapper.querySelector(
+                `#${categorySearchParam}`
+            ) as HTMLElement | null;
             if (selectedEl) {
                 selectedIndicator.style.width = selectedEl.clientWidth + 'px';
                 selectedIndicator.style.transform = `translateX(${selectedEl.offsetLeft}px)`;
                 selectedIndicator.style.backgroundColor = tabColor;
             }
         }
-    }, [tabColor, ageSearchParam]);
+    }, [tabColor, categorySearchParam]);
 
     return (
         <TabProvider>
@@ -48,7 +51,7 @@ export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabColor }) => {
                             key={trainType.key}
                             data-color={tabColor}
                             onClick={() => {
-                                setAgeSearchParam(trainType.key);
+                                setCategorySearchParam(trainType.key);
                             }}
                         >
                             <div

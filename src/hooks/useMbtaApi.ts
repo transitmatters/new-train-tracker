@@ -4,7 +4,7 @@ File that contains a React hook that provides data from the MBTA API
 
 import { useEffect, useState, useCallback } from 'react';
 
-import { Line, Route, Station, Train, VehiclesAge } from '../types';
+import { Line, Route, Station, Train, VehicleCategory } from '../types';
 import { APP_DATA_BASE_PATH } from '../constants';
 
 export interface MBTAApi {
@@ -28,12 +28,18 @@ const filterOld = (trains: Train[] | undefined) => {
     return trains?.filter((train) => !train.isNewTrain);
 };
 
-const filterTrains = (trains: Train[] | undefined, vehiclesAge: VehiclesAge) => {
+const filterGoogly = (trains: Train[] | undefined) => {
+    return trains?.filter((train) => train.hasGooglyEyes);
+};
+
+const filterTrains = (trains: Train[] | undefined, vehiclesAge: VehicleCategory) => {
     let selectedTrains: Train[] | undefined = [];
     if (vehiclesAge === 'new_vehicles') {
         selectedTrains = filterNew(trains);
     } else if (vehiclesAge === 'old_vehicles') {
         selectedTrains = filterOld(trains);
+    } else if (vehiclesAge === 'googly_eyes_vehicles') {
+        selectedTrains = filterGoogly(trains);
     } else {
         selectedTrains = trains;
     }
@@ -48,7 +54,10 @@ const getRoutesInfo = (routes: string[]) => {
     return fetch(`${APP_DATA_BASE_PATH}/routes/${routes.join(',')}`).then((res) => res.json());
 };
 
-export const useMbtaApi = (lines: Line[], vehiclesAge: VehiclesAge = 'new_vehicles'): MBTAApi => {
+export const useMbtaApi = (
+    lines: Line[],
+    vehiclesAge: VehicleCategory = 'new_vehicles'
+): MBTAApi => {
     const routeNames = lines
         .map((line) => Object.keys(line.routes))
         .reduce((a, b) => [...a, ...b], [])

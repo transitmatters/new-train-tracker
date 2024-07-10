@@ -16,6 +16,7 @@ export interface Route {
     stationPositions?: StationPositions;
     derivedFromRouteId?: string;
     pathDirective?: string;
+    pathInterpolator?: (any) => any;
     id?: string;
 }
 
@@ -32,6 +33,7 @@ export interface Train {
     currentStatus: CurrentStatus;
     direction: number;
     isNewTrain: boolean;
+    hasGooglyEyes: boolean;
     label: string;
     latitude: number;
     longitude: number;
@@ -85,7 +87,7 @@ export interface Pair {
     train: Train;
 }
 
-export type VehiclesAge = 'vehicles' | 'new_vehicles' | 'old_vehicles';
+export type VehicleCategory = 'vehicles' | 'new_vehicles' | 'old_vehicles' | 'googly_eyes_vehicles';
 
 export interface Prediction {
     departure_time: Date;

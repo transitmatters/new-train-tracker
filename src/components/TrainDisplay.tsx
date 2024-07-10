@@ -6,6 +6,7 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import { interpolateTrainOffset } from '../interpolation';
 import { PopoverContainerContext, prefersReducedMotion } from './util';
 import { TrainPopover } from './TrainPopover';
+import { Route, Train } from '../types';
 
 const getSpringConfig = () => {
     if (prefersReducedMotion()) {
@@ -37,7 +38,23 @@ const drawEquilateralTriangle = (radius) =>
         .reduce((a, b) => `${a} ${b}`)
         .trim();
 
-export const Train = ({ train, route, colors, focusOnMount, labelPosition, onFocus, onBlur }) => {
+export const TrainDisplay = ({
+    train,
+    route,
+    colors,
+    focusOnMount,
+    labelPosition,
+    onFocus,
+    onBlur,
+}: {
+    train: Train;
+    route: Route;
+    colors: Record<string, string>;
+    focusOnMount: boolean;
+    labelPosition: string | undefined;
+    onFocus: () => void;
+    onBlur: () => void;
+}) => {
     const { direction } = train;
     const { pathInterpolator, stations } = route;
 
@@ -78,7 +95,7 @@ export const Train = ({ train, route, colors, focusOnMount, labelPosition, onFoc
         }
     }, [element, shouldAutoFocus]);
 
-    const renderTrainMarker = () => {
+    const renderTrainMarker = (hasGooglyEyes: boolean) => {
         return (
             <g>
                 <circle
@@ -87,8 +104,26 @@ export const Train = ({ train, route, colors, focusOnMount, labelPosition, onFoc
                     r={3.326}
                     fill={colors.train}
                     stroke={isTracked ? 'white' : undefined}
+                    textAnchor="middle"
                 />
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
+                {hasGooglyEyes ? (
+                    <>
+                        <circle
+                            cx={2}
+                            cy={3}
+                            r={2}
+                            fill={'black'}
+                            stroke={isTracked ? 'white' : undefined}
+                            textAnchor="middle"
+                        />
+                        <text fontSize={3} x={1} y={-1} transform="rotate(90)">
+                            👀
+                        </text>
+                    </>
+                ) : (
+                    <></>
+                )}
             </g>
         );
     };
@@ -96,7 +131,7 @@ export const Train = ({ train, route, colors, focusOnMount, labelPosition, onFoc
     return (
         <Spring to={{ offset }} config={getSpringConfig()}>
             {(spring) => {
-                const { x, y, theta } = pathInterpolator(spring.offset);
+                const { x, y, theta } = pathInterpolator!(spring.offset);
                 const correctedTheta = direction === 1 ? 180 + theta : theta;
                 return (
                     <>
@@ -110,7 +145,7 @@ export const Train = ({ train, route, colors, focusOnMount, labelPosition, onFoc
                             onClick={() => element?.focus()}
                             onBlur={handleBlur}
                         >
-                            {renderTrainMarker()}
+                            {renderTrainMarker(train.hasGooglyEyes)}
                         </g>
                         {popoverContainer && element && (
                             <TrainPopover
