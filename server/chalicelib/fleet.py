@@ -23,7 +23,7 @@ green_has_eyes = lambda x: int(x) in [3909, 3864, 3918]
 blue_has_eyes = lambda _: False
 orange_has_eyes = lambda _: False
 silver_has_eyes = lambda _: False
-blue_has_eyes = lambda _: True
+blue_has_eyes = lambda _: False
 
 
 def get_route_test_function_dict(route_ids, test_fn):
