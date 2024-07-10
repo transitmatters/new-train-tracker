@@ -12,7 +12,7 @@ import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
 
 import favicon from '../../public/images/favicon.png';
-import { AgeTabPicker } from './AgeTabPicker';
+import { CategoryTabPicker } from './CategoryTabPicker';
 import { Line as TLine } from '../types';
 
 import { useSearchParams } from 'react-router-dom';
@@ -77,7 +77,7 @@ export const App: React.FC = () => {
     const renderControls = () => {
         return (
             <div className={'selectors'}>
-                <AgeTabPicker tabColor={selectedLine.color} />
+                <CategoryTabPicker tabColor={selectedLine.color} />
                 {api.trainsByRoute && (
                     <LineTabPicker
                         lines={Object.values(lineByTabId)}
