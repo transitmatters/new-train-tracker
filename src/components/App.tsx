@@ -16,7 +16,7 @@ import { AgeTabPicker } from './AgeTabPicker';
 import { Line as TLine } from '../types';
 
 import { useSearchParams } from 'react-router-dom';
-import { useLineSearchParam, useAgeSearchParam } from '../hooks/searchParams';
+import { useLineSearchParam, useCategorySearchParam } from '../hooks/searchParams';
 import { TrophySpin } from 'react-loading-indicators';
 
 const lineByTabId: Record<string, TLine> = {
@@ -29,7 +29,7 @@ const lineByTabId: Record<string, TLine> = {
 export const App: React.FC = () => {
     const [searchParams] = useSearchParams();
     const [lineSearchParam, setLineSearchParam] = useLineSearchParam();
-    const [ageSearchParam] = useAgeSearchParam();
+    const [ageSearchParam] = useCategorySearchParam();
 
     const api = useMbtaApi(Object.values(lineByTabId), ageSearchParam);
     const selectedLine = lineByTabId[lineSearchParam];

@@ -4,15 +4,15 @@ import classNames from 'classnames';
 import { prerenderLine } from '../prerender';
 import { renderTextTrainlabel } from '../labels';
 
-import { Train } from './Train';
+import { TrainDisplay } from './Train';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
-import { Line as TLine, Pair, StationPositions, VehiclesAge } from '../types';
+import { Line as TLine, Pair, StationPositions, VehicleCategory } from '../types';
 import { MBTAApi } from '../hooks/useMbtaApi';
 import { useLastSightingByLine } from '../hooks/useLastSighting';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
-const AGE_WORD_MAP = new Map<VehiclesAge, string>([
+const AGE_WORD_MAP = new Map<VehicleCategory, string>([
     ['new_vehicles', ' new '],
     ['old_vehicles', ' old '],
     ['vehicles', ' '],
@@ -21,7 +21,7 @@ const AGE_WORD_MAP = new Map<VehiclesAge, string>([
 interface LineProps {
     api: MBTAApi;
     line: TLine;
-    age: VehiclesAge;
+    age: VehicleCategory;
 }
 
 dayjs.extend(relativeTime);
@@ -49,7 +49,7 @@ const sortTrainRoutePairsByDistance = (pairs: Pair[], stationPositions: StationP
     return pairs.sort((a, b) => distanceMap.get(a) - distanceMap.get(b));
 };
 
-const EmptyNoticeForLine: React.FC<{ line: string; age: VehiclesAge }> = ({ line, age }) => {
+const EmptyNoticeForLine: React.FC<{ line: string; age: VehicleCategory }> = ({ line, age }) => {
     const sightingForLine = useLastSightingByLine(line);
 
     const ageWord = AGE_WORD_MAP.get(age);
@@ -151,7 +151,7 @@ export const Line: React.FC<LineProps> = ({ api, line, age }) => {
 
     const renderTrains = () => {
         return sortedTrainRoutePairs.map(({ train, route }, index) => (
-            <Train
+            <TrainDisplay
                 focusOnMount={shouldFocusOnFirstTrain && index === 0}
                 key={train.label}
                 train={train}

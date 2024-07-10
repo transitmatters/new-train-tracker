@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { Line, VehiclesAge } from '../types';
+import { Line, VehicleCategory } from '../types';
 
 // Read and update line ID search parameters
 export const useLineSearchParam = (): [string, (newLine: Line) => void] => {
@@ -16,15 +16,15 @@ export const useLineSearchParam = (): [string, (newLine: Line) => void] => {
 };
 
 // Read and update train age search parameters
-export const useAgeSearchParam = (): [VehiclesAge, (newAge: VehiclesAge) => void] => {
+export const useCategorySearchParam = (): [VehicleCategory, (newAge: VehicleCategory) => void] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const age = searchParams.get('age') || 'new_vehicles';
+    const age = searchParams.get('category') || 'new_vehicles';
 
-    const setAge = (newAge: VehiclesAge) => {
-        searchParams.set('age', newAge);
+    const setAge = (newAge: VehicleCategory) => {
+        searchParams.set('category', newAge);
         setSearchParams(searchParams);
     };
 
-    return [age as VehiclesAge, setAge];
+    return [age as VehicleCategory, setAge];
 };

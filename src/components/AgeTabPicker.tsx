@@ -1,13 +1,14 @@
 import { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab, TabProvider } from '@ariakit/react';
-import { VehiclesAge } from '../types';
-import { useAgeSearchParam } from '../hooks/searchParams';
+import { VehicleCategory } from '../types';
+import { useCategorySearchParam } from '../hooks/searchParams';
 
-type TrainAge = { key: VehiclesAge; label: string };
+type TrainAge = { key: VehicleCategory; label: string };
 
 const trainTypes: TrainAge[] = [
     { key: 'old_vehicles', label: 'Old' },
     { key: 'new_vehicles', label: 'New' },
+    { key: 'googly_eyes_vehicles', label: '👀' },
     { key: 'vehicles', label: 'All' },
 ];
 
@@ -17,7 +18,7 @@ interface AgeTabPickerProps {
 
 export const AgeTabPicker: React.FC<AgeTabPickerProps> = ({ tabColor }) => {
     // Get train age ID from serach params
-    const [ageSearchParam, setAgeSearchParam] = useAgeSearchParam();
+    const [ageSearchParam, setAgeSearchParam] = useCategorySearchParam();
 
     const wrapperRef = useRef<HTMLDivElement>(null);
     const selectedIndicatorRef = useRef<HTMLDivElement>(null);
