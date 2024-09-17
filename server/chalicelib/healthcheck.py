@@ -15,7 +15,7 @@ def run():
             checks[i] = False
 
     if all(checks):
-        return Response(json.dumps({"status": "pass"}), mimetype="application/json", status=200)
+        return Response(json.dumps({"status": "pass"}), headers={"Content-Type": "application/json"}, status_code=200)
 
     return Response(
         json.dumps(
@@ -24,6 +24,6 @@ def run():
                 "check_failed": checks.index(False),
             }
         ),
-        mimetype="application/json",
-        status=500,
+        headers={"Content-Type": "application/json"},
+        status_code=500,
     )
