@@ -7,8 +7,7 @@ import os
 import json
 import asyncio
 
-from chalicelib import (last_seen, mbta_api)
-import chalicelib.healthcheck
+from chalicelib import (last_seen, mbta_api, healthcheck as statuscheck)
 from datadog_lambda.wrapper import datadog_lambda_wrapper
 from chalice import Chalice, CORSConfig, ConvertToMiddleware, Response, Cron
 
@@ -64,7 +63,7 @@ def update_last_seen(event):
 
 @app.route("/healthcheck", cors=cors_config)
 def healthcheck():
-    return chalicelib.healthcheck.run()
+    return statuscheck.run()
 
 
 def get_static_data():
