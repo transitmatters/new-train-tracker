@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['20']
+        node-version: ['22']
         python-version: ['3.12']
     env:
       TM_NTT_CERT_ARN: ${{ secrets.TM_NTT_CERT_ARN }}
