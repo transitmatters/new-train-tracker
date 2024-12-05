@@ -1,19 +1,19 @@
 {
     "Orange": {
         "totalOldActive": 0,
-        "totalOldInactive": 22,
-        "totalNewDelivered": 116,
-        "totalNewUndelivered": 36
+        "totalOldInactive": 0,
+        "totalNewDelivered": 122,
+        "totalNewUndelivered": 28
     },
     "Red": {
-        "totalOldActive": 212,
+        "totalOldActive": 220,
         "totalOldInactive": 4,
-        "totalNewDelivered": 16,
-        "totalNewUndelivered": 236
+        "totalNewDelivered": 24,
+        "totalNewUndelivered": 228
     },
     "Green": {
-        "totalOldActive": 165,
-        "totalOldInactive": 32,
+        "totalOldActive": 169,
+        "totalOldInactive": 38,
         "totalNewDelivered": 24,
         "totalNewUndelivered": 0
     },
@@ -24,5 +24,5 @@
     "Sources": {
         "fleet_numbers": "http://roster.transithistory.org/"
     },
-    "Updated": "2024-08-18"
+    "Updated": "2024-12-04"
 }

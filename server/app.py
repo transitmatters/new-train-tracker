@@ -13,10 +13,10 @@ from chalice import Chalice, CORSConfig, ConvertToMiddleware, Response, Cron
 
 app = Chalice(app_name="new-train-tracker")
 
-localhost = "localhost:3000"
+localhost = "localhost:5173"
 TM_CORS_HOST = os.environ.get("TM_CORS_HOST", localhost)
 
-if TM_CORS_HOST != localhost:
+if localhost not in TM_CORS_HOST:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
     cors_config = CORSConfig(allow_origin=f"https://{TM_CORS_HOST}", max_age=3600)
 else:
@@ -76,7 +76,7 @@ def get_port():
     env_port = os.environ.get("PORT")
     if env_port is not None:
         return int(env_port)
-    return 5000
+    return 5555
 
 
 def get_debug():
