@@ -9,19 +9,23 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "~3.12"
 aiohttp = "3.11.9"
-boto3 = "1.35.75"
+boto3 = "~1.35.75"
 json-api-doc = "0.15.0"
 pytz = "2024.2"
 schedule = "1.2.2"
-datadog_lambda = "6.104.0"
+datadog_lambda = "~6.104.0"
 
 
 [tool.poetry.dev-dependencies]
 pip = ">=24.0"
-chalice = "1.31.2"
+chalice = "1.31.3"
 black = "^24.10.0"
-pylint = "3.3.2"
+pylint = "3.3.3"
 flake8 = "7.1.1"
+
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = "^1.9.0"
 
 
 [tool.black]
