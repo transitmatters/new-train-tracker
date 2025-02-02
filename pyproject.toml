@@ -14,9 +14,9 @@ json-api-doc = "0.15.0"
 pytz = "2024.2"
 schedule = "1.2.2"
 datadog_lambda = "~6.104.0"
+tzdata = "^2024.2"
 
-
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pip = ">=24.0"
 chalice = "1.31.3"
 black = "^24.10.0"
