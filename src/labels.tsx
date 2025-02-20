@@ -97,7 +97,7 @@ const renderCarriageIcon = (
     first: boolean,
     last: boolean
 ) => {
-    const status_to_color: Record<typeof status, string> = {
+    const statusToColor: Record<typeof status, string> = {
         EMPTY: 'green',
         MANY_SEATS_AVAILABLE: 'green',
         FEW_SEATS_AVAILABLE: 'gold',
@@ -116,7 +116,7 @@ const renderCarriageIcon = (
                 borderTopRightRadius: first ? 3 : undefined,
                 borderBottomLeftRadius: last ? 3 : undefined,
                 borderBottomRightRadius: last ? 3 : undefined,
-                backgroundColor: status_to_color[status],
+                backgroundColor: statusToColor[status],
                 zIndex: 100,
                 marginBottom: 1,
             }}
