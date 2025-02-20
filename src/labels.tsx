@@ -1,4 +1,5 @@
 import { Route, Train, Prediction } from './types';
+import { SVGProps } from 'react';
 
 const abbreviateStationName = (station: string) =>
     station
@@ -91,6 +92,88 @@ const renderDetailsLabel = (train: Train, prediction: Prediction | null) => {
     );
 };
 
+const renderCarriageIcon = (
+    status: Train['carriages'][number]['occupancy_status'],
+    first: boolean,
+    last: boolean
+) => {
+    const status_to_color: Record<typeof status, string> = {
+        EMPTY: 'green',
+        MANY_SEATS_AVAILABLE: 'green',
+        FEW_SEATS_AVAILABLE: 'gold',
+        STANDING_ROOM_ONLY: 'orange',
+        CRUSHED_STANDING_ROOM_ONLY: 'red',
+        FULL: 'maroon',
+        NO_DATA_AVAILABLE: 'silver',
+        NOT_ACCEPTING_PASSENGERS: 'grey',
+    };
+    return (
+        <div
+            style={{
+                height: 30,
+                width: 10,
+                borderTopLeftRadius: first ? 3 : undefined,
+                borderTopRightRadius: first ? 3 : undefined,
+                borderBottomLeftRadius: last ? 3 : undefined,
+                borderBottomRightRadius: last ? 3 : undefined,
+                backgroundColor: status_to_color[status],
+                zIndex: 100,
+                marginBottom: 1,
+            }}
+        />
+    );
+};
+
+const BaselineKeyboardDoubleArrowUp = (props: SVGProps<SVGSVGElement>) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="10px"
+            height="10px"
+            fill="grey"
+            {...props}
+        >
+            <path fill="grey" d="M6 17.59L7.41 19L12 14.42L16.59 19L18 17.59l-6-6z"></path>
+            <path fill="grey" d="m6 11l1.41 1.41L12 7.83l4.59 4.58L18 11l-6-6z"></path>
+        </svg>
+    );
+};
+
+function convertAllCapsToSentenceCase(s: string): string {
+    /**
+     * Converts a string from ALL_CAPS_STRING to sentence case (All caps string).
+     *
+     * @param s - Input string in ALL_CAPS format with underscores.
+     * @returns Converted string in sentence case.
+     */
+    s = s.toLowerCase().replace(/_/g, ' '); // Convert to lowercase and replace underscores with spaces
+    return s.charAt(0).toUpperCase() + s.slice(1); // Capitalize the first letter
+}
+
+const renderCarriageDetails = (train: Train) => {
+    return (
+        <div>
+            {<BaselineKeyboardDoubleArrowUp style={{ width: 20, height: 20, marginInline: -5 }} />}
+            {train.carriages.map((carriage, index) => (
+                <div key={carriage.label} style={{ display: 'flex', alignItems: 'center' }}>
+                    {renderCarriageIcon(
+                        carriage.occupancy_status,
+                        index === 0,
+                        index === train.carriages.length - 1
+                    )}
+                    <div style={{ paddingLeft: 6 }}>
+                        <div style={{ fontSize: 12 }}>{carriage.label} </div>
+                        <div style={{ fontSize: 8, paddingLeft: 1, color: '#404040' }}>
+                            {convertAllCapsToSentenceCase(carriage.occupancy_status)}
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
 export const renderTrainLabel = (
     train: Train,
     prediction: Prediction | null,
@@ -103,6 +186,7 @@ export const renderTrainLabel = (
             {renderDestinationLabel(train, route)}
             {renderLeadCarLabel(train, accentColor)}
             {renderDetailsLabel(train, prediction)}
+            {renderCarriageDetails(train)}
         </>
     );
 };

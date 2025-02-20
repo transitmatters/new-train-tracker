@@ -28,6 +28,20 @@ export interface Routes {
 
 export type CurrentStatus = 'IN_TRANSIT_TO' | 'INCOMING_AT' | 'STOPPED_AT';
 
+interface Carriage {
+    label: string;
+    occupancy_status:
+        | 'NO_DATA_AVAILABLE'
+        | 'EMPTY'
+        | 'MANY_SEATS_AVAILABLE'
+        | 'FEW_SEATS_AVAILABLE'
+        | 'STANDING_ROOM_ONLY'
+        | 'CRUSHED_STANDING_ROOM_ONLY'
+        | 'FULL'
+        | 'NOT_ACCEPTING_PASSENGERS';
+    occupancy_percentage: number | null;
+}
+
 export interface Train {
     vehicleId: string;
     currentStatus: CurrentStatus;
@@ -39,6 +53,8 @@ export interface Train {
     longitude: number;
     route: string;
     stationId: string;
+    isFourCar: boolean;
+    carriages: Carriage[];
     tripId: string;
     updatedAt: string;
 }
