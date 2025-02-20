@@ -252,6 +252,7 @@ a {
     top: 0;
     left: 0;
     pointer-events: none;
+    z-index: 100;
 }
 
 .train-popover.visible {
