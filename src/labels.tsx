@@ -152,6 +152,9 @@ function convertAllCapsToSentenceCase(s: string): string {
 }
 
 const renderCarriageDetails = (train: Train) => {
+    const hasSomeLiveCarriageData = train.carriages.some(
+        (carriage) => carriage.occupancy_status !== 'NO_DATA_AVAILABLE'
+    );
     return (
         <div>
             {<BaselineKeyboardDoubleArrowUp style={{ width: 20, height: 20, marginInline: -5 }} />}
@@ -164,9 +167,11 @@ const renderCarriageDetails = (train: Train) => {
                     )}
                     <div style={{ paddingLeft: 6 }}>
                         <div style={{ fontSize: 12 }}>{carriage.label} </div>
-                        <div style={{ fontSize: 8, paddingLeft: 1, color: '#404040' }}>
-                            {convertAllCapsToSentenceCase(carriage.occupancy_status)}
-                        </div>
+                        {hasSomeLiveCarriageData && (
+                            <div style={{ fontSize: 8, paddingLeft: 1, color: '#404040' }}>
+                                {convertAllCapsToSentenceCase(carriage.occupancy_status)}
+                            </div>
+                        )}
                     </div>
                 </div>
             ))}
