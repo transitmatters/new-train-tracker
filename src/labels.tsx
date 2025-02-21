@@ -178,10 +178,12 @@ const renderCarriageDetails = (train: Train) => {
                         index === 0,
                         index === train.carriages.length - 1
                     )}
-                    <div>
+                    <div className="occupancy-details-container">
                         <div className="occupancy-label-container">
                             {carriage.label}{' '}
-                            <OccupancyStatusIcon occupancyStatus={carriage.occupancy_status} />
+                            {hasSomeLiveCarriageData && (
+                                <OccupancyStatusIcon occupancyStatus={carriage.occupancy_status} />
+                            )}
                         </div>
                         {hasSomeLiveCarriageData && (
                             <div className="occupancy-status-text">

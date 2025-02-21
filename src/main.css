@@ -289,8 +289,11 @@ a {
 .train-popover .occupancy-container { 
     display: flex;
     flex-direction: row;
-    align-items: 'center';
-    gap: 6px;
+    align-items: center;
+}
+
+.train-popover .occupancy-details-container { 
+    padding-left: 6px;
 }
 
 .train-popover .occupancy-status-container { 
@@ -319,7 +322,6 @@ a {
 
 .train-popover .occupancy-label-container {
     font-size: 12px;
-    padding-top: 2px;
     display: flex;
 }
 
