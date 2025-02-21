@@ -140,7 +140,9 @@ async def vehicle_data_for_routes(route_ids):
                     "tripId": vehicle["trip"]["id"],
                     "isNewTrain": is_new,
                     "hasGooglyEyes": has_eyes,
-                    "updatedAt": vehicle["updated_at"]
+                    "isFourCar": len(vehicle["carriages"]) == 4,
+                    "carriages": vehicle["carriages"],
+                    "updatedAt": vehicle["updated_at"],
                 }
             )
 
