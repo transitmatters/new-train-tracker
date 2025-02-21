@@ -93,14 +93,18 @@ const prerenderRoute = (shape: LineShape[], stationIds) => {
     };
 };
 
-export const prerenderLine = (line: Line, stationsByRoute, routesInfo) => {
+export const prerenderLine = (
+    line: Line,
+    stationsByRoute: Record<string, Station[]> | null,
+    routesInfo
+) => {
     const pathBuilder = createPathBuilder();
     const routes: Record<string, Route> = {};
     let stationPositions = {};
     Object.entries(line.routes).forEach(([routeId, { shape }]) => {
-        const stations: Station[] = stationsByRoute[routeId];
+        const stations = stationsByRoute?.[routeId];
         const routeInfo = routesInfo[routeId];
-        const stationIds = stations.map((s) => s.id);
+        const stationIds = stations?.map((s) => s.id);
         const { pathInterpolator, stationOffsets, pathDirective } = prerenderRoute(
             shape,
             stationIds
@@ -110,7 +114,7 @@ export const prerenderLine = (line: Line, stationsByRoute, routesInfo) => {
             ...routeInfo,
             id: routeId,
             pathInterpolator: pathInterpolator,
-            stations: stations.map((station) => {
+            stations: stations?.map((station) => {
                 return {
                     id: station.id,
                     name: station.name,
