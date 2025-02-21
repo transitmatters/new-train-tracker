@@ -286,6 +286,58 @@ a {
     transition: 500ms transform cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+.train-popover .occupancy-container { 
+    display: flex;
+    flex-direction: row;
+    align-items: 'center';
+    gap: 6px;
+}
+
+.train-popover .occupancy-status-container { 
+    padding-left: 2px;
+    padding-top: 2px;
+    position: relative;
+}
+
+.train-popover .consist-front-icon { 
+    width: 20px;
+    height: 20px;
+    margin-inline: -5px;
+}
+
+.train-popover .occupancy-status-icon { 
+    width: 12px; 
+    height: 12px; 
+    position: 'absolute';
+}
+
+.train-popover .occupancy-status-text {
+    font-size: 8px;
+    padding-left: 1px;
+    color: "#404040";
+}
+
+.train-popover .occupancy-label-container {
+    font-size: 12px;
+    padding-top: 2px;
+    display: flex;
+}
+
+.train-popover .train-carriage {
+    margin-bottom: 1px;
+    height: 30px;
+    width: 10px;
+}
+
+.train-popover .train-carriage.first {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.train-popover .train-carriage.last {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
 .train-popover.right {
     transform-origin: right;
 }

@@ -1,4 +1,6 @@
-import { Route, Train, Prediction } from './types';
+import { ArrowUpIcon } from './components/icons/ArrowUpIcon';
+import { PersonIcon } from './components/icons/PersonIcon';
+import { Route, Train, Prediction, OccupancyStatus } from './types';
 import { SVGProps } from 'react';
 
 const abbreviateStationName = (station: string) =>
@@ -91,52 +93,63 @@ const renderDetailsLabel = (train: Train, prediction: Prediction | null) => {
         </div>
     );
 };
-
-const renderCarriageIcon = (
-    status: Train['carriages'][number]['occupancy_status'],
-    first: boolean,
-    last: boolean
-) => {
+const renderCarriageIcon = (status: OccupancyStatus, first: boolean, last: boolean) => {
     const statusToColor: Record<typeof status, string> = {
-        EMPTY: 'green',
-        MANY_SEATS_AVAILABLE: 'green',
-        FEW_SEATS_AVAILABLE: 'gold',
-        STANDING_ROOM_ONLY: 'orange',
-        CRUSHED_STANDING_ROOM_ONLY: 'red',
-        FULL: 'maroon',
+        EMPTY: '#008150',
+        MANY_SEATS_AVAILABLE: '#008150',
+        FEW_SEATS_AVAILABLE: '#FFC72C',
+        STANDING_ROOM_ONLY: '#FD8A03',
+        CRUSHED_STANDING_ROOM_ONLY: '#FA2D27',
+        FULL: '#FA2D27',
         NO_DATA_AVAILABLE: 'silver',
         NOT_ACCEPTING_PASSENGERS: 'grey',
     };
     return (
         <div
+            className={`train-carriage ${first ? 'first' : ''} ${last ? 'last' : ''}`}
             style={{
-                height: 30,
-                width: 10,
-                borderTopLeftRadius: first ? 3 : undefined,
-                borderTopRightRadius: first ? 3 : undefined,
-                borderBottomLeftRadius: last ? 3 : undefined,
-                borderBottomRightRadius: last ? 3 : undefined,
                 backgroundColor: statusToColor[status],
-                zIndex: 100,
-                marginBottom: 1,
             }}
         />
     );
 };
 
-const BaselineKeyboardDoubleArrowUp = (props: SVGProps<SVGSVGElement>) => {
+const OccupancyStatusIcon = ({
+    occupancyStatus,
+    ...rest
+}: { occupancyStatus: OccupancyStatus } & SVGProps<SVGSVGElement>) => {
+    const occupancyStatusToIcons: Record<OccupancyStatus, number> = {
+        EMPTY: 1,
+        MANY_SEATS_AVAILABLE: 1,
+        FEW_SEATS_AVAILABLE: 2,
+        STANDING_ROOM_ONLY: 3,
+        CRUSHED_STANDING_ROOM_ONLY: 4,
+        NOT_ACCEPTING_PASSENGERS: 0,
+        NO_DATA_AVAILABLE: 0,
+        FULL: 4,
+    };
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="10px"
-            height="10px"
-            fill="grey"
-            {...props}
-        >
-            <path fill="grey" d="M6 17.59L7.41 19L12 14.42L16.59 19L18 17.59l-6-6z"></path>
-            <path fill="grey" d="m6 11l1.41 1.41L12 7.83l4.59 4.58L18 11l-6-6z"></path>
-        </svg>
+        <div className="occupancy-status-container">
+            {[...Array(occupancyStatusToIcons[occupancyStatus])].map((_item, i) => {
+                const hex = (255 / 4) * i;
+                const color = `rgba(${hex}, ${hex}, ${hex})`;
+                return (
+                    <PersonIcon
+                        key={i}
+                        className="occupancy-status-icon"
+                        stroke="white"
+                        strokeWidth="1px"
+                        {...rest}
+                        style={{
+                            position: 'absolute',
+                            marginLeft: i * 4,
+                            color: color,
+                            zIndex: 100 - i,
+                        }}
+                    />
+                );
+            })}
+        </div>
     );
 };
 
@@ -157,18 +170,21 @@ const renderCarriageDetails = (train: Train) => {
     );
     return (
         <div>
-            {<BaselineKeyboardDoubleArrowUp style={{ width: 20, height: 20, marginInline: -5 }} />}
+            {<ArrowUpIcon className="consist-front-icon" />}
             {train.carriages.map((carriage, index) => (
-                <div key={carriage.label} style={{ display: 'flex', alignItems: 'center' }}>
+                <div key={carriage.label} className="occupancy-container">
                     {renderCarriageIcon(
                         carriage.occupancy_status,
                         index === 0,
                         index === train.carriages.length - 1
                     )}
-                    <div style={{ paddingLeft: 6 }}>
-                        <div style={{ fontSize: 12 }}>{carriage.label} </div>
+                    <div>
+                        <div className="occupancy-label-container">
+                            {carriage.label}{' '}
+                            <OccupancyStatusIcon occupancyStatus={carriage.occupancy_status} />
+                        </div>
                         {hasSomeLiveCarriageData && (
-                            <div style={{ fontSize: 8, paddingLeft: 1, color: '#404040' }}>
+                            <div className="occupancy-status-text">
                                 {convertAllCapsToSentenceCase(carriage.occupancy_status)}
                             </div>
                         )}
