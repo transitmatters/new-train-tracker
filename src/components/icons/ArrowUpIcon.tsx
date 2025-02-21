@@ -1,5 +1,9 @@
 import { SVGProps } from 'react';
 
+/**
+ * Icon from Material Design Icons
+ * License: Apache
+ */
 export const ArrowUpIcon = (props: SVGProps<SVGSVGElement>) => {
     return (
         <svg

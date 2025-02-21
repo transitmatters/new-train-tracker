@@ -1,5 +1,9 @@
 import { SVGProps } from 'react';
 
+/**
+ * Icon from IonIcons.
+ * License: MIT
+ */
 export const PersonIcon = (props: SVGProps<SVGSVGElement>) => {
     return (
         <svg
