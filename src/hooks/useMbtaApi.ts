@@ -69,7 +69,7 @@ export const useMbtaApi = (
     const [stationsByRoute, setStationsByRoute] = useState<Record<string, Station[]> | null>(null);
 
     // Get all trains for all routes
-    const { data: allTrains } = useQuery({
+    const { data: allTrains, isLoading: isLoadingAllTrains } = useQuery({
         queryKey: ['getTrains', routeNames],
         queryFn: () => getTrainPositions(routeNames),
         // if routeNames is empty, don't make the request
@@ -117,7 +117,7 @@ export const useMbtaApi = (
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routeNamesKey]);
 
-    const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
+    const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute && !isLoadingAllTrains;
 
     return {
         routesInfo: routesInfoByRoute,
