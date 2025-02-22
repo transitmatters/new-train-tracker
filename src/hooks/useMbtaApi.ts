@@ -117,12 +117,8 @@ export const useMbtaApi = (
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routeNamesKey]);
 
-    const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute && !isLoadingAllTrains;
+    const isReady =
+        !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute && !isLoadingAllTrains;
 
-    return {
-        routesInfo: routesInfoByRoute,
-        stationsByRoute,
-        trainsByRoute,
-        isReady,
-    };
+    return { routesInfo: routesInfoByRoute, stationsByRoute, trainsByRoute, isReady };
 };
