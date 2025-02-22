@@ -2,21 +2,22 @@
 File that contains a React hook that provides data from the MBTA API
 */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 import { Line, Route, Station, Train, VehicleCategory } from '../types';
-import { APP_DATA_BASE_PATH } from '../constants';
+import { APP_DATA_BASE_PATH, ONE_HOUR, TEN_SECONDS } from '../constants';
+import { useQuery } from '@tanstack/react-query';
 
 export interface MBTAApi {
     routesInfo: Record<string, Route> | null;
-    stationsByRoute: Record<string, Station> | null;
+    stationsByRoute: Record<string, Station[]> | null;
     trainsByRoute: Record<string, Train[]> | null;
     isReady: boolean;
 }
 
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via chalice route defined in app.py
-const getTrainPositions = (routes: string[]) => {
+const getTrainPositions = (routes: string[]): Promise<Train[]> => {
     return fetch(`${APP_DATA_BASE_PATH}/trains/${routes.join(',')}`).then((res) => res.json());
 };
 
@@ -65,34 +66,43 @@ export const useMbtaApi = (
 
     const routeNamesKey = routeNames.join(',');
     const [routesInfoByRoute, setRoutesInfoByRoute] = useState<Record<string, Route> | null>(null);
-    const [stationsByRoute, setStationsByRoute] = useState<Record<string, Station> | null>(null);
-    const [trainsByRoute, setTrainsByRoute] = useState<Record<string, Train[]> | null>(null);
-    const isReady = !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute;
+    const [stationsByRoute, setStationsByRoute] = useState<Record<string, Station[]> | null>(null);
 
-    const getTrains = useCallback(() => {
+    // Get all trains for all routes
+    const { data: allTrains, isLoading: isLoadingAllTrains } = useQuery({
+        queryKey: ['getTrains', routeNames],
+        queryFn: () => getTrainPositions(routeNames),
+        // if routeNames is empty, don't make the request
+        enabled: !!routeNames,
+        staleTime: TEN_SECONDS,
+        refetchInterval: TEN_SECONDS,
+    });
+
+    const trainsByRoute = useMemo(() => {
         const nextTrainsByRoute: Record<string, Train[]> = {};
         routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
-        getTrainPositions(routeNames).then((trains: Train[]) => {
-            filterTrains(trains, vehiclesAge)?.forEach((train) =>
-                nextTrainsByRoute[train.route].push(train)
-            );
-            setTrainsByRoute(nextTrainsByRoute);
-        });
-    }, [routeNames, vehiclesAge]);
+        filterTrains(allTrains, vehiclesAge)?.forEach((train) =>
+            nextTrainsByRoute[train.route].push(train)
+        );
+        return nextTrainsByRoute;
+    }, [allTrains, routeNames, vehiclesAge]);
 
-    useEffect(() => {
-        const nextStopsByRoute: Record<string, Station> = {};
-        Promise.all(
-            routeNames.map((routeName) =>
-                getStationsForRoute(routeName).then((data) => {
-                    nextStopsByRoute[routeName] = data;
-                })
-            )
-        ).then(() => setStationsByRoute(nextStopsByRoute));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [routeNamesKey]);
+    useQuery({
+        queryKey: ['getStations', routeNamesKey],
+        queryFn: () => {
+            const nextStopsByRoute: Record<string, Station[]> = {};
+            Promise.all(
+                routeNames.map((routeName) =>
+                    getStationsForRoute(routeName).then((data) => {
+                        nextStopsByRoute[routeName] = data;
+                    })
+                )
+            ).then(() => setStationsByRoute(nextStopsByRoute));
+        },
+        staleTime: ONE_HOUR,
+    });
 
     useEffect(() => {
         const nextRoutesInfo: Record<string, Route> = {};
@@ -107,18 +117,8 @@ export const useMbtaApi = (
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [routeNamesKey]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(getTrains, [routeNamesKey, vehiclesAge]);
+    const isReady =
+        !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute && !isLoadingAllTrains;
 
-    useEffect(() => {
-        const timeout = setTimeout(getTrains, 10 * 1000);
-        return () => clearTimeout(timeout);
-    }, [getTrains]);
-
-    return {
-        routesInfo: routesInfoByRoute,
-        stationsByRoute,
-        trainsByRoute,
-        isReady,
-    };
+    return { routesInfo: routesInfoByRoute, stationsByRoute, trainsByRoute, isReady };
 };

@@ -12,3 +12,8 @@ if (typeof window !== 'undefined') {
     domain = window.location.hostname;
 }
 export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP[domain] || '';
+
+// Time in milliseconds
+export const ONE_HOUR = 60 * 60 * 1000;
+export const FIVE_MINUTES = 5 * 60 * 1000;
+export const TEN_SECONDS = 10 * 1000;
