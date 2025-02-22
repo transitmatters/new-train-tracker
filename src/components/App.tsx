@@ -65,7 +65,7 @@ export const App: React.FC = () => {
     }, [api.isReady]);
 
     useEffect(() => {
-        const listener = (evt) => {
+        const listener = (evt: KeyboardEvent) => {
             if (evt.key === 'Tab') {
                 setCssVariable('--focus-outline-style', '0px 0px 0px 2px white');
             }

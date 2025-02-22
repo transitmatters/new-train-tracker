@@ -1,10 +1,10 @@
 import { createInterpolatorForSegments } from './interpolation';
-import { Line, LineShape, Route, Segment, Shape, Station } from './types';
+import { Line, LineShape, Route, Segment, Shape, Station, StationPositions, Turtle } from './types';
 
 const createPathBuilder = () => {
     let path = '';
     return {
-        add: (nextPath) => {
+        add: (nextPath: string) => {
             if (path.length === 0) {
                 path = nextPath;
             }
@@ -14,13 +14,20 @@ const createPathBuilder = () => {
     };
 };
 
-const getStationIdsWithinRange = (stationRange, stationIds) => {
+const getStationIdsWithinRange = (stationRange: Shape, stationIds: string[] | undefined) => {
     const { start, end, stations } = stationRange;
     if (stations) {
         return stations;
     }
-    const startIndex = stationIds.indexOf(start);
-    const endIndex = stationIds.indexOf(end);
+    if (!start || !end) {
+        throw new Error(
+            'Improper use of {start, end} properties for stationRange. ' +
+                'These properties are required if stations property is not defined.'
+        );
+    }
+
+    const startIndex = stationIds?.indexOf(start);
+    const endIndex = stationIds?.indexOf(end);
     if (startIndex === -1 || endIndex === -1) {
         throw new Error(
             `Improper use of {start=${start}, end=${end}} properties for stationRange. ` +
@@ -28,22 +35,32 @@ const getStationIdsWithinRange = (stationRange, stationIds) => {
                 'consider using stationRange.stations property instead.'
         );
     }
-    return stationIds.slice(startIndex, endIndex + 1);
+
+    if (endIndex !== undefined) {
+        return stationIds?.slice(startIndex, endIndex + 1);
+    } else {
+        throw new Error(`End station ${end} not found in stationIds.`);
+    }
 };
 
-const getStationPositions = (stationOffsets, pathInterpolator) => {
-    const positions = {};
+const getStationPositions = (
+    stationOffsets: {
+        [x: string]: number;
+    },
+    pathInterpolator: (partialLength: number) => Turtle
+): StationPositions => {
+    const positions: StationPositions = {};
     Object.entries(stationOffsets).forEach(([stationId, offset]) => {
         positions[stationId] = pathInterpolator(offset);
     });
     return positions;
 };
 
-const prerenderRoute = (shape: LineShape[], stationIds) => {
+const prerenderRoute = (shape: LineShape[], stationIds: string[] | undefined) => {
     const [start, ...entries] = shape;
     const pathBuilder = createPathBuilder();
     const segments: Segment[] = [];
-    const stationOffsets = {};
+    const stationOffsets: { [key in string]: number } = {};
     let totalLength = 0;
 
     if (typeof start !== 'function' && start.type !== 'start') {
@@ -51,7 +68,7 @@ const prerenderRoute = (shape: LineShape[], stationIds) => {
     }
     let { turtle } = start as Shape;
 
-    const consumeCommand = (command) => {
+    const consumeCommand = (command: ((command: Turtle) => Segment) | any) => {
         const segment: Segment = command(turtle);
         const { path, length, turtle: nextTurtle } = segment;
         segments.push(segment);
@@ -74,7 +91,7 @@ const prerenderRoute = (shape: LineShape[], stationIds) => {
 
             const segmentsLength = totalLength - initialLength;
 
-            stationIdsWithinRange.forEach((stationId, index) => {
+            stationIdsWithinRange?.forEach((stationId, index) => {
                 const fraction =
                     stationIdsWithinRange.length === 1
                         ? 0.5
@@ -95,14 +112,14 @@ const prerenderRoute = (shape: LineShape[], stationIds) => {
 
 export const prerenderLine = (
     line: Line,
-    stationsByRoute: Record<string, Station[]> | null,
-    routesInfo
+    stationsByRoute: Record<string, Station[]>,
+    routesInfo: Record<string, Route>
 ) => {
     const pathBuilder = createPathBuilder();
     const routes: Record<string, Route> = {};
-    let stationPositions = {};
+    let stationPositions: StationPositions = {};
     Object.entries(line.routes).forEach(([routeId, { shape }]) => {
-        const stations = stationsByRoute?.[routeId];
+        const stations = stationsByRoute[routeId];
         const routeInfo = routesInfo[routeId];
         const stationIds = stations?.map((s) => s.id);
         const { pathInterpolator, stationOffsets, pathDirective } = prerenderRoute(

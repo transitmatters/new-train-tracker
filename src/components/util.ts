@@ -4,7 +4,7 @@ import { Route, Routes, Train } from '../types';
 export const PopoverContainerContext = createContext<HTMLDivElement | null>(null);
 
 export const getTrainRoutePairsForLine = (
-    trainsByRoute: Record<string, Train[]> | null,
+    trainsByRoute: Record<string, Train[]>,
     routes: Routes
 ) => {
     const pairs: { train: Train; route: Route }[] = [];

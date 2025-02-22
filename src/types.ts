@@ -5,7 +5,15 @@ export interface Line {
     colorSecondary: string;
     routes: Routes;
     fixedTrainLabelPosition?: string;
-    getStationLabelPosition: ({ stationId, routeId, isRouteFocused }) => string | null;
+    getStationLabelPosition: ({
+        stationId,
+        routeId,
+        isRouteFocused,
+    }: {
+        stationId: string;
+        routeId: string;
+        isRouteFocused: boolean;
+    }) => string | null;
 }
 
 export interface Route {
@@ -16,8 +24,15 @@ export interface Route {
     stationPositions?: StationPositions;
     derivedFromRouteId?: string;
     pathDirective?: string;
-    pathInterpolator?: (any) => any;
+    pathInterpolator?: (path: number) => Turtle;
     id?: string;
+}
+
+export interface Color {
+    route: string;
+    unfocusedRoute: string;
+    train: string;
+    background: string;
 }
 
 export type StationPositions = Record<string, Turtle>;
@@ -66,7 +81,8 @@ export interface Station {
     latitude: number;
     longitude: number;
     name: string;
-    route: { id: string; type: string };
+    route?: { id: string; type: string };
+    offset: number;
 }
 
 export interface Shape {
@@ -75,10 +91,10 @@ export interface Shape {
     turtle?: Turtle;
     length?: number;
     stations?: string[];
-    commands?: null[];
+    commands?: Array<(command: Turtle) => Segment>;
     start?: string;
     end?: string;
-    get?: (frac: any) => { x; y };
+    get?: (frac: number) => { x: number; y: number };
 }
 
 type ShapeType = 'start' | 'line' | 'branch' | 'stationRange';
@@ -90,6 +106,7 @@ export interface Segment {
     path: string;
     length: number;
     turtle: Turtle;
+    get: (frac: number) => Turtle;
 }
 
 type SegmentType = 'line' | 'branch';

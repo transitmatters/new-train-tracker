@@ -6,8 +6,8 @@ import { renderTextTrainlabel } from '../labels';
 
 import { TrainDisplay } from './TrainDisplay';
 import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
-import { Line as TLine, Pair, StationPositions, VehicleCategory } from '../types';
-import { MBTAApi } from '../hooks/useMbtaApi';
+import { Line as TLine, Pair, StationPositions, VehicleCategory, Color } from '../types';
+import { MBTAApiReady } from '../hooks/useMbtaApi';
 import { useLastSightingByLine } from '../hooks/useLastSighting';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -20,7 +20,7 @@ const AGE_WORD_MAP = new Map<VehicleCategory, string>([
 ]);
 
 interface LineProps {
-    api: MBTAApi;
+    api: MBTAApiReady;
     line: TLine;
     age: VehicleCategory;
 }
@@ -82,7 +82,7 @@ export const Line: React.FC<LineProps> = ({ api, line, age }) => {
     const [shouldFocusOnFirstTrain, setShouldFocusOnFirstTrain] = useState(true);
     const [focusedRouteId, setFocusedRouteId] = useState<string | undefined>();
 
-    const colors = {
+    const colors: Color = {
         route: 'white',
         unfocusedRoute: '#ffffff55',
         train: line.color,
@@ -165,7 +165,7 @@ export const Line: React.FC<LineProps> = ({ api, line, age }) => {
         ));
     };
 
-    const renderStationLabelsForRouteId = (routeId) => {
+    const renderStationLabelsForRouteId = (routeId: string) => {
         const { stationPositions } = routes[routeId];
         const isRouteFocused = routeId === focusedRouteId;
         if (stationPositions) {

@@ -12,8 +12,17 @@ export interface MBTAApi {
     routesInfo: Record<string, Route> | null;
     stationsByRoute: Record<string, Station[]> | null;
     trainsByRoute: Record<string, Train[]> | null;
-    isReady: boolean;
+    isReady: false;
 }
+
+export interface MBTAApiReady {
+    routesInfo: Record<string, Route>;
+    stationsByRoute: Record<string, Station[]>;
+    trainsByRoute: Record<string, Train[]>;
+    isReady: true;
+}
+
+export type MBTAApiResponse = MBTAApi | MBTAApiReady;
 
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via chalice route defined in app.py
@@ -58,7 +67,7 @@ const getRoutesInfo = (routes: string[]) => {
 export const useMbtaApi = (
     lines: Line[],
     vehiclesAge: VehicleCategory = 'new_vehicles'
-): MBTAApi => {
+): MBTAApiResponse => {
     const routeNames = lines
         .map((line) => Object.keys(line.routes))
         .reduce((a, b) => [...a, ...b], [])
@@ -93,14 +102,19 @@ export const useMbtaApi = (
         queryKey: ['getStations', routeNamesKey],
         queryFn: () => {
             const nextStopsByRoute: Record<string, Station[]> = {};
-            Promise.all(
+            return Promise.all(
                 routeNames.map((routeName) =>
                     getStationsForRoute(routeName).then((data) => {
                         nextStopsByRoute[routeName] = data;
                     })
                 )
-            ).then(() => setStationsByRoute(nextStopsByRoute));
+            ).then(() => {
+                setStationsByRoute(nextStopsByRoute);
+                return nextStopsByRoute;
+            });
         },
+        // if routeNames is empty, don't make the request
+        enabled: !!routeNames && routeNames.length > 0,
         staleTime: ONE_HOUR,
     });
 
@@ -120,5 +134,8 @@ export const useMbtaApi = (
     const isReady =
         !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute && !isLoadingAllTrains;
 
+    if (!isReady) {
+        return { routesInfo: routesInfoByRoute, stationsByRoute, trainsByRoute, isReady };
+    }
     return { routesInfo: routesInfoByRoute, stationsByRoute, trainsByRoute, isReady };
 };

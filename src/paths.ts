@@ -1,5 +1,5 @@
-import Bezier from 'bezier-js';
-import { Shape, Turtle } from './types';
+import { Bezier } from 'bezier-js';
+import { Segment, Shape, Turtle } from './types';
 
 const d2r = (degrees: number) => degrees * (Math.PI / 180);
 const r2d = (radians: number) => radians * (180 / Math.PI);
@@ -8,14 +8,14 @@ const cosd = (theta: number) => Math.cos(d2r(theta));
 const tand = (theta: number) => Math.tan(d2r(theta));
 const round = (x: number, n = 2) => Math.round(x * Math.pow(10, n)) / Math.pow(10, n);
 
-const bezierParameterizedPosition = (bezier) => (frac) => {
+const bezierParameterizedPosition = (bezier: Bezier) => (frac: number) => {
     const { x, y } = bezier.get(frac);
     const { x: dx, y: dy } = bezier.derivative(frac);
     return { x, y, theta: r2d(Math.atan2(dy, dx)) };
 };
 
-const path = (strings, ...args) => {
-    const roundedString = (i) => {
+const path = (strings: TemplateStringsArray, ...args: number[]) => {
+    const roundedString = (i: number) => {
         if (args[i] !== undefined) {
             return round(args[i]).toString();
         }
@@ -37,7 +37,7 @@ export const start = (x: number, y: number, theta: number): Shape => {
 
 export const line =
     (length: number) =>
-    (turtle: Turtle): Shape => {
+    (turtle: Turtle): Segment => {
         const { x, y, theta } = turtle;
         const x2 = x + length * cosd(theta);
         const y2 = y + length * sind(theta);
@@ -56,7 +56,7 @@ export const line =
         };
     };
 
-export const curve = (length: number, angle: number) => (turtle) => {
+export const curve = (length: number, angle: number) => (turtle: Turtle) => {
     const { x: x1, y: y1, theta } = turtle;
     const nextTheta = theta + angle;
     const x2 = x1 + length * cosd(theta + angle / 2);
@@ -91,7 +91,7 @@ export const curve = (length: number, angle: number) => (turtle) => {
 
 export const wiggle =
     (length: number, width: number, angle = 0) =>
-    (turtle: Turtle): Shape => {
+    (turtle: Turtle): Shape | Segment => {
         const { x: x1, y: y1, theta } = turtle;
         const nextTheta = theta + angle;
         const x2 = x1 + length * cosd(theta) + width * cosd(theta - 90);
@@ -124,7 +124,7 @@ interface IStationRange {
     start?: string;
     end?: string;
     stations?: string[];
-    commands?: Array<any>;
+    commands?: Array<(command: Turtle) => Segment>;
 }
 
 export const stationRange = ({ start, end, stations, commands }: IStationRange): Shape => {

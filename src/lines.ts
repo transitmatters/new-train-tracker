@@ -27,7 +27,7 @@ const GLStations = {
     StMarysStreet: 'place-smary',
     Fenway: 'place-fenwy',
     Prudential: 'place-prmnl',
-} as const;
+};
 
 const glxStations = [
     GLStations.MedfordTufts,

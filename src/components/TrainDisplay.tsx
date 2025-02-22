@@ -6,7 +6,7 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import { interpolateTrainOffset } from '../interpolation';
 import { PopoverContainerContext, prefersReducedMotion } from './util';
 import { TrainPopover } from './TrainPopover';
-import { Route, Train } from '../types';
+import { Color, Route, Train } from '../types';
 
 const getSpringConfig = () => {
     if (prefersReducedMotion()) {
@@ -49,7 +49,7 @@ export const TrainDisplay = ({
 }: {
     train: Train;
     route: Route;
-    colors: Record<string, string>;
+    colors: Color;
     focusOnMount: boolean;
     labelPosition: string | undefined;
     onFocus: () => void;
@@ -149,7 +149,7 @@ export const TrainDisplay = ({
     return (
         <Spring to={{ offset }} config={getSpringConfig()}>
             {(spring) => {
-                const { x, y, theta } = pathInterpolator!(spring.offset);
+                const { x, y, theta } = pathInterpolator!(spring.offset ?? 0);
                 const correctedTheta = direction === 1 ? 180 + theta : theta;
                 return (
                     <>
