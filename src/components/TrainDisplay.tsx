@@ -95,7 +95,7 @@ export const TrainDisplay = ({
         }
     }, [element, shouldAutoFocus]);
 
-    const renderTrainMarker = (hasGooglyEyes: boolean, isFourCar: boolean) => {
+    const renderTrainMarker = (isFourCar: boolean) => {
         return (
             <g>
                 <circle
@@ -107,23 +107,6 @@ export const TrainDisplay = ({
                     textAnchor="middle"
                 />
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
-                {hasGooglyEyes ? (
-                    <>
-                        <circle
-                            cx={2}
-                            cy={3}
-                            r={2}
-                            fill={'black'}
-                            stroke={isTracked ? 'white' : undefined}
-                            textAnchor="middle"
-                        />
-                        <text fontSize={3} x={1} y={-1} transform="rotate(90)">
-                            👀
-                        </text>
-                    </>
-                ) : (
-                    <></>
-                )}
                 {isFourCar ? (
                     <>
                         <circle
@@ -163,7 +146,7 @@ export const TrainDisplay = ({
                             onClick={() => element?.focus()}
                             onBlur={handleBlur}
                         >
-                            {renderTrainMarker(train.hasGooglyEyes, train.isFourCar)}
+                            {renderTrainMarker(train.isFourCar)}
                         </g>
                         {popoverContainer && element && (
                             <TrainPopover

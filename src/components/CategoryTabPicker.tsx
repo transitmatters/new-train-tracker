@@ -8,7 +8,6 @@ type TrainCategory = { key: VehicleCategory; label: string };
 const trainTypes: TrainCategory[] = [
     { key: 'old_vehicles', label: 'Old' },
     { key: 'new_vehicles', label: 'New' },
-    { key: 'googly_eyes_vehicles', label: '👀' },
     { key: 'vehicles', label: 'All' },
 ];
 

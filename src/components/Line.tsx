@@ -15,7 +15,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 const AGE_WORD_MAP = new Map<VehicleCategory, string>([
     ['new_vehicles', ' new '],
     ['old_vehicles', ' old '],
-    ['googly_eyes_vehicles', ' googly-eyed '],
     ['vehicles', ' '],
 ]);
 
@@ -68,8 +67,12 @@ const EmptyNoticeForLine: React.FC<{ line: string; age: VehicleCategory }> = ({ 
     return <>{`No new trains on the ${line} Line right now.`}</>;
 };
 
-const getRouteColor = (colors, routeId, focusedRouteId) => {
-    return routeId === focusedRouteId || focusedRouteId === null
+const getRouteColor = (
+    colors: Color,
+    routeId: string,
+    focusedRouteId: string | null | undefined
+) => {
+    return routeId === focusedRouteId || focusedRouteId === null || focusedRouteId === undefined
         ? colors.route
         : colors.unfocusedRoute;
 };
