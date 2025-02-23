@@ -3,10 +3,26 @@ import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { renderTrainLabel } from '../labels';
 import { usePrediction } from '../hooks/usePrediction';
+import { Color, Route, Train } from '../types';
 
 const popoverDistance = 15;
 
-export const TrainPopover = (props) => {
+interface TrainPopoverProps {
+    colors: Color;
+    container: HTMLDivElement;
+    fixedPositionStrategy?: string;
+    isVisible: boolean;
+    referenceRect: {
+        width: number;
+        height: number;
+        top: number;
+        left: number;
+    };
+    route: Route;
+    train: Train;
+}
+
+export const TrainPopover: React.FunctionComponent<TrainPopoverProps> = (props) => {
     const { colors, container, fixedPositionStrategy, isVisible, referenceRect, route, train } =
         props;
     const { direction } = train;

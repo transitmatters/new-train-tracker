@@ -1,6 +1,6 @@
 import { ArrowUpIcon } from './components/icons/ArrowUpIcon';
 import { PersonIcon } from './components/icons/PersonIcon';
-import { Route, Train, Prediction, OccupancyStatus } from './types';
+import { Route, Train, Prediction, OccupancyStatus, CurrentStatus } from './types';
 import { SVGProps } from 'react';
 
 const abbreviateStationName = (station: string) =>
@@ -12,7 +12,7 @@ const abbreviateStationName = (station: string) =>
         .replace('Museum of Fine Arts', 'MFA')
         .replace('Massachusetts Avenue', 'Mass Ave');
 
-const getReadableStatusLabel = (status) => {
+const getReadableStatusLabel = (status: CurrentStatus) => {
     if (status === 'INCOMING_AT' || status === 'IN_TRANSIT_TO') {
         return 'Near';
     }
@@ -68,7 +68,7 @@ const renderDestinationLabel = (train: Train, route: Route) => {
     return <div className="destination">to&nbsp;{destinationName}</div>;
 };
 
-const renderLeadCarLabel = (train: Train, backgroundColor) => {
+const renderLeadCarLabel = (train: Train, backgroundColor: string) => {
     const { label } = train;
     if (!label) {
         return null;
@@ -201,7 +201,7 @@ export const renderTrainLabel = (
     train: Train,
     prediction: Prediction | null,
     route: Route,
-    accentColor
+    accentColor: string
 ) => {
     return (
         <>

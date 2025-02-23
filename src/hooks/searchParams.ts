@@ -1,8 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
-import { Line, VehicleCategory } from '../types';
+import { Line, LineName, VehicleCategory } from '../types';
 
 // Read and update line ID search parameters
-export const useLineSearchParam = (): [string, (newLine: Line) => void] => {
+export const useLineSearchParam = (): [LineName, (newLine: Line) => void] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const line = searchParams.get('line') || 'Green';
@@ -12,7 +12,7 @@ export const useLineSearchParam = (): [string, (newLine: Line) => void] => {
         setSearchParams(searchParams);
     };
 
-    return [line, setLine];
+    return [line as LineName, setLine];
 };
 
 // Read and update train age search parameters

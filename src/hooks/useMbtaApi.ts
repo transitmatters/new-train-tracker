@@ -12,8 +12,17 @@ export interface MBTAApi {
     routesInfo: Record<string, Route> | null;
     stationsByRoute: Record<string, Station[]> | null;
     trainsByRoute: Record<string, Train[]> | null;
-    isReady: boolean;
+    isReady: false;
 }
+
+export interface MBTAApiReady {
+    routesInfo: Record<string, Route>;
+    stationsByRoute: Record<string, Station[]>;
+    trainsByRoute: Record<string, Train[]>;
+    isReady: true;
+}
+
+export type MBTAApiResponse = MBTAApi | MBTAApiReady;
 
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via chalice route defined in app.py
@@ -21,26 +30,20 @@ const getTrainPositions = (routes: string[]): Promise<Train[]> => {
     return fetch(`${APP_DATA_BASE_PATH}/trains/${routes.join(',')}`).then((res) => res.json());
 };
 
-const filterNew = (trains: Train[] | undefined) => {
-    return trains?.filter((train) => train.isNewTrain);
+const filterNew = (trains: Train[]) => {
+    return trains.filter((train) => train.isNewTrain);
 };
 
-const filterOld = (trains: Train[] | undefined) => {
-    return trains?.filter((train) => !train.isNewTrain);
+const filterOld = (trains: Train[]) => {
+    return trains.filter((train) => !train.isNewTrain);
 };
 
-const filterGoogly = (trains: Train[] | undefined) => {
-    return trains?.filter((train) => train.hasGooglyEyes);
-};
-
-const filterTrains = (trains: Train[] | undefined, vehiclesAge: VehicleCategory) => {
-    let selectedTrains: Train[] | undefined = [];
+const filterTrains = (trains: Train[], vehiclesAge: VehicleCategory) => {
+    let selectedTrains: Train[] = [];
     if (vehiclesAge === 'new_vehicles') {
         selectedTrains = filterNew(trains);
     } else if (vehiclesAge === 'old_vehicles') {
         selectedTrains = filterOld(trains);
-    } else if (vehiclesAge === 'googly_eyes_vehicles') {
-        selectedTrains = filterGoogly(trains);
     } else {
         selectedTrains = trains;
     }
@@ -58,7 +61,7 @@ const getRoutesInfo = (routes: string[]) => {
 export const useMbtaApi = (
     lines: Line[],
     vehiclesAge: VehicleCategory = 'new_vehicles'
-): MBTAApi => {
+): MBTAApiResponse => {
     const routeNames = lines
         .map((line) => Object.keys(line.routes))
         .reduce((a, b) => [...a, ...b], [])
@@ -83,7 +86,8 @@ export const useMbtaApi = (
         routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
-        filterTrains(allTrains, vehiclesAge)?.forEach((train) =>
+        // filter trains by selected vehiclesAge
+        filterTrains(allTrains ?? [], vehiclesAge).forEach((train) =>
             nextTrainsByRoute[train.route].push(train)
         );
         return nextTrainsByRoute;
@@ -93,14 +97,19 @@ export const useMbtaApi = (
         queryKey: ['getStations', routeNamesKey],
         queryFn: () => {
             const nextStopsByRoute: Record<string, Station[]> = {};
-            Promise.all(
+            return Promise.all(
                 routeNames.map((routeName) =>
                     getStationsForRoute(routeName).then((data) => {
                         nextStopsByRoute[routeName] = data;
                     })
                 )
-            ).then(() => setStationsByRoute(nextStopsByRoute));
+            ).then(() => {
+                setStationsByRoute(nextStopsByRoute);
+                return nextStopsByRoute;
+            });
         },
+        // if routeNames is empty, don't make the request
+        enabled: !!routeNames && routeNames.length > 0,
         staleTime: ONE_HOUR,
     });
 
@@ -120,5 +129,8 @@ export const useMbtaApi = (
     const isReady =
         !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute && !isLoadingAllTrains;
 
+    if (!isReady) {
+        return { routesInfo: routesInfoByRoute, stationsByRoute, trainsByRoute, isReady };
+    }
     return { routesInfo: routesInfoByRoute, stationsByRoute, trainsByRoute, isReady };
 };
