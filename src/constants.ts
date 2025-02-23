@@ -1,7 +1,8 @@
 export const PRODUCTION = 'traintracker.transitmatters.org';
 export const BETA = 'ntt-beta.labs.transitmatters.org';
 export const LOCAL = 'localhost';
-const FRONTEND_TO_BACKEND_MAP = {
+
+const FRONTEND_TO_BACKEND_MAP: { [key in string]: string } = {
     [PRODUCTION]: 'https://traintracker-api.labs.transitmatters.org',
     [BETA]: 'https://ntt-api-beta.labs.transitmatters.org',
     [LOCAL]: 'http://localhost:5555',

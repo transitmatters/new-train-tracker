@@ -1,23 +1,31 @@
 import * as stats from '../../../public/static_data.json';
+import { LineName } from '../../types';
 import './LineStats.css';
 
 interface Props {
-    line: string;
+    line: LineName;
 }
 
 export const LineStats: React.FunctionComponent<Props> = ({ line }) => {
-    const lineName = stats[line];
+    const lineStats: {
+        totalNewDelivered?: number;
+        totalNewUndelivered?: number;
+        totalOldActive?: number;
+        totalOldInactive?: number;
+        totalActive?: number;
+        totalInactive?: number;
+    } = stats[line];
 
     if (line === 'Blue') {
         return (
             <details className="stats-container">
                 <summary className="stats-title">Stats for {line} line</summary>
-                {lineName ? (
+                {lineStats ? (
                     <table className="stats-table">
                         <tbody>
                             <tr>
                                 <td>Train Cars Active:</td>
-                                <td>{lineName?.totalActive}</td>
+                                <td>{lineStats?.totalOldActive}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -34,24 +42,24 @@ export const LineStats: React.FunctionComponent<Props> = ({ line }) => {
     return (
         <details className="stats-container">
             <summary className="stats-title">Stats for {line} line</summary>
-            {lineName ? (
+            {lineStats ? (
                 <table className="stats-table">
                     <tbody>
                         <tr>
                             <td>New Train Cars Delivered:</td>
-                            <td>{lineName?.totalNewDelivered}</td>
+                            <td>{lineStats?.totalNewDelivered}</td>
                         </tr>
                         <tr>
                             <td>New Train Cars Awaiting Delivery:</td>
-                            <td>{lineName?.totalNewUndelivered}</td>
+                            <td>{lineStats?.totalNewUndelivered}</td>
                         </tr>
                         <tr>
                             <td>Old Train Cars Active:</td>
-                            <td>{lineName?.totalOldActive}</td>
+                            <td>{lineStats?.totalOldActive}</td>
                         </tr>
                         <tr>
                             <td>Old Train Cars Inactive:</td>
-                            <td>{lineName?.totalOldInactive}</td>
+                            <td>{lineStats?.totalOldInactive}</td>
                         </tr>
                     </tbody>
                 </table>

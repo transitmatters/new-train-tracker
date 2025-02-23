@@ -1,7 +1,10 @@
 import logo from '../../public/images/logo.svg';
 
-export const Header = (props) => {
-    const { controls } = props;
+interface Props {
+    controls: React.ReactNode;
+}
+
+export const Header: React.FunctionComponent<Props> = ({ controls }) => {
     return (
         <div className="header">
             <a
