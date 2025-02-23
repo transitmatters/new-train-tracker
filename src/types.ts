@@ -1,5 +1,7 @@
+export type LineName = 'Green' | 'Red' | 'Orange' | 'Blue';
+
 export interface Line {
-    name: string;
+    name: LineName;
     abbreviation: string;
     color: string;
     colorSecondary: string;

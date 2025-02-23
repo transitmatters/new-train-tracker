@@ -114,7 +114,12 @@ export const prerenderLine = (
     line: Line,
     stationsByRoute: Record<string, Station[]>,
     routesInfo: Record<string, Route>
-) => {
+): {
+    routes: Record<string, Route>;
+    stations: Record<string, Station>;
+    pathDirective: string;
+    stationPositions: StationPositions;
+} => {
     const pathBuilder = createPathBuilder();
     const routes: Record<string, Route> = {};
     let stationPositions: StationPositions = {};

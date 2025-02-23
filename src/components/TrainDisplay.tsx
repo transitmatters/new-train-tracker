@@ -15,7 +15,7 @@ const getSpringConfig = () => {
     return undefined;
 };
 
-const getBoundingRectWithinParent = (element: SVGGElement, parent) => {
+const getBoundingRectWithinParent = (element: SVGGElement, parent: HTMLDivElement) => {
     const elementRect = element.getBoundingClientRect();
     const parentRect = parent.getBoundingClientRect();
 
@@ -27,7 +27,7 @@ const getBoundingRectWithinParent = (element: SVGGElement, parent) => {
     };
 };
 
-const drawEquilateralTriangle = (radius) =>
+const drawEquilateralTriangle = (radius: number) =>
     [0, 1, 2]
         .map((idx) => {
             const theta = idx * (2 / 3) * Math.PI;

@@ -10,11 +10,12 @@
       /* Bundler mode */
       "moduleResolution": "bundler",
       "allowImportingTsExtensions": true,
+      "strictFunctionTypes": true,
       "resolveJsonModule": true,
       "isolatedModules": true,
       "noEmit": true,
       "jsx": "react-jsx",
-      "noImplicitAny": false,
+      "noImplicitAny": true,
       /* Linting */
       "strict": true,
       "noUnusedLocals": true,

@@ -255,7 +255,7 @@ const enum BLStations {
     Wonderland = 'place-wondl',
 }
 
-export const blueLine = {
+export const blueLine: Line = {
     name: 'Blue',
     abbreviation: 'BL',
     colorSecondary: '#3434D1',

@@ -13,13 +13,13 @@ import { setCssVariable } from './util';
 
 import favicon from '../../public/images/favicon.png';
 import { CategoryTabPicker } from './CategoryTabPicker';
-import { Line as TLine } from '../types';
+import { LineName, Line as TLine } from '../types';
 
 import { useSearchParams } from 'react-router-dom';
 import { useLineSearchParam, useCategorySearchParam } from '../hooks/searchParams';
 import { TrophySpin } from 'react-loading-indicators';
 
-const lineByTabId: Record<string, TLine> = {
+const lineByTabId: Record<LineName, TLine> = {
     Green: greenLine,
     Orange: orangeLine,
     Red: redLine,
