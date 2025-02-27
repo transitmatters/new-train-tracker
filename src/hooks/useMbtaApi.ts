@@ -39,15 +39,12 @@ const filterOld = (trains: Train[]) => {
 };
 
 const filterTrains = (trains: Train[], vehiclesAge: VehicleCategory) => {
-    let selectedTrains: Train[] = [];
     if (vehiclesAge === 'new_vehicles') {
-        selectedTrains = filterNew(trains);
+        return filterNew(trains);
     } else if (vehiclesAge === 'old_vehicles') {
-        selectedTrains = filterOld(trains);
-    } else {
-        selectedTrains = trains;
+        return filterOld(trains);
     }
-    return selectedTrains;
+    return trains;
 };
 
 const getStationsForRoute = (route: string) => {
@@ -86,8 +83,12 @@ export const useMbtaApi = (
         routeNames.forEach((routeName) => {
             nextTrainsByRoute[routeName] = [];
         });
+        // if allTrains is empty or null, return null
+        if (!allTrains) {
+            return null;
+        }
         // filter trains by selected vehiclesAge
-        filterTrains(allTrains ?? [], vehiclesAge).forEach((train) =>
+        filterTrains(allTrains, vehiclesAge).forEach((train) =>
             nextTrainsByRoute[train.route].push(train)
         );
         return nextTrainsByRoute;
