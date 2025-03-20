@@ -95,7 +95,7 @@ export const TrainDisplay = ({
         }
     }, [element, shouldAutoFocus]);
 
-    const renderTrainMarker = (isFourCar: boolean) => {
+    const renderTrainMarker = (isFourCar: boolean, correctedTheta: number) => {
         return (
             <g>
                 <circle
@@ -108,7 +108,7 @@ export const TrainDisplay = ({
                 />
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
                 {isFourCar ? (
-                    <>
+                    <g transform={`rotate(${90 - correctedTheta})`}>
                         <circle
                             cx={-2}
                             cy={-3}
@@ -121,7 +121,7 @@ export const TrainDisplay = ({
                         <text fontWeight={700} fontSize={3} x={2} y={-1} transform="rotate(-90)">
                             4
                         </text>
-                    </>
+                    </g>
                 ) : (
                     <></>
                 )}
@@ -146,7 +146,7 @@ export const TrainDisplay = ({
                             onClick={() => element?.focus()}
                             onBlur={handleBlur}
                         >
-                            {renderTrainMarker(train.isFourCar)}
+                            {renderTrainMarker(train.isFourCar, correctedTheta)}
                         </g>
                         {popoverContainer && element && (
                             <TrainPopover
