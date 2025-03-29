@@ -17,6 +17,7 @@ details summary {
     margin: 0 auto;
     color: white;
     min-width: 300px;
+    text-align: center;
 }
 
 .td {
@@ -34,4 +35,14 @@ td:nth-child(2) {
 
 .updated {
     font-size: smaller;
+}
+
+.train-type-text {
+    text-align: center;
+    font-variant: all-small-caps;
+}
+
+.stat-count {
+    text-align: center;
+    font-weight: bold;
 }
