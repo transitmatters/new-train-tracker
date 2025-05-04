@@ -143,7 +143,11 @@
                                     "StorageClass": "INTELLIGENT_TIERING_ARCHIVE_ACCESS",
                                     "TransitionInDays": 90
                                 }
-                            ]
+                            ],
+                            "ExpirationInDays": 120,
+                            "Filter": {
+                                "Prefix": ""
+                            }
                         }
                     ]
                 },
