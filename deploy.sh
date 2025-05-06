@@ -29,6 +29,7 @@ done
 $PRODUCTION && ENV_SUFFIX=""                                    || ENV_SUFFIX="-beta"
 $PRODUCTION && CHALICE_STAGE="production"                       || CHALICE_STAGE="beta"
 $PRODUCTION && STACK_NAME="ntt"                                 || STACK_NAME="ntt-beta"
+$PRODUCTION && ENV_TAG="prod"                                   || ENV_TAG="beta"
 
 $PRODUCTION && FRONTEND_ZONE="traintracker.transitmatters.org"  || FRONTEND_ZONE="labs.transitmatters.org"
 $PRODUCTION && FRONTEND_CERT_ARN="$TM_NTT_CERT_ARN"             || FRONTEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
@@ -79,6 +80,7 @@ aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUC
 aws cloudformation deploy --stack-name $STACK_NAME \
     --template-file cfn/packaged.yaml \
     --capabilities CAPABILITY_NAMED_IAM \
+    --tags service=new-train-tracker env=$ENV_TAG \
     --no-fail-on-empty-changeset \
     --parameter-overrides \
     TMFrontendHostname=$FRONTEND_HOSTNAME \
@@ -93,7 +95,10 @@ aws cloudformation deploy --stack-name $STACK_NAME \
     DDTags=$DD_TAGS
 
 popd > /dev/null
-aws s3 sync dist/ s3://$FRONTEND_HOSTNAME
+aws s3 sync dist/ s3://$FRONTEND_HOSTNAME \
+  --cache-control "public, max-age=31536000, immutable"
+aws s3 cp dist/index.html s3://$FRONTEND_HOSTNAME/index.html \
+  --cache-control "no-cache, must-revalidate"
 
 # Grab the cloudfront ID and invalidate its cache
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
