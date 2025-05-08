@@ -70,7 +70,7 @@ DD_TAGS="git.commit.sha:$GIT_SHA,git.repository_url:github.com/transitmatters/ne
 
 npm run build
 
-echo "Deploying Train Tracker CloudFormation stack to $HOSTNAME..."
+echo "Deploying Train Tracker CloudFormation stack from $HOSTNAME..."
 echo "View stack log here: https://$AWS_REGION.console.aws.amazon.com/cloudformation/home?region=$AWS_REGION"
 
 pushd server/ > /dev/null

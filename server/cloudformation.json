@@ -130,24 +130,18 @@
                     "IndexDocument": "index.html",
                     "ErrorDocument": "index.html"
                 },
-                "VersioningConfiguration": {
-                    "Status": "Disabled"
-                },
                 "LifecycleConfiguration": {
                     "Rules": [
                         {
-                            "Id": "ArchiveAndExpireOldObjects",
+                            "Id": "ArchiveOldObjects",
                             "Status": "Enabled",
                             "Transitions": [
                                 {
-                                    "StorageClass": "INTELLIGENT_TIERING_ARCHIVE_ACCESS",
+                                    "StorageClass": "INTELLIGENT_TIERING",
                                     "TransitionInDays": 90
                                 }
                             ],
-                            "ExpirationInDays": 120,
-                            "Filter": {
-                                "Prefix": ""
-                            }
+                            "ExpirationInDays": 120
                         }
                     ]
                 },
