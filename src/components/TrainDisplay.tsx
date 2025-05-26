@@ -100,6 +100,10 @@ export const TrainDisplay = ({
     }, [element, shouldAutoFocus]);
 
     const renderTrainMarker = (isFourCar: boolean, correctedTheta: number) => {
+        const prideColors = ['#e40303', '#ff8c00', '#ffed00', '#008018', '#0066ff', '#732982'];
+        const circumference = 2 * Math.PI * 3.326;
+        const segmentLength = circumference / 6;
+
         return (
             <g>
                 <circle
@@ -107,63 +111,49 @@ export const TrainDisplay = ({
                     cy={0}
                     r={3.326}
                     fill={colors.train}
-                    stroke={isTracked ? 'white' : undefined}
+                    stroke={!isPrideCar && isTracked ? 'white' : 'none'}
                     textAnchor="middle"
                 />
+                {isPrideCar && (
+                    <g>
+                        <animateTransform
+                            attributeName="transform"
+                            type="rotate"
+                            values="0 0 0;360 0 0"
+                            dur="3s"
+                            repeatCount="indefinite"
+                        />
+                        {prideColors.map((color, index) => (
+                            <circle
+                                key={index}
+                                cx={0}
+                                cy={0}
+                                r={3.326}
+                                fill="none"
+                                stroke={color}
+                                strokeWidth={0.8}
+                                strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}
+                                strokeDashoffset={-index * segmentLength}
+                                transform={`rotate(-90)`}
+                            />
+                        ))}
+                    </g>
+                )}
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
                 {isFourCar ? (
                     <g transform={`rotate(${90 - correctedTheta})`}>
-                        <defs>
-                            <clipPath id="prideFlag">
-                                <circle cx={-2} cy={-3} r={2} />
-                            </clipPath>
-                        </defs>
-                        <g clipPath="url(#prideFlag)">
-                            {/* Pride flag stripes */}
-                            <rect x={-4} y={-5} width={4} height={0.67} fill="#e40303" />
-                            <rect x={-4} y={-4.33} width={4} height={0.67} fill="#ff8c00" />
-                            <rect x={-4} y={-3.66} width={4} height={0.67} fill="#ffed00" />
-                            <rect x={-4} y={-2.99} width={4} height={0.67} fill="#008018" />
-                            <rect x={-4} y={-2.32} width={4} height={0.67} fill="#0066ff" />
-                            <rect x={-4} y={-1.65} width={4} height={0.67} fill="#732982" />
-                        </g>
                         <circle
                             cx={-2}
                             cy={-3}
                             r={2}
-                            fill="none"
-                            stroke={isTracked ? 'white' : '#333'}
-                            strokeWidth={0.2}
+                            fill={'#ffffff'}
+                            stroke={isTracked ? 'white' : undefined}
+                            textAnchor="middle"
                             style={{ filter: 'drop-shadow( 0px 0px 1px rgba(0, 0, 0, .3))' }}
                         />
-                    </g>
-                ) : (
-                    <></>
-                )}
-                {isPrideCar ? (
-                    <g transform={`rotate(${90 - correctedTheta})`}>
-                        <defs>
-                            <clipPath id="prideFlag">
-                                <circle cx={-2} cy={-3} r={2} />
-                            </clipPath>
-                        </defs>
-                        <g clipPath="url(#prideFlag)">
-                            <rect x={-4} y={-5} width={4} height={0.67} fill="#e40303" />
-                            <rect x={-4} y={-4.33} width={4} height={0.67} fill="#ff8c00" />
-                            <rect x={-4} y={-3.66} width={4} height={0.67} fill="#ffed00" />
-                            <rect x={-4} y={-2.99} width={4} height={0.67} fill="#008018" />
-                            <rect x={-4} y={-2.32} width={4} height={0.67} fill="#0066ff" />
-                            <rect x={-4} y={-1.65} width={4} height={0.67} fill="#732982" />
-                        </g>
-                        <circle
-                            cx={-2}
-                            cy={-3}
-                            r={2}
-                            fill="none"
-                            stroke={isTracked ? 'white' : '#333'}
-                            strokeWidth={0.2}
-                            style={{ filter: 'drop-shadow( 0px 0px 1px rgba(0, 0, 0, .3))' }}
-                        />
+                        <text fontWeight={700} fontSize={3} x={2} y={-1} transform="rotate(-90)">
+                            4
+                        </text>
                     </g>
                 ) : (
                     <></>
