@@ -55,7 +55,11 @@ export const TrainDisplay = ({
     onFocus: () => void;
     onBlur: () => void;
 }) => {
-    const { direction } = train;
+    const { direction, label } = train;
+
+    const carIds = label.split('-');
+    const isPrideCar = carIds.includes('3706');
+
     const { pathInterpolator, stations } = route;
 
     const [element, setElement] = useState<SVGGElement | null>(null);
@@ -109,18 +113,57 @@ export const TrainDisplay = ({
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
                 {isFourCar ? (
                     <g transform={`rotate(${90 - correctedTheta})`}>
+                        <defs>
+                            <clipPath id="prideFlag">
+                                <circle cx={-2} cy={-3} r={2} />
+                            </clipPath>
+                        </defs>
+                        <g clipPath="url(#prideFlag)">
+                            {/* Pride flag stripes */}
+                            <rect x={-4} y={-5} width={4} height={0.67} fill="#e40303" />
+                            <rect x={-4} y={-4.33} width={4} height={0.67} fill="#ff8c00" />
+                            <rect x={-4} y={-3.66} width={4} height={0.67} fill="#ffed00" />
+                            <rect x={-4} y={-2.99} width={4} height={0.67} fill="#008018" />
+                            <rect x={-4} y={-2.32} width={4} height={0.67} fill="#0066ff" />
+                            <rect x={-4} y={-1.65} width={4} height={0.67} fill="#732982" />
+                        </g>
                         <circle
                             cx={-2}
                             cy={-3}
                             r={2}
-                            fill={'#ffffff'}
-                            stroke={isTracked ? 'white' : undefined}
-                            textAnchor="middle"
+                            fill="none"
+                            stroke={isTracked ? 'white' : '#333'}
+                            strokeWidth={0.2}
                             style={{ filter: 'drop-shadow( 0px 0px 1px rgba(0, 0, 0, .3))' }}
                         />
-                        <text fontWeight={700} fontSize={3} x={2} y={-1} transform="rotate(-90)">
-                            4
-                        </text>
+                    </g>
+                ) : (
+                    <></>
+                )}
+                {isPrideCar ? (
+                    <g transform={`rotate(${90 - correctedTheta})`}>
+                        <defs>
+                            <clipPath id="prideFlag">
+                                <circle cx={-2} cy={-3} r={2} />
+                            </clipPath>
+                        </defs>
+                        <g clipPath="url(#prideFlag)">
+                            <rect x={-4} y={-5} width={4} height={0.67} fill="#e40303" />
+                            <rect x={-4} y={-4.33} width={4} height={0.67} fill="#ff8c00" />
+                            <rect x={-4} y={-3.66} width={4} height={0.67} fill="#ffed00" />
+                            <rect x={-4} y={-2.99} width={4} height={0.67} fill="#008018" />
+                            <rect x={-4} y={-2.32} width={4} height={0.67} fill="#0066ff" />
+                            <rect x={-4} y={-1.65} width={4} height={0.67} fill="#732982" />
+                        </g>
+                        <circle
+                            cx={-2}
+                            cy={-3}
+                            r={2}
+                            fill="none"
+                            stroke={isTracked ? 'white' : '#333'}
+                            strokeWidth={0.2}
+                            style={{ filter: 'drop-shadow( 0px 0px 1px rgba(0, 0, 0, .3))' }}
+                        />
                     </g>
                 ) : (
                     <></>
