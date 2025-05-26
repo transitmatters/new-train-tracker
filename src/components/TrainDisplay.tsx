@@ -120,7 +120,7 @@ export const TrainDisplay = ({
                             attributeName="transform"
                             type="rotate"
                             values="0 0 0;360 0 0"
-                            dur="3s"
+                            dur="5s"
                             repeatCount="indefinite"
                         />
                         {prideColors.map((color, index) => (
