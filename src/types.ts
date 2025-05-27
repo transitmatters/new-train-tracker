@@ -75,6 +75,7 @@ export interface Train {
     carriages: Carriage[];
     tripId: string;
     updatedAt: string;
+    isPrideCar: boolean;
 }
 
 export interface Station {
@@ -123,7 +124,7 @@ export interface Pair {
     train: Train;
 }
 
-export type VehicleCategory = 'vehicles' | 'new_vehicles' | 'old_vehicles';
+export type VehicleCategory = 'vehicles' | 'new_vehicles' | 'old_vehicles' | 'pride';
 
 export interface Prediction {
     departure_time: Date;
