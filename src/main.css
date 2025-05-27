@@ -223,9 +223,6 @@ a {
         #0066ff 66.66%,
         #732982 83.33%
     );
-    font-size: 0.7em;
-    transform: scale(1.05);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
     position: relative;
     overflow: hidden;
 }
