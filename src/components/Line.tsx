@@ -1,21 +1,22 @@
-import { useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import classNames from 'classnames';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
-import { prerenderLine } from '../prerender';
 import { renderTextTrainlabel } from '../labels';
+import { prerenderLine } from '../prerender';
 
-import { TrainDisplay } from './TrainDisplay';
-import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
-import { Line as TLine, Pair, StationPositions, VehicleCategory, Color } from '../types';
-import { MBTAApiReady } from '../hooks/useMbtaApi';
-import { useLastSightingByLine } from '../hooks/useLastSighting';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useLastSightingByLine } from '../hooks/useLastSighting';
+import { MBTAApiReady } from '../hooks/useMbtaApi';
+import { Color, Pair, StationPositions, Line as TLine, VehicleCategory } from '../types';
+import { TrainDisplay } from './TrainDisplay';
+import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
 
 const AGE_WORD_MAP = new Map<VehicleCategory, string>([
     ['new_vehicles', ' new '],
     ['old_vehicles', ' old '],
     ['vehicles', ' '],
+    ['pride', ' pride '],
 ]);
 
 interface LineProps {

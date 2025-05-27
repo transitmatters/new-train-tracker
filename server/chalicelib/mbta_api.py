@@ -126,6 +126,8 @@ async def vehicle_data_for_routes(route_ids):
             # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
+            is_pride_car = "3706" in vehicle["label"].split("-")
+
             vehicles_to_display.append(
                 {
                     "vehicleId": vehicle["id"],
@@ -141,6 +143,7 @@ async def vehicle_data_for_routes(route_ids):
                     "isFourCar": len(vehicle["carriages"]) == 4,
                     "carriages": vehicle["carriages"],
                     "updatedAt": vehicle["updated_at"],
+                    "isPrideCar": is_pride_car,
                 }
             )
 

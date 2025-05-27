@@ -55,10 +55,7 @@ export const TrainDisplay = ({
     onFocus: () => void;
     onBlur: () => void;
 }) => {
-    const { direction, label } = train;
-
-    const carIds = label.split('-');
-    const isPrideCar = carIds.includes('3706');
+    const { direction, isPrideCar } = train;
 
     const { pathInterpolator, stations } = route;
 
