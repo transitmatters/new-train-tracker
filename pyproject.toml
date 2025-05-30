@@ -9,22 +9,22 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "~3.12"
 aiohttp = "~3.11.16"
-boto3 = "~1.37.30"
+boto3 = "~1.38.26"
 json-api-doc = "0.15.0"
 pytz = "^2025.2"
 schedule = "1.2.2"
-datadog_lambda = "~6.107.0"
+datadog_lambda = "~6.110.0"
 tzdata = "^2025.2"
 
 [tool.poetry.group.dev.dependencies]
 pip = ">=24.0"
-chalice = "1.31.4"
+chalice = "1.32.0"
 black = "^25.1.0"
-pylint = "3.3.6"
+pylint = "3.3.7"
 flake8 = "7.2.0"
 
 [tool.poetry.requires-plugins]
-poetry-plugin-export = "^1.9.0"
+poetry-plugin-export = ">=1.9.0"
 
 [tool.black]
 line-length = 120
