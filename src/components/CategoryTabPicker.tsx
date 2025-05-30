@@ -9,6 +9,7 @@ const trainTypes: TrainCategory[] = [
     { key: 'old_vehicles', label: 'Old' },
     { key: 'new_vehicles', label: 'New' },
     { key: 'vehicles', label: 'All' },
+    { key: 'pride', label: 'Pride' },
 ];
 
 interface CategoryTabPickerProps {

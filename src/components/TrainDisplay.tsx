@@ -55,7 +55,8 @@ export const TrainDisplay = ({
     onFocus: () => void;
     onBlur: () => void;
 }) => {
-    const { direction } = train;
+    const { direction, isPrideCar } = train;
+
     const { pathInterpolator, stations } = route;
 
     const [element, setElement] = useState<SVGGElement | null>(null);
@@ -96,6 +97,10 @@ export const TrainDisplay = ({
     }, [element, shouldAutoFocus]);
 
     const renderTrainMarker = (isFourCar: boolean, correctedTheta: number) => {
+        const prideColors = ['#e40303', '#ff8c00', '#ffed00', '#008018', '#0066ff', '#732982'];
+        const circumference = 2 * Math.PI * 3.326;
+        const segmentLength = circumference / 6;
+
         return (
             <g>
                 <circle
@@ -103,9 +108,34 @@ export const TrainDisplay = ({
                     cy={0}
                     r={3.326}
                     fill={colors.train}
-                    stroke={isTracked ? 'white' : undefined}
+                    stroke={!isPrideCar && isTracked ? 'white' : 'none'}
                     textAnchor="middle"
                 />
+                {isPrideCar && (
+                    <g>
+                        <animateTransform
+                            attributeName="transform"
+                            type="rotate"
+                            values="0 0 0;360 0 0"
+                            dur="5s"
+                            repeatCount="indefinite"
+                        />
+                        {prideColors.map((color, index) => (
+                            <circle
+                                key={index}
+                                cx={0}
+                                cy={0}
+                                r={3.326}
+                                fill="none"
+                                stroke={color}
+                                strokeWidth={0.8}
+                                strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}
+                                strokeDashoffset={-index * segmentLength}
+                                transform={`rotate(-90)`}
+                            />
+                        ))}
+                    </g>
+                )}
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />
                 {isFourCar ? (
                     <g transform={`rotate(${90 - correctedTheta})`}>

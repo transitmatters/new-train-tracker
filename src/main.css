@@ -75,12 +75,12 @@ a {
 }
 
 .screenreader-only {
-	position: absolute;
-	left: -10000px;
-	top: auto;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
 
 .header .title {
@@ -148,7 +148,6 @@ a {
     transform: translate3d(0, 0, 0);
     user-select: none;
     align-self: center;
-
 }
 
 .tab-picker > .selected-indicator {
@@ -157,7 +156,8 @@ a {
     left: 0;
     height: 100%;
     border-radius: 100px;
-    transition: transform 500ms cubic-bezier(0.86, 0, 0.07, 1), 
+    transition:
+        transform 500ms cubic-bezier(0.86, 0, 0.07, 1),
         width 500ms cubic-bezier(0.86, 0, 0.07, 1),
         background-color 0ms cubic-bezier(0.86, 0, 0.07, 1);
 }
@@ -188,7 +188,7 @@ a {
     font-size: 0.9em;
     font-family: 'Nunito', sans-serif;
     padding: 0;
-    }
+}
 
 .tab-picker > .tab:not(:last-child) {
     margin-right: 10px;
@@ -211,6 +211,58 @@ a {
     height: 1.5em;
     width: 2.75em;
     padding: 0.25em;
+}
+
+.tab-picker > .tab[id='pride'] > .age {
+    background: linear-gradient(
+        45deg,
+        #e40303 0%,
+        #ff8c00 16.66%,
+        #ffed00 33.33%,
+        #008018 50%,
+        #0066ff 66.66%,
+        #732982 83.33%
+    );
+    position: relative;
+    overflow: hidden;
+}
+
+.tab-picker > .tab[id='pride'] > .age::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 70%
+    );
+    animation: sparkle 2.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes sparkle {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tab-picker > .tab[id='pride'] > .age::before {
+        animation: none;
+        opacity: 0;
+    }
 }
 
 .tab-picker > .tab > .label {
@@ -286,38 +338,38 @@ a {
     transition: 500ms transform cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.train-popover .occupancy-container { 
+.train-popover .occupancy-container {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.train-popover .occupancy-details-container { 
+.train-popover .occupancy-details-container {
     padding-left: 6px;
 }
 
-.train-popover .occupancy-status-container { 
+.train-popover .occupancy-status-container {
     padding-left: 2px;
     padding-top: 2px;
     position: relative;
 }
 
-.train-popover .consist-front-icon { 
+.train-popover .consist-front-icon {
     width: 20px;
     height: 20px;
     margin-inline: -5px;
 }
 
-.train-popover .occupancy-status-icon { 
-    width: 12px; 
-    height: 12px; 
+.train-popover .occupancy-status-icon {
+    width: 12px;
+    height: 12px;
     position: 'absolute';
 }
 
 .train-popover .occupancy-status-text {
     font-size: 8px;
     padding-left: 1px;
-    color: "#404040";
+    color: '#404040';
 }
 
 .train-popover .occupancy-label-container {
