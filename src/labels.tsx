@@ -37,6 +37,15 @@ const getLastUpdatedAt = (updatedAt: Date) => {
     return '';
 };
 
+const getVehicleSpeed = (vehicleSpeed: number | null) => {
+    if (vehicleSpeed) {
+        // Convert m/s to mph
+        const mph = vehicleSpeed * 2.23694;
+        return `Speed: ${Math.round((mph + Number.EPSILON) * 100) / 100} mph`;
+    }
+    return '';
+};
+
 const getStationNameAndStatusForTrain = (train: Train, route: Route) => {
     const { stations } = route;
     const nearStation = stations?.find((st) => st.id === train.stationId);
@@ -85,11 +94,13 @@ const renderDetailsLabel = (train: Train, prediction: Prediction | null) => {
         prediction ? new Date(prediction.departure_time) : null
     );
     const lastUpdated = getLastUpdatedAt(new Date(train.updatedAt));
+    const speed = getVehicleSpeed(train.speed);
 
     return (
         <div className="details">
             <p>{departurePrediction}</p>
             <p>{lastUpdated}</p>
+            <p>{speed}</p>
         </div>
     );
 };
