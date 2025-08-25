@@ -23,6 +23,10 @@
         "totalActive": 94,
         "totalInactive": 0
     },
+    "Mattapan": {
+        "totalActive": 0,
+        "totalInactive": 0
+    },
     "Sources": {
         "fleet_numbers": "http://roster.transithistory.org/"
     },
