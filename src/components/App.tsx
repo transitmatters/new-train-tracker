@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect } from 'react';
 import Favicon from 'react-favicon';
 
-import { greenLine, orangeLine, redLine, blueLine } from '../lines';
+import { greenLine, orangeLine, redLine, blueLine, mattapanLine } from '../lines';
 import { useMbtaApi } from '../hooks/useMbtaApi';
 
 import { Line } from './Line';
@@ -24,6 +24,7 @@ const lineByTabId: Record<LineName, TLine> = {
     Orange: orangeLine,
     Red: redLine,
     Blue: blueLine,
+    Mattapan: mattapanLine,
 };
 
 export const App: React.FC = () => {
