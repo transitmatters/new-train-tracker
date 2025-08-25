@@ -144,6 +144,7 @@ async def vehicle_data_for_routes(route_ids):
                     "carriages": vehicle["carriages"],
                     "updatedAt": vehicle["updated_at"],
                     "isPrideCar": is_pride_car,
+                    "speed": vehicle["speed"],
                 }
             )
 

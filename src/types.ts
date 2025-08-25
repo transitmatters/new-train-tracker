@@ -76,6 +76,7 @@ export interface Train {
     tripId: string;
     updatedAt: string;
     isPrideCar: boolean;
+    speed: number | null;
 }
 
 export interface Station {
