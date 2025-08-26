@@ -275,3 +275,29 @@ export const blueLine: Line = {
         },
     },
 };
+
+const enum MattapanStations {
+    Ashmont = 'place-asmnl',
+    Mattapan = 'place-matt',
+}
+
+export const mattapanLine: Line = {
+    name: 'Mattapan',
+    abbreviation: 'MT',
+    color: '#E37C7C',
+    colorSecondary: '#D13434',
+    getStationLabelPosition: () => 'right',
+    fixedTrainLabelPosition: 'right',
+    routes: {
+        Mattapan: {
+            shape: [
+                start(0, 0, 90),
+                stationRange({
+                    start: MattapanStations.Ashmont,
+                    end: MattapanStations.Mattapan,
+                    commands: [line(150)],
+                }),
+            ],
+        },
+    },
+};

@@ -1,4 +1,4 @@
-export type LineName = 'Green' | 'Red' | 'Orange' | 'Blue';
+export type LineName = 'Green' | 'Red' | 'Orange' | 'Blue' | 'Mattapan';
 
 export interface Line {
     name: LineName;
