@@ -39,11 +39,21 @@ RED_A_STOP_IDS = [
     "70094",
 ]
 
-CR_Franklin_A_STOP_IDS = ["place-FB-0303","place-FB-0275","place-FB-0230","place-FB-0191"]
+CR_Franklin_A_STOP_IDS = ["place-FB-0303", "place-FB-0275", "place-FB-0230", "place-FB-0191"]
 CR_Franklin_B_STOP_IDS = ["place-FS-0049"]
 
-CR_Providence_A_STOP_IDS = ["place-SB-0156","place-SB-0189"]
-CR_Providence_B_STOP_IDS = ["place-NEC-1659","place-NEC-1768", "place-NEC-1851", "place-NEC-1891", "place-NEC-1919", "place-NEC-1969", "place-NEC-2040", "place-NEC-2108"]
+CR_Providence_A_STOP_IDS = ["place-SB-0156", "place-SB-0189"]
+CR_Providence_B_STOP_IDS = [
+    "place-NEC-1659",
+    "place-NEC-1768",
+    "place-NEC-1851",
+    "place-NEC-1891",
+    "place-NEC-1919",
+    "place-NEC-1969",
+    "place-NEC-2040",
+    "place-NEC-2108",
+]
+
 
 # "normalizes" route id by aggregating "Red-A" and "Red-B" ids into "Red"
 def normalize_custom_route_name(route_id):
@@ -53,7 +63,7 @@ def normalize_custom_route_name(route_id):
         return "CR-Franklin"
     if route_id in ("CR-Providence-A", "CR-Providence-B"):
         return "CR-Providence"
-    else: 
+    else:
         return route_id
 
 
@@ -82,7 +92,7 @@ def derive_custom_route_name(vehicle):
             return "Red-B"
         except Exception:
             pass
-        
+
     if default_route_id == "CR-Franklin":
         # First try to figure it out by route pattern
         try:
@@ -97,7 +107,7 @@ def derive_custom_route_name(vehicle):
             return "CR-Franklin-B"
         except Exception:
             pass
-        
+
     if default_route_id == "CR-Providence":
         # First try to figure it out by route pattern
         try:
@@ -129,7 +139,7 @@ def derive_custom_direction_destinations(route, normalized_route_name, custom_ro
             return ["Forge Park/495", "South Station"]
         else:
             return ["Foxboro", "South Station"]
-        
+
     if normalized_route_name == "CR-Providence":
         if custom_route_name == "CR-Providence-A":
             return ["Wickford Junction", "South Station"]
