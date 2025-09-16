@@ -169,6 +169,23 @@ a {
     width: 100%;
 }
 
+.separated-line-tabs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.separated-line-tabs .subway-tabs,
+.separated-line-tabs .commuter-rail-tabs {
+    display: flex;
+    justify-content: center;
+}
+
+.separated-line-tabs .commuter-rail-tabs {
+    margin-top: 5px;
+}
+
 @media (pointer: none) {
     .tab-picker > .tab:focus {
         outline: none;

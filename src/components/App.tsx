@@ -1,13 +1,29 @@
 import { useEffect, useLayoutEffect } from 'react';
 import Favicon from 'react-favicon';
 
-import { greenLine, orangeLine, redLine, blueLine, mattapanLine } from '../lines';
+import {
+    greenLine,
+    orangeLine,
+    redLine,
+    blueLine,
+    mattapanLine,
+    crworcesterLine,
+    crfairmountLine,
+    crfitchburgLine,
+    crkingstonLine,
+    crLowellLine,
+    crNeedhamLine,
+    crGreenbushLine,
+    crHaverillLine,
+    crFranklinLine,
+    crProvidenceLine,
+} from '../lines';
 import { useMbtaApi } from '../hooks/useMbtaApi';
 
 import { Line } from './Line';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { LineTabPicker } from './LineTabPicker';
+import { SeparatedLineTabPicker } from './SeparatedLineTabPicker';
 import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
 
@@ -25,6 +41,16 @@ const lineByTabId: Record<LineName, TLine> = {
     Red: redLine,
     Blue: blueLine,
     Mattapan: mattapanLine,
+    Worcester: crworcesterLine,
+    Fairmount: crfairmountLine,
+    Fitchburg: crfitchburgLine,
+    Kingston: crkingstonLine,
+    Lowell: crLowellLine,
+    Needham: crNeedhamLine,
+    Greenbush: crGreenbushLine,
+    Haverhill: crHaverillLine,
+    Franklin: crFranklinLine,
+    Providence: crProvidenceLine,
 };
 
 export const App: React.FC = () => {
@@ -80,7 +106,7 @@ export const App: React.FC = () => {
             <div className={'selectors'}>
                 <CategoryTabPicker tabColor={selectedLine.color} />
                 {api.trainsByRoute && (
-                    <LineTabPicker
+                    <SeparatedLineTabPicker
                         lines={Object.values(lineByTabId)}
                         trainsByRoute={api.trainsByRoute}
                     />

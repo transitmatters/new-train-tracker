@@ -128,6 +128,8 @@ async def vehicle_data_for_routes(route_ids):
 
             is_pride_car = any(carriage.get("label") == "3706" for carriage in vehicle["carriages"])
 
+            is_heritage_car = any([vehicle["label"] == "1030"])
+            
             vehicles_to_display.append(
                 {
                     "vehicleId": vehicle["id"],
@@ -144,6 +146,7 @@ async def vehicle_data_for_routes(route_ids):
                     "carriages": vehicle["carriages"],
                     "updatedAt": vehicle["updated_at"],
                     "isPrideCar": is_pride_car,
+                    "isHeritageCar": is_heritage_car,
                     "speed": vehicle["speed"],
                 }
             )

@@ -17,6 +17,7 @@ const AGE_WORD_MAP = new Map<VehicleCategory, string>([
     ['old_vehicles', ' old '],
     ['vehicles', ' '],
     ['pride', ' pride '],
+    ['heritage', ' heritage '],
 ]);
 
 interface LineProps {

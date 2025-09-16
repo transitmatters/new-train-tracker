@@ -42,6 +42,10 @@ const filterPride = (trains: Train[]) => {
     return trains.filter((train) => train.isPrideCar);
 };
 
+const filterHeritage = (trains: Train[]) => {
+    return trains.filter((train) => train.isHeritageCar);
+};
+
 const filterTrains = (trains: Train[], vehiclesAge: VehicleCategory) => {
     if (vehiclesAge === 'new_vehicles') {
         return filterNew(trains);
@@ -49,6 +53,8 @@ const filterTrains = (trains: Train[], vehiclesAge: VehicleCategory) => {
         return filterOld(trains);
     } else if (vehiclesAge === 'pride') {
         return filterPride(trains);
+    } else if (vehiclesAge == 'heritage') {
+        return filterHeritage(trains);
     }
     return trains;
 };
