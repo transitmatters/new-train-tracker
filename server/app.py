@@ -28,7 +28,8 @@ else:
 def trains(route_ids_string):
     route_ids = route_ids_string.split(",")
     vehicle_data = asyncio.run(mbta_api.vehicle_data_for_routes(route_ids))
-    return Response(json.dumps(vehicle_data), headers={"Cache-Control": "no-cache", "Access-Control-Allow-Origin": "*"})
+    # Cache for 5 seconds to reduce API Gateway costs for multiple concurrent users
+    return Response(json.dumps(vehicle_data), headers={"Cache-Control": "public, max-age=5", "Access-Control-Allow-Origin": "*"})
 
 
 # takes a single route id
@@ -36,7 +37,8 @@ def trains(route_ids_string):
 @app.route("/stops/{route_id}", cors=cors_config)
 def stops(route_id):
     stop_data = asyncio.run(mbta_api.stops_for_route(route_id))
-    return Response(json.dumps(stop_data), headers={"Content-Type": "application/json"})
+    # Cache for 7 days - stops rarely change
+    return Response(json.dumps(stop_data), headers={"Content-Type": "application/json", "Cache-Control": "public, max-age=604800"})
 
 
 # takes a comma-delimited string of route ids
@@ -45,7 +47,8 @@ def stops(route_id):
 def routes(route_ids_string):
     route_ids = route_ids_string.split(",")
     route_data = asyncio.run(mbta_api.routes_info(route_ids))
-    return Response(json.dumps(route_data), headers={"Content-Type": "application/json"})
+    # Cache for 7 days - route info rarely changes
+    return Response(json.dumps(route_data), headers={"Content-Type": "application/json", "Cache-Control": "public, max-age=604800"})
 
 
 # takes a single trip id
@@ -53,7 +56,8 @@ def routes(route_ids_string):
 @app.route("/predictions/{trip_id}/{stop_id}", cors=cors_config)
 def vehicles(trip_id, stop_id):
     departure = asyncio.run(mbta_api.trip_departure_predictions(trip_id, stop_id))
-    return Response(json.dumps(departure), headers={"Content-Type": "application/json"})
+    # Cache for 10 seconds to reduce API Gateway costs for multiple concurrent users
+    return Response(json.dumps(departure), headers={"Content-Type": "application/json", "Cache-Control": "public, max-age=10"})
 
 
 @app.schedule(Cron("0/10", "0-6,9-23", "*", "*", "?", "*"))

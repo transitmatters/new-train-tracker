@@ -1,4 +1,4 @@
-import { APP_DATA_BASE_PATH, TEN_SECONDS } from '../constants';
+import { APP_DATA_BASE_PATH, FIFTEEN_SECONDS } from '../constants';
 import { useQuery } from '@tanstack/react-query';
 
 const getPrediction = (tripId: string | null, stopId: string) => {
@@ -16,7 +16,7 @@ export const usePrediction = (tripId: string | null, stopId: string) => {
         queryKey: ['getPrediction', tripId, stopId],
         queryFn: () => getPrediction(tripId, stopId),
         enabled: !!tripId,
-        staleTime: TEN_SECONDS,
+        staleTime: FIFTEEN_SECONDS,
     });
 
     return prediction;

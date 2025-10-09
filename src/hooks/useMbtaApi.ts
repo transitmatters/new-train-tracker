@@ -2,10 +2,10 @@
 File that contains a React hook that provides data from the MBTA API
 */
 
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 import { Line, Route, Station, Train, VehicleCategory } from '../types';
-import { APP_DATA_BASE_PATH, ONE_HOUR, TEN_SECONDS } from '../constants';
+import { APP_DATA_BASE_PATH, ONE_DAY, FIFTEEN_SECONDS } from '../constants';
 import { useQuery } from '@tanstack/react-query';
 
 export interface MBTAApi {
@@ -80,8 +80,8 @@ export const useMbtaApi = (
         queryFn: () => getTrainPositions(routeNames),
         // if routeNames is empty, don't make the request
         enabled: !!routeNames,
-        staleTime: TEN_SECONDS,
-        refetchInterval: TEN_SECONDS,
+        staleTime: FIFTEEN_SECONDS,
+        refetchInterval: FIFTEEN_SECONDS,
     });
 
     const trainsByRoute = useMemo(() => {
@@ -117,21 +117,26 @@ export const useMbtaApi = (
         },
         // if routeNames is empty, don't make the request
         enabled: !!routeNames && routeNames.length > 0,
-        staleTime: ONE_HOUR,
+        staleTime: ONE_DAY,
     });
 
-    useEffect(() => {
-        const nextRoutesInfo: Record<string, Route> = {};
-        getRoutesInfo(routeNames).then((routes: Route[]) => {
-            routes.forEach((route: Route) => {
-                if (route.id) {
-                    nextRoutesInfo[route.id] = route;
-                }
+    useQuery({
+        queryKey: ['getRoutesInfo', routeNamesKey],
+        queryFn: () => {
+            const nextRoutesInfo: Record<string, Route> = {};
+            return getRoutesInfo(routeNames).then((routes: Route[]) => {
+                routes.forEach((route: Route) => {
+                    if (route.id) {
+                        nextRoutesInfo[route.id] = route;
+                    }
+                });
+                setRoutesInfoByRoute(nextRoutesInfo);
+                return nextRoutesInfo;
             });
-            setRoutesInfoByRoute(nextRoutesInfo);
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [routeNamesKey]);
+        },
+        enabled: !!routeNames && routeNames.length > 0,
+        staleTime: ONE_DAY,
+    });
 
     const isReady =
         !!stationsByRoute && !!trainsByRoute && !!routesInfoByRoute && !isLoadingAllTrains;
