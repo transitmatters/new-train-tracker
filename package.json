@@ -1,7 +1,7 @@
 {
     "name": "new-train-tracker",
-    "version": "2.4.0",
-    "description": "New Train Tracker by TransitMattters",
+    "version": "2.4.1",
+    "description": "New Train Tracker by TransitMatters",
     "main": "index.tsx",
     "scripts": {
         "build": "tsc && vite build",
@@ -47,18 +47,18 @@
         "@types/node": "^22.15.0",
         "@types/react": "^18.3.13",
         "@types/react-dom": "^18.3.1",
-        "@typescript-eslint/eslint-plugin": "^8.33.0",
-        "@typescript-eslint/parser": "^8.33.0",
+        "@typescript-eslint/eslint-plugin": "^8.46.0",
+        "@typescript-eslint/parser": "^8.46.0",
         "@vitejs/plugin-react": "^4.3.4",
         "autoprefixer": "^10.4.21",
-        "concurrently": "^9.1.2",
+        "concurrently": "^9.2.1",
         "eslint": "^8.57.0",
-        "eslint-config-prettier": "^10.1.5",
+        "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-prettier": "^5.4.1",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^5.2.0",
-        "prettier": "^3.5.3",
+        "prettier": "^3.6.2",
         "typescript": "^5.8.3",
         "vite": "^6.3.5"
     }

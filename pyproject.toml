@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "new-train-tracker"
-version = "2.4.0"
+version = "2.4.1"
 description = "New Train Tracker by TransitMattters"
 authors = ["TransitMatters Labs Team"]
 license = "MIT"
@@ -13,13 +13,13 @@ boto3 = "~1.38.26"
 json-api-doc = "0.15.0"
 pytz = "^2025.2"
 schedule = "1.2.2"
-datadog_lambda = "~6.111.0"
+datadog_lambda = "~8.114.0"
 tzdata = "^2025.2"
 
 [tool.poetry.group.dev.dependencies]
 pip = ">=24.1"
 chalice = "1.32.0"
-black = "^25.1.0"
+black = "^25.9.0"
 pylint = "3.3.7"
 flake8 = "7.3.0"
 
