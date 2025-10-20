@@ -5,6 +5,10 @@ interface LineStatsTableProps {
     stats: {
         totalNewDelivered?: number;
         totalNewUndelivered?: number;
+        totalType7Active?: number;
+        totalType7Inactive?: number;
+        totalType8Active?: number;
+        totalType8Inactive?: number;
         totalType9Delivered?: number;
         totalType9Undelivered?: number;
         totalType10Delivered?: number;
@@ -24,20 +28,6 @@ export const LineStatsTable: React.FC<LineStatsTableProps> = ({ line, stats }) =
                 <tbody>
                     <tr>
                         <td>
-                            New <span className="train-type-text">Type 9</span> Train Cars
-                            Delivered:
-                        </td>
-                        <td className="stat-count">{stats.totalType9Delivered}</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            New <span className="train-type-text">Type 9</span> Train Cars Awaiting
-                            Delivery:
-                        </td>
-                        <td className="stat-count">{stats.totalType9Undelivered}</td>
-                    </tr>
-                    <tr>
-                        <td>
                             New <span className="train-type-text">Type 10</span> Train Cars
                             Delivered:
                         </td>
@@ -51,12 +41,43 @@ export const LineStatsTable: React.FC<LineStatsTableProps> = ({ line, stats }) =
                         <td className="stat-count">{stats.totalType10Undelivered}</td>
                     </tr>
                     <tr>
-                        <td>Old Train Cars Active:</td>
-                        <td className="stat-count">{stats.totalOldActive}</td>
+                        <td>
+                            New <span className="train-type-text">Type 9</span> Train Cars
+                            Delivered:
+                        </td>
+                        <td className="stat-count">{stats.totalType9Delivered}</td>
                     </tr>
                     <tr>
-                        <td>Old Train Cars Inactive:</td>
-                        <td className="stat-count">{stats.totalOldInactive}</td>
+                        <td>
+                            New <span className="train-type-text">Type 9</span> Train Cars Awaiting
+                            Delivery:
+                        </td>
+                        <td className="stat-count">{stats.totalType9Undelivered}</td>
+                    </tr>
+                    <br />
+                    <tr>
+                        <td>
+                            Old <span className="train-type-text">Type 8</span> Train Cars Active:
+                        </td>
+                        <td className="stat-count">{stats.totalType8Active}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Old <span className="train-type-text">Type 8</span> Train Cars Inactive:
+                        </td>
+                        <td className="stat-count">{stats.totalType8Inactive}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Old <span className="train-type-text">Type 7</span> Train Cars Active:
+                        </td>
+                        <td className="stat-count">{stats.totalType7Active}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Old <span className="train-type-text">Type 7</span> Train Cars Inactive:
+                        </td>
+                        <td className="stat-count">{stats.totalType7Inactive}</td>
                     </tr>
                 </tbody>
             </table>

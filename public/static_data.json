@@ -12,8 +12,10 @@
         "totalNewUndelivered": 210
     },
     "Green": {
-        "totalOldActive": 165,
-        "totalOldInactive": 42,
+        "totalType7Active": 83,
+        "totalType7Inactive": 20,
+        "totalType8Active": 75,
+        "totalType8Inactive": 19,
         "totalType9Delivered": 24,
         "totalType9Undelivered": 0,
         "totalType10Delivered": 0,
@@ -30,5 +32,5 @@
     "Sources": {
         "fleet_numbers": "http://roster.transithistory.org/"
     },
-    "Updated": "2025-08-17"
+    "Updated": "2025-10-20"
 }
