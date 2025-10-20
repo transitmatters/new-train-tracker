@@ -14,8 +14,8 @@
     "Green": {
         "totalOldActive": 165,
         "totalOldInactive": 42,
-        "totalNewDelivered": 24,
-        "totalNewUndelivered": 0,
+        "totalType9Delivered": 24,
+        "totalType9Undelivered": 0,
         "totalType10Delivered": 0,
         "totalType10Undelivered": 102
     },

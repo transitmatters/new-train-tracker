@@ -5,6 +5,8 @@ interface LineStatsTableProps {
     stats: {
         totalNewDelivered?: number;
         totalNewUndelivered?: number;
+        totalType9Delivered?: number;
+        totalType9Undelivered?: number;
         totalType10Delivered?: number;
         totalType10Undelivered?: number;
         totalOldActive?: number;
@@ -25,14 +27,14 @@ export const LineStatsTable: React.FC<LineStatsTableProps> = ({ line, stats }) =
                             New <span className="train-type-text">Type 9</span> Train Cars
                             Delivered:
                         </td>
-                        <td className="stat-count">{stats.totalNewDelivered}</td>
+                        <td className="stat-count">{stats.totalType9Delivered}</td>
                     </tr>
                     <tr>
                         <td>
                             New <span className="train-type-text">Type 9</span> Train Cars Awaiting
                             Delivery:
                         </td>
-                        <td className="stat-count">{stats.totalNewUndelivered}</td>
+                        <td className="stat-count">{stats.totalType9Undelivered}</td>
                     </tr>
                     <tr>
                         <td>
