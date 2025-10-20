@@ -11,7 +11,7 @@ Dependencies:
 - `node 22.x` (with `npm 10.x`)
 - `python 3.12`
 - [`poetry`](https://python-poetry.org/)
-  - Ensure `poetry` is using the correct Python version by running `poetry env use <your python3.12 binary>`
+  - Ensure `poetry` is using the correct Python version by running `poetry env <use your python3.12 binary>`
 
 Run:
 - `$ npm install`
