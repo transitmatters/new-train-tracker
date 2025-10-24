@@ -16,6 +16,7 @@ orange_is_new = lambda x: int(x) >= 1400 and int(x) <= 1551
 silver_is_new = lambda x: int(x) >= 1294 and int(x) <= 1299
 blue_is_new = lambda _: False
 mattapan_is_new = lambda x: False
+cr_is_new = lambda x: False
 
 
 def get_route_test_function_dict(route_ids, test_fn):
@@ -30,6 +31,18 @@ vehicle_is_new_func = {
     **get_route_test_function_dict(SILVER_ROUTE_IDS, silver_is_new),
     "Blue": blue_is_new,
     "Mattapan": mattapan_is_new,
+    "CR-Worcester": cr_is_new,
+    "CR-Fairmount": cr_is_new,
+    "CR-Fitchburg": cr_is_new,
+    "CR-Greenbush": cr_is_new,
+    "CR-Haverhill": cr_is_new,
+    "CR-Kingston": cr_is_new,
+    "CR-Lowell": cr_is_new,
+    "CR-Needham": cr_is_new,
+    "CR-Franklin-A": cr_is_new,
+    "CR-Franklin-B": cr_is_new,
+    "CR-Providence-A": cr_is_new,
+    "CR-Providence-B": cr_is_new,
 }
 
 

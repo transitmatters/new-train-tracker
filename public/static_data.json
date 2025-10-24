@@ -29,6 +29,46 @@
         "totalActive": 6,
         "totalInactive": 4
     },
+    "Worcester": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Fairmount": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Fitchburg": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Greenbush": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Haverhill": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Kingston": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Lowell": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Needham": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Providence": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
+    "Franklin": {
+        "totalActive": 109,
+        "totalInactive": 19
+    },
     "Sources": {
         "fleet_numbers": "http://roster.transithistory.org/"
     },

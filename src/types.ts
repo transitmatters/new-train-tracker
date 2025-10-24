@@ -1,4 +1,19 @@
-export type LineName = 'Green' | 'Red' | 'Orange' | 'Blue' | 'Mattapan';
+export type LineName =
+    | 'Green'
+    | 'Red'
+    | 'Orange'
+    | 'Blue'
+    | 'Mattapan'
+    | 'Worcester'
+    | 'Fairmount'
+    | 'Fitchburg'
+    | 'Franklin'
+    | 'Greenbush'
+    | 'Haverhill'
+    | 'Kingston'
+    | 'Lowell'
+    | 'Needham'
+    | 'Providence';
 
 export interface Line {
     name: LineName;
@@ -76,6 +91,7 @@ export interface Train {
     tripId: string;
     updatedAt: string;
     isPrideCar: boolean;
+    isHeritageCar: boolean;
     speed: number | null;
 }
 
@@ -125,7 +141,7 @@ export interface Pair {
     train: Train;
 }
 
-export type VehicleCategory = 'vehicles' | 'new_vehicles' | 'old_vehicles' | 'pride';
+export type VehicleCategory = 'vehicles' | 'new_vehicles' | 'old_vehicles' | 'pride' | 'heritage';
 
 export interface Prediction {
     departure_time: Date;

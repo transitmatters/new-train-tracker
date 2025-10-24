@@ -90,7 +90,7 @@ async def trip_departure_predictions(trip_id: str, stop_id: str):
     try:
         prediction = await getV3("predictions", {"filter[trip]": trip_id, "filter[stop]": stop_id})
 
-        return {'departure_time': prediction[0]['departure_time']}
+        return {"departure_time": prediction[0]["departure_time"]}
     except Exception as e:
         print(f"Error getting predictions for trip: {e}")
         return {"departure_time": "null"}
@@ -128,6 +128,8 @@ async def vehicle_data_for_routes(route_ids):
 
             is_pride_car = any(carriage.get("label") == "3706" for carriage in vehicle["carriages"])
 
+            is_heritage_car = any([vehicle["label"] == "1030"])
+
             vehicles_to_display.append(
                 {
                     "vehicleId": vehicle["id"],
@@ -144,6 +146,7 @@ async def vehicle_data_for_routes(route_ids):
                     "carriages": vehicle["carriages"],
                     "updatedAt": vehicle["updated_at"],
                     "isPrideCar": is_pride_car,
+                    "isHeritageCar": is_heritage_car,
                     "speed": vehicle["speed"],
                 }
             )
