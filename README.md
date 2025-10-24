@@ -1,5 +1,6 @@
 # New Train Tracker
 [![lint](https://github.com/transitmatters/new-train-tracker/actions/workflows/lint.yml/badge.svg)](https://github.com/transitmatters/new-train-tracker/actions/workflows/lint.yml)
+[![test](https://github.com/transitmatters/new-train-tracker/actions/workflows/test.yml/badge.svg)](https://github.com/transitmatters/new-train-tracker/actions/workflows/test.yml)
 [![deploy](https://github.com/transitmatters/new-train-tracker/actions/workflows/deploy.yml/badge.svg)](https://github.com/transitmatters/new-train-tracker/actions/workflows/deploy.yml)
 
 Developed by [TransitMatters Labs](https://transitmatters.org/transitmatters-labs)
