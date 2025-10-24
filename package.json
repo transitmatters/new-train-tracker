@@ -12,7 +12,8 @@
         "postinstall": "poetry install",
         "start-prod": "npm run build && NODE_ENV=production npm run start-python",
         "start-python": "cd server && poetry run chalice local --port=5555",
-        "start": "concurrently npm:start-python npm:dev"
+        "start": "concurrently npm:start-python npm:dev",
+        "test-frontend": "jest"
     },
     "repository": {
         "type": "git",
@@ -43,7 +44,11 @@
         "seamless-scroll-polyfill": "^2.3.4"
     },
     "devDependencies": {
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^16.3.0",
+        "@testing-library/user-event": "^14.6.1",
         "@types/bezier-js": "^4.1.3",
+        "@types/jest": "^30.0.0",
         "@types/node": "^22.15.0",
         "@types/react": "^18.3.13",
         "@types/react-dom": "^18.3.1",
@@ -58,7 +63,10 @@
         "eslint-plugin-prettier": "^5.4.1",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^5.2.0",
+        "jest": "^30.2.0",
+        "jest-environment-jsdom": "^30.2.0",
         "prettier": "^3.6.2",
+        "ts-jest": "^29.4.5",
         "typescript": "^5.8.3",
         "vite": "^6.3.5"
     }
