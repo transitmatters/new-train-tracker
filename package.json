@@ -13,9 +13,7 @@
         "start-prod": "npm run build && NODE_ENV=production npm run start-python",
         "start-python": "cd server && poetry run chalice local --port=5555",
         "start": "concurrently npm:start-python npm:dev",
-        "test": "jest",
-        "test:watch": "jest --watch",
-        "test:coverage": "jest --coverage"
+        "test-frontend": "jest"
     },
     "repository": {
         "type": "git",
