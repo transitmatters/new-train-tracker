@@ -5,6 +5,15 @@ module.exports = {
         amd: true,
         node: true,
     },
+    ignorePatterns: [
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        '**/__tests__/**',
+        '**/node_modules/**',
+        '**/dist/**',
+    ],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
