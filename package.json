@@ -8,10 +8,10 @@
         "lint": "npm run lint-frontend && npm run lint-backend",
         "dev": "vite",
         "lint-frontend": "eslint src && tsc --noEmit",
-        "lint-backend": "cd server && poetry run flake8",
-        "postinstall": "poetry install",
+        "lint-backend": "cd server && uv run ruff check .",
+        "postinstall": "uv sync && uv run pre-commit install --install-hooks || true",
         "start-prod": "npm run build && NODE_ENV=production npm run start-python",
-        "start-python": "cd server && poetry run chalice local --port=5555",
+        "start-python": "cd server && uv run chalice local --port=5555",
         "start": "concurrently npm:start-python npm:dev",
         "test-frontend": "jest"
     },

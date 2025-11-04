@@ -74,8 +74,8 @@ echo "Deploying Train Tracker CloudFormation stack from $HOSTNAME..."
 echo "View stack log here: https://$AWS_REGION.console.aws.amazon.com/cloudformation/home?region=$AWS_REGION"
 
 pushd server/ > /dev/null
-poetry export --without-hashes --output requirements.txt
-poetry run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
+uv export --no-hashes --output-file requirements.txt
+uv run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --stack-name $STACK_NAME \
     --template-file cfn/packaged.yaml \

@@ -1,35 +1,31 @@
-[tool.poetry]
+[project]
 name = "new-train-tracker"
 version = "2.4.1"
 description = "New Train Tracker by TransitMattters"
-authors = ["TransitMatters Labs Team"]
+authors = [{ name = "TransitMatters Labs Team" }]
+requires-python = ">=3.12,<3.13"
 license = "MIT"
-package-mode = false
+dependencies = [
+    "aiohttp~=3.12.13",
+    "boto3~=1.38.26",
+    "json-api-doc==0.15.0",
+    "pytz~=2025.2",
+    "schedule==1.2.2",
+    "datadog_lambda~=8.114.0",
+    "tzdata~=2025.2",
+]
 
-[tool.poetry.dependencies]
-python = "~3.12"
-aiohttp = "~3.12.13"
-boto3 = "~1.38.26"
-json-api-doc = "0.15.0"
-pytz = "^2025.2"
-schedule = "1.2.2"
-datadog_lambda = "~8.114.0"
-tzdata = "^2025.2"
+[dependency-groups]
+dev = [
+    "pip>=24.1",
+    "chalice==1.32.0",
+    "ruff>=0.14.3",
+    "pre-commit>=4.0.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-pip = ">=24.1"
-chalice = "1.32.0"
-black = "^25.9.0"
-pylint = "3.3.7"
-flake8 = "7.3.0"
-
-[tool.poetry.requires-plugins]
-poetry-plugin-export = ">=1.9.0"
-
-[tool.black]
-line-length = 120
-target-version = ['py312']
+[tool.uv]
+package = false
 
 [build-system]
-requires = ["poetry-core>=2.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

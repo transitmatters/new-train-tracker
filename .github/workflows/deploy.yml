@@ -35,6 +35,8 @@ jobs:
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Generate AWS profile
         run: |
           mkdir ~/.aws
@@ -45,6 +47,5 @@ jobs:
           EOF
       - name: Run deploy shell script
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
           npm ci
           bash ./deploy.sh -p -c

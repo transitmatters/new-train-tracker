@@ -27,9 +27,10 @@ jobs:
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Lint frontend code with ESLint
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
           npm ci
           npm run lint-frontend
 
@@ -53,8 +54,9 @@ jobs:
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
-      - name: Lint backend code with Flake8
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Lint backend code with Ruff
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
           npm ci
           npm run lint-backend
