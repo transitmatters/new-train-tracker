@@ -90,7 +90,7 @@ async def trip_departure_predictions(trip_id: str, stop_id: str):
     try:
         prediction = await getV3("predictions", {"filter[trip]": trip_id, "filter[stop]": stop_id})
 
-        return {'departure_time': prediction[0]['departure_time']}
+        return {"departure_time": prediction[0]["departure_time"]}
     except Exception as e:
         print(f"Error getting predictions for trip: {e}")
         return {"departure_time": "null"}

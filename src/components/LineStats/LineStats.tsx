@@ -1,4 +1,4 @@
-import * as stats from '../../../public/static_data.json';
+import * as stats from '../../static_data.json';
 import { LineName } from '../../types';
 import { LastUpdatedStats } from './LastUpdatedStats';
 import { LineStatsTable } from './LineStatsTable';

@@ -11,7 +11,7 @@ import { LineTabPicker } from './LineTabPicker';
 import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
 
-import favicon from '../../public/images/favicon.png';
+import favicon from '../images/favicon.png';
 import { CategoryTabPicker } from './CategoryTabPicker';
 import { LineName, Line as TLine } from '../types';
 
