@@ -11,8 +11,8 @@ Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 Dependencies:
 - `node 22.x` (with `npm 10.x`)
 - `python 3.12`
-- [`poetry`](https://python-poetry.org/)
-  - Ensure `poetry` is using the correct Python version by running `poetry env <use your python3.12 binary>`
+- [`uv`](https://docs.astral.sh/uv/)
+  - Ensure `uv` is using the correct Python version by running `uv venv --python 3.12`
 
 Run:
 - `$ npm install`
