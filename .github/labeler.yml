@@ -6,12 +6,12 @@ ci/cd:
 dependencies:
 - package.json
 - package-lock.json
-- poetry.lock
+- uv.lock
 
 backend:
 - '**/*.py'
 - server/**/*
-- .flake8
+- ruff.toml
 
 frontend:
 - '**/*.js'

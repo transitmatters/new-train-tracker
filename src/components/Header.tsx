@@ -1,4 +1,4 @@
-import logo from '../../public/images/logo.svg';
+import logo from '../images/logo.svg';
 
 interface Props {
     controls: React.ReactNode;
