@@ -55,7 +55,7 @@ export const TrainDisplay = ({
     onFocus: () => void;
     onBlur: () => void;
 }) => {
-    const { direction, isPrideCar } = train;
+    const { direction, isPrideCar, isHolidayCar } = train;
 
     const { pathInterpolator, stations } = route;
 
@@ -108,7 +108,7 @@ export const TrainDisplay = ({
                     cy={0}
                     r={3.326}
                     fill={colors.train}
-                    stroke={!isPrideCar && isTracked ? 'white' : 'none'}
+                    stroke={!isPrideCar && !isHolidayCar && isTracked ? 'white' : 'none'}
                     textAnchor="middle"
                 />
                 {isPrideCar && (
@@ -134,6 +134,71 @@ export const TrainDisplay = ({
                                 transform={`rotate(-90)`}
                             />
                         ))}
+                    </g>
+                )}
+                {isHolidayCar && (
+                    <g>
+                        <animateTransform
+                            attributeName="transform"
+                            type="rotate"
+                            values="0 0 0;360 0 0"
+                            dur="8s"
+                            repeatCount="indefinite"
+                        />
+                        {/* Outer snowflake circle */}
+                        <circle
+                            cx={0}
+                            cy={0}
+                            r={3.326}
+                            fill="none"
+                            stroke="#00bfff"
+                            strokeWidth={0.6}
+                            opacity={0.8}
+                        />
+                        {/* Snowflake arms - 6 main points */}
+                        {[0, 60, 120, 180, 240, 300].map((angle) => (
+                            <g key={angle} transform={`rotate(${angle})`}>
+                                {/* Main arm */}
+                                <line
+                                    x1={0}
+                                    y1={0}
+                                    x2={0}
+                                    y2={-4}
+                                    stroke="#1e90ff"
+                                    strokeWidth={0.5}
+                                />
+                                {/* Side branches */}
+                                <line
+                                    x1={0}
+                                    y1={-2.5}
+                                    x2={1}
+                                    y2={-3.2}
+                                    stroke="#1e90ff"
+                                    strokeWidth={0.4}
+                                />
+                                <line
+                                    x1={0}
+                                    y1={-2.5}
+                                    x2={-1}
+                                    y2={-3.2}
+                                    stroke="#1e90ff"
+                                    strokeWidth={0.4}
+                                />
+                            </g>
+                        ))}
+                        {/* Subtle glow effect */}
+                        <circle
+                            cx={0}
+                            cy={0}
+                            r={3.326}
+                            fill="none"
+                            stroke="#87ceeb"
+                            strokeWidth={0.3}
+                            opacity={0.6}
+                            style={{
+                                filter: 'drop-shadow(0 0 1.5px rgba(30, 144, 255, 0.6))',
+                            }}
+                        />
                     </g>
                 )}
                 <polygon points={drawEquilateralTriangle(2)} fill={'white'} />

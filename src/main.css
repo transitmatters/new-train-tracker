@@ -265,6 +265,55 @@ a {
     }
 }
 
+.tab-picker > .tab[id='holiday'] > .age {
+    background: linear-gradient(
+        135deg,
+        #1e90ff 0%,
+        #00bfff 50%,
+        #1e90ff 100%
+    );
+    position: relative;
+    overflow: hidden;
+}
+
+.tab-picker > .tab[id='holiday'] > .age::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        135deg,
+        transparent 25%,
+        rgba(255, 255, 255, 0.6) 50%,
+        transparent 75%
+    );
+    animation: frostGlow 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes frostGlow {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(-45deg);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tab-picker > .tab[id='holiday'] > .age::before {
+        animation: none;
+        opacity: 0;
+    }
+}
+
 .tab-picker > .tab > .label {
     margin: 0px 0.5em;
 }
