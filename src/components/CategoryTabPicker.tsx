@@ -10,6 +10,7 @@ const trainTypes: TrainCategory[] = [
     { key: 'new_vehicles', label: 'New' },
     { key: 'vehicles', label: 'All' },
     { key: 'pride', label: 'Pride' },
+    { key: 'holiday', label: 'Holiday' },
 ];
 
 interface CategoryTabPickerProps {
@@ -44,6 +45,7 @@ export const CategoryTabPicker: React.FC<CategoryTabPickerProps> = ({ tabColor }
                 <div className="selected-indicator" ref={selectedIndicatorRef} />
 
                 {trainTypes.map((trainType) => {
+                    const isHoliday = trainType.key === 'holiday';
                     return (
                         <Tab
                             id={trainType.key}
@@ -57,9 +59,9 @@ export const CategoryTabPicker: React.FC<CategoryTabPickerProps> = ({ tabColor }
                             <div
                                 aria-label={trainType.key}
                                 className="icon age"
-                                style={{ backgroundColor: tabColor }}
+                                style={{ backgroundColor: isHoliday ? 'transparent' : tabColor }}
                             >
-                                {trainType.label.toUpperCase()}
+                                {isHoliday ? '❄️' : trainType.label.toUpperCase()}
                             </div>
                             <div className="label">trains</div>
                         </Tab>

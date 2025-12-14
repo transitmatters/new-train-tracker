@@ -127,6 +127,7 @@ async def vehicle_data_for_routes(route_ids):
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
             is_pride_car = any(carriage.get("label") == "3706" for carriage in vehicle["carriages"])
+            is_holiday_car = any(carriage.get("label") in ["3908", "3917"] for carriage in vehicle["carriages"])
 
             vehicles_to_display.append(
                 {
@@ -144,6 +145,7 @@ async def vehicle_data_for_routes(route_ids):
                     "carriages": vehicle["carriages"],
                     "updatedAt": vehicle["updated_at"],
                     "isPrideCar": is_pride_car,
+                    "isHolidayCar": is_holiday_car,
                     "speed": vehicle["speed"],
                 }
             )
