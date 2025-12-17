@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { renderTrainLabel } from '../labels';
@@ -35,43 +35,55 @@ export const TrainPopover: React.FunctionComponent<TrainPopoverProps> = (props) 
     const trainX = referenceRect.left + referenceRect.width / 2;
     const trainY = referenceRect.top + referenceRect.height / 2;
 
-    let popoverWidth: number | null = null;
-    let popoverHeight: number | null = null;
-
-    if (popoverElement) {
-        const popoverBounds = popoverElement.getBoundingClientRect();
-        popoverWidth = popoverBounds.width;
-        popoverHeight = popoverBounds.height;
-    }
+    // Use a ref to track previous position to avoid render loops from floating-point variations
+    const prevPositionRef = useRef<{ x: number; y: number; strategy: string } | null>(null);
 
     useLayoutEffect(() => {
-        if (popoverWidth && popoverHeight) {
-            const leftPositionLeftExtent = trainX - popoverDistance - popoverWidth;
-            const rightPositionRightExtent = trainX + popoverDistance + popoverWidth;
+        if (!popoverElement) return;
 
-            const canPositionLeft = leftPositionLeftExtent > 0;
-            const canPositionRight = rightPositionRightExtent < containerWidth;
+        const popoverBounds = popoverElement.getBoundingClientRect();
+        const popoverWidth = popoverBounds.width;
+        const popoverHeight = popoverBounds.height;
 
-            let nextPositionStrategy = fixedPositionStrategy;
-            if (!nextPositionStrategy) {
-                nextPositionStrategy =
-                    direction === 1
-                        ? canPositionLeft
-                            ? 'left'
-                            : 'right'
-                        : canPositionRight
-                          ? 'right'
-                          : 'left';
-            }
+        if (!popoverWidth || !popoverHeight) return;
 
-            const popoverX =
-                trainX +
-                (nextPositionStrategy === 'left'
-                    ? -1 * (popoverWidth + popoverDistance)
-                    : popoverDistance);
+        const leftPositionLeftExtent = trainX - popoverDistance - popoverWidth;
+        const rightPositionRightExtent = trainX + popoverDistance + popoverWidth;
 
-            const popoverY = trainY - popoverHeight / 2;
+        const canPositionLeft = leftPositionLeftExtent > 0;
+        const canPositionRight = rightPositionRightExtent < containerWidth;
 
+        let nextPositionStrategy = fixedPositionStrategy;
+        if (!nextPositionStrategy) {
+            nextPositionStrategy =
+                direction === 1
+                    ? canPositionLeft
+                        ? 'left'
+                        : 'right'
+                    : canPositionRight
+                      ? 'right'
+                      : 'left';
+        }
+
+        const popoverX =
+            trainX +
+            (nextPositionStrategy === 'left'
+                ? -1 * (popoverWidth + popoverDistance)
+                : popoverDistance);
+
+        const popoverY = trainY - popoverHeight / 2;
+
+        // Only update state if position changed significantly (> 0.5px) to prevent render loops
+        // from floating-point variations in getBoundingClientRect()
+        const prev = prevPositionRef.current;
+        const positionChanged =
+            !prev ||
+            Math.abs(prev.x - popoverX) > 0.5 ||
+            Math.abs(prev.y - popoverY) > 0.5 ||
+            prev.strategy !== nextPositionStrategy;
+
+        if (positionChanged) {
+            prevPositionRef.current = { x: popoverX, y: popoverY, strategy: nextPositionStrategy };
             setPositionStrategy(nextPositionStrategy);
             setPositionStyle({
                 transform: `translate(${popoverX}px, ${popoverY}px)`,
@@ -82,8 +94,7 @@ export const TrainPopover: React.FunctionComponent<TrainPopoverProps> = (props) 
         direction,
         fixedPositionStrategy,
         isVisible,
-        popoverHeight,
-        popoverWidth,
+        popoverElement,
         trainX,
         trainY,
     ]);
