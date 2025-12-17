@@ -119,6 +119,41 @@ a {
     }
 }
 
+/* Mobile screens - iPhone 14 Pro Max and similar */
+@media screen and (max-width: 430px) {
+    .header {
+        padding: 24px 0;
+    }
+
+    .tab-picker {
+        margin-top: 6px;
+        gap: 4px;
+    }
+
+    .tab-picker > .tab:not(:last-child) {
+        margin-right: 0;
+    }
+
+    .tab-picker > .tab > .age {
+        width: 2.2em;
+    }
+
+    /* Hide "trains" label on category picker only */
+    .tab-picker > .tab > .age + .label {
+        display: none;
+    }
+
+    /* Dim non-selected tabs so selection is clear */
+    .tab-picker > .tab > .age {
+        opacity: 0.5;
+    }
+
+    .tab-picker > .tab[aria-selected="true"] > .age {
+        opacity: 1;
+        box-shadow: 0 0 0 2px white;
+    }
+}
+
 .line-pane {
     position: relative;
     display: flex;
