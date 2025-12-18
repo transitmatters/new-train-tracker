@@ -40,7 +40,7 @@ export const CategoryTabPicker: React.FC<CategoryTabPickerProps> = ({ tabColor }
     }, [tabColor, categorySearchParam]);
 
     return (
-        <TabProvider>
+        <TabProvider selectedId={categorySearchParam}>
             <TabList className="tab-picker" aria-label="Select train age" ref={wrapperRef}>
                 <div className="selected-indicator" ref={selectedIndicatorRef} />
 
