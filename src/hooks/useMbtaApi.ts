@@ -24,10 +24,23 @@ export interface MBTAApiReady {
 
 export type MBTAApiResponse = MBTAApi | MBTAApiReady;
 
+// Helper to validate array responses from API
+const isValidArray = <T>(data: unknown): data is T[] => {
+    return Array.isArray(data);
+};
+
 // if isFirstRequest is true, get train positions from intial request data JSON
 // if isFirstRequest is false, makes request for new train positions through backend server via chalice route defined in app.py
-const getTrainPositions = (routes: string[]): Promise<Train[]> => {
-    return fetch(`${APP_DATA_BASE_PATH}/trains/${routes.join(',')}`).then((res) => res.json());
+const getTrainPositions = async (routes: string[]): Promise<Train[]> => {
+    const res = await fetch(`${APP_DATA_BASE_PATH}/trains/${routes.join(',')}`);
+    if (!res.ok) {
+        throw new Error(`Failed to fetch trains: ${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    if (!isValidArray<Train>(data)) {
+        throw new Error(`Invalid train data received: ${JSON.stringify(data).slice(0, 100)}`);
+    }
+    return data;
 };
 
 const filterNew = (trains: Train[]) => {
@@ -59,12 +72,28 @@ const filterTrains = (trains: Train[], vehiclesAge: VehicleCategory) => {
     return trains;
 };
 
-const getStationsForRoute = (route: string) => {
-    return fetch(`${APP_DATA_BASE_PATH}/stops/${route}`).then((res) => res.json());
+const getStationsForRoute = async (route: string): Promise<Station[]> => {
+    const res = await fetch(`${APP_DATA_BASE_PATH}/stops/${route}`);
+    if (!res.ok) {
+        throw new Error(`Failed to fetch stations for ${route}: ${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    if (!isValidArray<Station>(data)) {
+        throw new Error(`Invalid station data for ${route}: ${JSON.stringify(data).slice(0, 100)}`);
+    }
+    return data;
 };
 
-const getRoutesInfo = (routes: string[]) => {
-    return fetch(`${APP_DATA_BASE_PATH}/routes/${routes.join(',')}`).then((res) => res.json());
+const getRoutesInfo = async (routes: string[]): Promise<Route[]> => {
+    const res = await fetch(`${APP_DATA_BASE_PATH}/routes/${routes.join(',')}`);
+    if (!res.ok) {
+        throw new Error(`Failed to fetch routes info: ${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    if (!isValidArray<Route>(data)) {
+        throw new Error(`Invalid routes info received: ${JSON.stringify(data).slice(0, 100)}`);
+    }
+    return data;
 };
 
 export const useMbtaApi = (
@@ -88,6 +117,8 @@ export const useMbtaApi = (
         enabled: !!routeNames,
         staleTime: FIFTEEN_SECONDS,
         refetchInterval: FIFTEEN_SECONDS,
+        retry: 3,
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     });
 
     const trainsByRoute = useMemo(() => {
@@ -108,40 +139,43 @@ export const useMbtaApi = (
 
     useQuery({
         queryKey: ['getStations', routeNamesKey],
-        queryFn: () => {
+        queryFn: async () => {
             const nextStopsByRoute: Record<string, Station[]> = {};
-            return Promise.all(
-                routeNames.map((routeName) =>
-                    getStationsForRoute(routeName).then((data) => {
-                        nextStopsByRoute[routeName] = data;
-                    })
-                )
-            ).then(() => {
-                setStationsByRoute(nextStopsByRoute);
-                return nextStopsByRoute;
-            });
+            await Promise.all(
+                routeNames.map(async (routeName) => {
+                    const data = await getStationsForRoute(routeName);
+                    nextStopsByRoute[routeName] = data;
+                })
+            );
+            // Only update state on successful fetch
+            setStationsByRoute(nextStopsByRoute);
+            return nextStopsByRoute;
         },
         // if routeNames is empty, don't make the request
         enabled: !!routeNames && routeNames.length > 0,
         staleTime: ONE_DAY,
+        retry: 3,
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     });
 
     useQuery({
         queryKey: ['getRoutesInfo', routeNamesKey],
-        queryFn: () => {
+        queryFn: async () => {
             const nextRoutesInfo: Record<string, Route> = {};
-            return getRoutesInfo(routeNames).then((routes: Route[]) => {
-                routes.forEach((route: Route) => {
-                    if (route.id) {
-                        nextRoutesInfo[route.id] = route;
-                    }
-                });
-                setRoutesInfoByRoute(nextRoutesInfo);
-                return nextRoutesInfo;
+            const routes = await getRoutesInfo(routeNames);
+            routes.forEach((route: Route) => {
+                if (route.id) {
+                    nextRoutesInfo[route.id] = route;
+                }
             });
+            // Only update state on successful fetch
+            setRoutesInfoByRoute(nextRoutesInfo);
+            return nextRoutesInfo;
         },
         enabled: !!routeNames && routeNames.length > 0,
         staleTime: ONE_DAY,
+        retry: 3,
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     });
 
     const isReady =

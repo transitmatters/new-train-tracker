@@ -20,27 +20,21 @@ const getStationIdsWithinRange = (stationRange: Shape, stationIds: string[] | un
         return stations;
     }
     if (!start || !end) {
-        throw new Error(
-            'Improper use of {start, end} properties for stationRange. ' +
-                'These properties are required if stations property is not defined.'
-        );
+        return [];
     }
 
-    const startIndex = stationIds?.indexOf(start);
-    const endIndex = stationIds?.indexOf(end);
+    // If stationIds is empty or undefined, return empty array gracefully
+    if (!stationIds || stationIds.length === 0) {
+        return [];
+    }
+
+    const startIndex = stationIds.indexOf(start);
+    const endIndex = stationIds.indexOf(end);
     if (startIndex === -1 || endIndex === -1) {
-        throw new Error(
-            `Improper use of {start=${start}, end=${end}} properties for stationRange. ` +
-                'These stations do not exist on retrieved GTFS route -- ' +
-                'consider using stationRange.stations property instead.'
-        );
+        return [];
     }
 
-    if (endIndex !== undefined) {
-        return stationIds?.slice(startIndex, endIndex + 1);
-    } else {
-        throw new Error(`End station ${end} not found in stationIds.`);
-    }
+    return stationIds.slice(startIndex, endIndex + 1);
 };
 
 const getStationPositions = (
@@ -126,7 +120,8 @@ export const prerenderLine = (
     Object.entries(line.routes).forEach(([routeId, { shape }]) => {
         const stations = stationsByRoute[routeId];
         const routeInfo = routesInfo[routeId];
-        const stationIds = stations?.map((s) => s.id);
+        // Safely get station IDs, handling missing/invalid data
+        const stationIds = Array.isArray(stations) ? stations.map((s) => s.id) : [];
         const { pathInterpolator, stationOffsets, pathDirective } = prerenderRoute(
             shape,
             stationIds
@@ -136,15 +131,17 @@ export const prerenderLine = (
             ...routeInfo,
             id: routeId,
             pathInterpolator: pathInterpolator,
-            stations: stations?.map((station) => {
-                return {
-                    id: station.id,
-                    name: station.name,
-                    latitude: station.latitude,
-                    longitude: station.longitude,
-                    offset: stationOffsets[station.id],
-                };
-            }),
+            stations: Array.isArray(stations)
+                ? stations.map((station) => {
+                      return {
+                          id: station.id,
+                          name: station.name,
+                          latitude: station.latitude,
+                          longitude: station.longitude,
+                          offset: stationOffsets[station.id],
+                      };
+                  })
+                : [],
             stationPositions: routeStationPositions,
             pathDirective,
         };
