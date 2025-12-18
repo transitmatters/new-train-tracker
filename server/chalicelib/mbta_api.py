@@ -5,6 +5,7 @@ mbta_api.py provides functions dealing with interactions with the MBTA V3 API
 
 from urllib.parse import urlencode
 import datetime
+import time
 import pytz
 import json_api_doc
 import json
@@ -25,15 +26,28 @@ from chalicelib.routes import (
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
+# Simple in-memory cache: {key: (data, expiry_time)}
+_cache = {}
+# Stale cache for stable data (stations/routes) - never expires, used as fallback
+_stale_cache = {}
+
 
 # wrapper around MBTA V3 API
 # used to simplify API calls
 # returns JSON of requested data
-async def getV3(command, params={}, session=None):
+async def getV3(command, params={}, session=None, cache_ttl=None):
     """Make a GET request against the MBTA v3 API"""
     url = BASE_URL_V3.format(command=command, parameters=urlencode(params))
     api_key = os.environ.get("MBTA_V3_API_KEY", "") or secrets.MBTA_V3_API_KEY
     headers = {"x-api-key": api_key} if api_key else {}
+
+    # Check cache
+    if cache_ttl:
+        cache_key = url
+        if cache_key in _cache:
+            data, expiry = _cache[cache_key]
+            if time.time() < expiry:
+                return data
 
     async def inner(some_session):
         async with some_session.get(url, headers=headers) as response:
@@ -53,9 +67,15 @@ async def getV3(command, params={}, session=None):
 
     if session is None:
         async with aiohttp.ClientSession() as local_session:
-            return await inner(local_session)
+            result = await inner(local_session)
     else:
-        return await inner(session)
+        result = await inner(session)
+
+    # Store in cache
+    if cache_ttl:
+        _cache[cache_key] = (result, time.time() + cache_ttl)
+
+    return result
 
 
 # ensures stops are in expected order specified in maybe_reverse()
@@ -88,7 +108,11 @@ def maybe_reverse(stops, route):
 
 async def trip_departure_predictions(trip_id: str, stop_id: str):
     try:
-        prediction = await getV3("predictions", {"filter[trip]": trip_id, "filter[stop]": stop_id})
+        prediction = await getV3(
+            "predictions",
+            {"filter[trip]": trip_id, "filter[stop]": stop_id},
+            cache_ttl=10,
+        )
 
         return {"departure_time": prediction[0]["departure_time"]}
     except Exception as e:
@@ -102,13 +126,18 @@ async def trip_departure_predictions(trip_id: str, stop_id: str):
 async def vehicle_data_for_routes(route_ids):
     route_ids = normalize_custom_route_ids(route_ids)
 
-    vehicles = await getV3(
-        "vehicles",
-        {
-            "filter[route]": ",".join(route_ids),
-            "include": "stop,trip.route_pattern.name",
-        },
-    )
+    try:
+        vehicles = await getV3(
+            "vehicles",
+            {
+                "filter[route]": ",".join(route_ids),
+                "include": "stop,trip.route_pattern.name",
+            },
+            cache_ttl=10,
+        )
+    except Exception as e:
+        print(f"[vehicle_data_for_routes] API error, returning empty list: {e}")
+        return []
 
     # intialize empty list of vehicles to display
     vehicles_to_display = []
@@ -163,47 +192,71 @@ async def vehicle_data_for_routes(route_ids):
 # returns list of dicts for every stop in a given route, based on route_id
 # ensures stops are in expected order via maybe_reverse()
 async def stops_for_route(route_id):
-    normalized_route_name = normalize_custom_route_name(route_id)
-    stops = await getV3("stops", {"filter[route]": normalized_route_name, "include": "route"})
-    return maybe_reverse(
-        list(
-            map(
-                lambda stop: {
-                    "id": stop["id"],
-                    "name": stop["name"],
-                    "latitude": stop["latitude"],
-                    "longitude": stop["longitude"],
-                    "route": stop["route"],
-                },
-                filter(
-                    lambda stop: stop_belongs_to_custom_route(stop["id"], route_id, normalized_route_name),
-                    stops,
-                ),
-            )
-        ),
-        route_id,
-    )
+    cache_key = f"stops:{route_id}"
+    try:
+        normalized_route_name = normalize_custom_route_name(route_id)
+        stops = await getV3(
+            "stops",
+            {"filter[route]": normalized_route_name, "include": "route"},
+            cache_ttl=3600,
+        )
+        result = maybe_reverse(
+            list(
+                map(
+                    lambda stop: {
+                        "id": stop["id"],
+                        "name": stop["name"],
+                        "latitude": stop["latitude"],
+                        "longitude": stop["longitude"],
+                        "route": stop["route"],
+                    },
+                    filter(
+                        lambda stop: stop_belongs_to_custom_route(stop["id"], route_id, normalized_route_name),
+                        stops,
+                    ),
+                )
+            ),
+            route_id,
+        )
+        _stale_cache[cache_key] = result  # Save for fallback
+        return result
+    except Exception as e:
+        if cache_key in _stale_cache:
+            print(f"[stops_for_route] API error for {route_id}, returning stale data: {e}")
+            return _stale_cache[cache_key]
+        print(f"[stops_for_route] API error for {route_id}, no stale data: {e}")
+        return []
 
 
 # returns list of dicts containing directional information about routes based on the given route_id
 async def routes_info(route_ids):
-    routes_to_return = []
-    custom_route_names = [s.strip() for s in route_ids]
-    routes_info = await getV3(
-        "routes",
-        {"filter[id]": ",".join(normalize_custom_route_ids(custom_route_names))},
-    )
-    for custom_route_name in custom_route_names:
-        normalized_route_name = normalize_custom_route_name(custom_route_name)
-        for route in routes_info:
-            if route["id"] == normalized_route_name:
-                routes_to_return.append(
-                    {
-                        "id": custom_route_name,
-                        "directionDestinations": derive_custom_direction_destinations(
-                            route, normalized_route_name, custom_route_name
-                        ),
-                        "directionNames": route["direction_names"],
-                    }
-                )
-    return routes_to_return
+    cache_key = f"routes:{','.join(route_ids)}"
+    try:
+        routes_to_return = []
+        custom_route_names = [s.strip() for s in route_ids]
+        routes_info = await getV3(
+            "routes",
+            {"filter[id]": ",".join(normalize_custom_route_ids(custom_route_names))},
+            cache_ttl=3600,
+        )
+        for custom_route_name in custom_route_names:
+            normalized_route_name = normalize_custom_route_name(custom_route_name)
+            for route in routes_info:
+                if route["id"] == normalized_route_name:
+                    routes_to_return.append(
+                        {
+                            "id": custom_route_name,
+                            "directionDestinations": derive_custom_direction_destinations(
+                                route, normalized_route_name, custom_route_name
+                            ),
+                            "directionNames": route["direction_names"],
+                        }
+                    )
+        _stale_cache[cache_key] = routes_to_return  # Save for fallback
+        return routes_to_return
+    except Exception as e:
+        if cache_key in _stale_cache:
+            print(f"[routes_info] API error, returning stale data: {e}")
+            return _stale_cache[cache_key]
+        print(f"[routes_info] API error, no stale data: {e}")
+        return []
