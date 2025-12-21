@@ -21,6 +21,16 @@ Run:
 
 To use an API key, put it as an environment variable `MBTA_V3_API_KEY`
 
+### Container
+You can also run the New Train Tracker inside a container using the following `docker build` and `docker run` commands
+
+```bash
+docker build -t new-train-tracker -f Containerfile .
+docker run --net=host -e MBTA_V3_API_KEY=your_key_here new-train-tracker
+```
+
+The app will be available at [http://localhost:5173/](http://localhost:5173/)
+
 ### Linting
 To lint frontend and backend code, run `$ npm run lint` in the root directory
 
