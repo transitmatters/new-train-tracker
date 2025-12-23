@@ -11,8 +11,8 @@ describe('LineStatsTable', () => {
     totalType7Inactive: 3,
     totalType8Active: 12,
     totalType8Inactive: 2,
-    totalType9Delivered: 8,
-    totalType9Undelivered: 4,
+    totalType9Active: 8,
+    totalType9Inactive: 4,
     totalType10Delivered: 6,
     totalType10Undelivered: 3,
     totalOldActive: 20,
@@ -33,7 +33,7 @@ describe('LineStatsTable', () => {
       
       // Check that specific values are displayed
       expect(screen.getByText('6')).toBeInTheDocument(); // totalType10Delivered
-      expect(screen.getByText('8')).toBeInTheDocument(); // totalType9Delivered
+      expect(screen.getByText('8')).toBeInTheDocument(); // totalType9Active
       expect(screen.getByText('12')).toBeInTheDocument(); // totalType8Active
       expect(screen.getByText('15')).toBeInTheDocument(); // totalType7Active
     });
@@ -202,7 +202,7 @@ describe('LineStatsTable', () => {
     it('renders Green line stats even when some values are undefined', () => {
       const partialGreenStats = {
         totalType10Delivered: 5,
-        totalType9Delivered: 3,
+        totalType9Active: 3,
         totalType8Active: 10,
         totalType7Active: 8,
         // Other Green line stats are undefined

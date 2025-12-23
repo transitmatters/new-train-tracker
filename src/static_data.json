@@ -1,23 +1,23 @@
 {
     "Orange": {
-        "totalActive": 140,
-        "totalInactive": 2,
-        "totalNewDelivered": 142,
-        "totalNewUndelivered": 10
+        "totalActive": 144,
+        "totalInactive": 4,
+        "totalNewDelivered": 148,
+        "totalNewUndelivered": 4
     },
     "Red": {
-        "totalOldActive": 156,
-        "totalOldInactive": 4,
-        "totalNewDelivered": 42,
-        "totalNewUndelivered": 210
+        "totalOldActive": 146,
+        "totalOldInactive": 6,
+        "totalNewDelivered": 48,
+        "totalNewUndelivered": 204
     },
     "Green": {
-        "totalType7Active": 83,
-        "totalType7Inactive": 20,
-        "totalType8Active": 75,
-        "totalType8Inactive": 19,
-        "totalType9Delivered": 24,
-        "totalType9Undelivered": 0,
+        "totalType7Active": 84,
+        "totalType7Inactive": 19,
+        "totalType8Active": 76,
+        "totalType8Inactive": 18,
+        "totalType9Active": 24,
+        "totalType9Inactive": 0,
         "totalType10Delivered": 0,
         "totalType10Undelivered": 102
     },
@@ -26,11 +26,11 @@
         "totalInactive": 0
     },
     "Mattapan": {
-        "totalActive": 6,
-        "totalInactive": 4
+        "totalActive": 7,
+        "totalInactive": 3
     },
     "Sources": {
         "fleet_numbers": "http://roster.transithistory.org/"
     },
-    "Updated": "2025-10-20"
+    "Updated": "2025-12-23"
 }
