@@ -42,15 +42,13 @@ export const LineStatsTable: React.FC<LineStatsTableProps> = ({ line, stats }) =
                     </tr>
                     <tr>
                         <td>
-                            New <span className="train-type-text">Type 9</span> Train Cars
-                            Delivered:
+                            New <span className="train-type-text">Type 9</span> Train Cars Active:
                         </td>
                         <td className="stat-count">{stats.totalType9Active}</td>
                     </tr>
                     <tr>
                         <td>
-                            New <span className="train-type-text">Type 9</span> Train Cars Awaiting
-                            Delivery:
+                            New <span className="train-type-text">Type 9</span> Train Cars Inactive:
                         </td>
                         <td className="stat-count">{stats.totalType9Inactive}</td>
                     </tr>
