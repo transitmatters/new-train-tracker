@@ -1,0 +1,56 @@
+name: container
+
+on:
+  pull_request:
+    paths:
+      - Containerfile
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      MBTA_V3_API_KEY: ${{ secrets.TM_NTT_CERT_ARN }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build container image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Containerfile
+          push: false
+          tags: ntt:test
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            GIT_ABR_VERSION=${{ github.sha }}
+
+      - name: Test container starts successfully
+        run: |
+          # Start the container in the background
+          docker run -d --net=host -e MBTA_V3_API_KEY=$MBTA_V3_API_KEY --name new-train-tracker ntt:test
+
+          # Wait for the container to start
+          sleep 10
+
+          # Check if container is still running
+          if ! docker ps | grep -q new-train-tracker; then
+            echo "Container failed to start"
+            docker logs new-train-tracker
+            exit 1
+          fi
+
+          # Check if the server responds
+          curl -f http://localhost:5173 || (docker logs new-train-tracker && exit 1)
+
+          # Cleanup
+          docker stop new-train-tracker
+          docker rm new-train-tracker

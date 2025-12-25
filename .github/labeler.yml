@@ -1,6 +1,5 @@
 ci/cd:
 - .github/**/*
-- devops/**/*
 - deploy.sh
 
 dependencies:
@@ -12,6 +11,7 @@ backend:
 - '**/*.py'
 - server/**/*
 - ruff.toml
+- pyproject.toml
 
 frontend:
 - '**/*.js'
@@ -22,3 +22,7 @@ frontend:
 documentation:
 - README.md
 - LICENSE
+
+infrastructure:
+- Containerfile
+- server/cloudformation.json
