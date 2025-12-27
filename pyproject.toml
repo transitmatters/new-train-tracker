@@ -1,6 +1,6 @@
 [project]
 name = "new-train-tracker"
-version = "2.4.1"
+version = "2.5.0"
 description = "New Train Tracker by TransitMattters"
 authors = [{ name = "TransitMatters Labs Team" }]
 requires-python = ">=3.12,<3.13"
