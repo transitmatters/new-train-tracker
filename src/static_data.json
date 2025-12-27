@@ -3,13 +3,15 @@
         "totalActive": 144,
         "totalInactive": 4,
         "totalNewDelivered": 148,
-        "totalNewUndelivered": 4
+        "totalNewUndelivered": 4,
+        "programLink": "https://www.mbta.com/projects/orange-line-program#cars"
     },
     "Red": {
         "totalOldActive": 146,
         "totalOldInactive": 6,
         "totalNewDelivered": 48,
-        "totalNewUndelivered": 204
+        "totalNewUndelivered": 204,
+        "programLink": "https://www.mbta.com/projects/red-line-program#cars"
     },
     "Green": {
         "totalType7Active": 84,
@@ -19,7 +21,8 @@
         "totalType9Active": 24,
         "totalType9Inactive": 0,
         "totalType10Delivered": 0,
-        "totalType10Undelivered": 102
+        "totalType10Undelivered": 102,
+        "programLink": "https://www.mbta.com/projects/green-line-type-10-vehicles"
     },
     "Blue": {
         "totalActive": 94,
@@ -27,7 +30,8 @@
     },
     "Mattapan": {
         "totalActive": 7,
-        "totalInactive": 3
+        "totalInactive": 3,
+        "programLink": "https://www.mbta.com/projects/mattapan-line-program"
     },
     "Sources": {
         "fleet_numbers": "http://roster.transithistory.org/",
