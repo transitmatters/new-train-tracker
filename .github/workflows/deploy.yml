@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['22']
-        python-version: ['3.12']
+        python-version: ['3.13']
     env:
       TM_NTT_CERT_ARN: ${{ secrets.TM_NTT_CERT_ARN }}
       TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
