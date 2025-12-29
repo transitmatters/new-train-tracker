@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Install Python 3.13
 RUN apt-get update && apt-get install -y \
+    add-apt-repository ppa:deadsnakes/ppa \
     python3.13 \
     python3.13-venv \
     python3-pip \
