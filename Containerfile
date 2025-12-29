@@ -4,8 +4,8 @@ FROM ubuntu:24.04
 WORKDIR /app
 
 # Install Python 3.13
-RUN apt-get update && apt-get install -y \
-    add-apt-repository ppa:deadsnakes/ppa \
+RUN add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update && apt-get install -y \
     python3.13 \
     python3.13-venv \
     python3-pip \
