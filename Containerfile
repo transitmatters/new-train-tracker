@@ -1,12 +1,14 @@
-# Single stage: Ubuntu 24.04 with Python 3.12 and Node.js 22
+# Single stage: Ubuntu 24.04 with Python 3.13 and Node.js 22
 FROM ubuntu:24.04
 
 WORKDIR /app
 
-# Install Python 3.12
-RUN apt-get update && apt-get install -y \
-    python3.12 \
-    python3.12-venv \
+# Install Python 3.13
+RUN apt-get update && apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:deadsnakes/ppa \
+    && apt-get update && apt-get install -y \
+    python3.13 \
+    python3.13-venv \
     python3-pip \
     && rm -rf /var/lib/apt/lists/*
 

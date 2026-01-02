@@ -3,24 +3,23 @@ name = "new-train-tracker"
 version = "2.5.0"
 description = "New Train Tracker by TransitMattters"
 authors = [{ name = "TransitMatters Labs Team" }]
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.13,<3.14"
 license = "MIT"
 dependencies = [
-    "aiohttp~=3.12.13",
+    "aiohttp~=3.13.2",
     "boto3~=1.38.26",
     "json-api-doc==0.15.0",
     "pytz~=2025.2",
     "schedule==1.2.2",
-    "datadog_lambda~=8.114.0",
+    "datadog_lambda~=8.120.0",
     "tzdata~=2025.2",
 ]
 
 [dependency-groups]
 dev = [
-    "pip>=24.1",
     "chalice==1.32.0",
-    "ruff>=0.14.3",
-    "pre-commit>=4.0.0",
+    "ruff>=0.14.5",
+    "pre-commit>=4.4.0",
 ]
 
 [tool.uv]
