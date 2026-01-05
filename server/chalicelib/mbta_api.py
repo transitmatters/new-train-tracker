@@ -123,7 +123,7 @@ async def trip_departure_predictions(trip_id: str, stop_id: str):
 # takes a list of route ids
 # uses getV3 to request real-time vehicle data for a given route id
 # returns list of all vehicles
-async def vehicle_data_for_routes(route_ids):
+async def vehicle_data_for_routes(route_ids: list[str]):
     route_ids = normalize_custom_route_ids(route_ids)
 
     try:
