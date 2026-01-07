@@ -27,13 +27,14 @@ def update_recent_sightings():
         all_vehicles = asyncio.run(mbta_api.vehicle_data_for_routes(ROUTES))
         new_vehicles = filter_new(all_vehicles)
 
-        for vehicle in new_vehicles:
-            line = get_line_for_route(vehicle["route"])
-            last_seen_times[line] = {
-                "car": vehicle["label"],
-                "time": now.isoformat(),
-            }
-        s3.upload(JSON_PATH, json.dumps(last_seen_times), compress=False)
+        if new_vehicles:
+            for vehicle in new_vehicles:
+                line = get_line_for_route(vehicle["route"])
+                last_seen_times[line] = {
+                    "car": vehicle["label"],
+                    "time": now.isoformat(),
+                }
+            s3.upload(JSON_PATH, json.dumps(last_seen_times), compress=False)
     except Exception as e:
         print("Couldn't write last seen times to s3: ", e)
 
@@ -41,4 +42,4 @@ def update_recent_sightings():
 # Get the last time that a new train was seen on each line
 # This is the function that other modules use
 def get_recent_sightings_for_lines():
-    return json.loads(s3.download(JSON_PATH, "utf8"))
+    return json.loads(s3.download(JSON_PATH, "utf8", compressed=False))
