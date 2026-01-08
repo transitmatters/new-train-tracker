@@ -46,3 +46,8 @@ td:nth-child(2) {
     text-align: center;
     font-weight: bold;
 }
+
+.program-link {
+    text-align: center !important;
+    font-size: smaller;
+}
