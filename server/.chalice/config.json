@@ -21,8 +21,7 @@
         "DD_PROFILING_ENABLED": "true",
         "DD_ENV": "prod",
         "TM_CORS_HOST": "traintracker.transitmatters.org",
-        "HOLIDAY_TRAIN_CARS": [],
-        "PRIDE_TRAIN_CARS": ["3706"]
+        "PRIDE_TRAIN_CARS": "3706"
       },
       "tags": {
         "service": "new-train-tracker",
@@ -46,8 +45,7 @@
         "DD_PROFILING_ENABLED": "true",
         "DD_ENV": "beta",
         "TM_FRONTEND_HOST": "ntt-beta.labs.transitmatters.org",
-        "HOLIDAY_TRAIN_CARS": [],
-        "PRIDE_TRAIN_CARS": ["3706"]
+        "PRIDE_TRAIN_CARS": "3706"
       },
       "tags": {
         "service": "new-train-tracker",

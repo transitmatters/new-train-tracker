@@ -142,8 +142,8 @@ async def vehicle_data_for_routes(route_ids: list[str]):
     # intialize empty list of vehicles to display
     vehicles_to_display = []
 
-    holiday_train_cars = os.environ.get("HOLIDAY_TRAIN_CARS")
-    pride_train_cars = os.environ.get("PRIDE_TRAIN_CARS")
+    holiday_train_cars = os.environ.get("HOLIDAY_TRAIN_CARS", "").split(',')
+    pride_train_cars = os.environ.get("PRIDE_TRAIN_CARS", "").split(',')
 
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
