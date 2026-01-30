@@ -142,6 +142,9 @@ async def vehicle_data_for_routes(route_ids: list[str]):
     # intialize empty list of vehicles to display
     vehicles_to_display = []
 
+    holiday_train_cars = os.environ.get("HOLIDAY_TRAIN_CARS")
+    pride_train_cars = os.environ.get("PRIDE_TRAIN_CARS")
+
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
         # Skip vehicles that don't have a stop
@@ -155,8 +158,8 @@ async def vehicle_data_for_routes(route_ids: list[str]):
             # determine if vehicle is new
             is_new = fleet.vehicle_array_is_new(custom_route, vehicle["label"].split("-"))
 
-            is_pride_car = any(carriage.get("label") == "3706" for carriage in vehicle["carriages"])
-            is_holiday_car = any(carriage.get("label") in ["3908", "3917", "1524", "1525", "1531", "1530", "1529", "1528"] for carriage in vehicle["carriages"])
+            is_pride_car = any(carriage.get("label") in pride_train_cars for carriage in vehicle["carriages"])
+            is_holiday_car = any(carriage.get("label") in holiday_train_cars for carriage in vehicle["carriages"])
 
             vehicles_to_display.append(
                 {
