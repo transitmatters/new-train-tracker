@@ -25,6 +25,20 @@ from chalicelib.routes import (
 )
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
+CARRIAGE_AGES = {
+    "0700-0793": "2007-09",
+    "1400-1551": "2018-25",
+    "1500-1651": "1969-70",
+    "1700-1757": "1987-89",
+    "1800-1885": "1993-94",
+    "1900-2151": "2019-27",
+    "3072-3265": "1945-46",
+    "3600-3649": "1986-87",
+    "3650-3699": "1987-88",
+    "3700-3719": "1997",
+    "3800-3894": "1999-07",
+    "3900-3923": "2018-20",
+}
 
 # Simple in-memory cache: {key: (data, expiry_time)}
 _cache = {}
@@ -120,6 +134,22 @@ async def trip_departure_predictions(trip_id: str, stop_id: str):
         return {"departure_time": "null"}
 
 
+# takes a carriage label (as a string)
+# calculates age based on data from http://roster.transithistory.org/
+# returns year vehicle was built or "N/A" if it cannot be found
+def determineVehicleYearBuilt(vehicleId: str) -> str:
+    vehicleYearBuilt = "N/A"
+
+    for k in CARRIAGE_AGES:
+        first_car = k.split("-")[0]
+        last_car = k.split("-")[1]
+        if int(first_car) <= int(vehicleId) <= int(last_car):
+            vehicleYearBuilt = CARRIAGE_AGES[k]
+            break
+
+    return vehicleYearBuilt
+
+
 # takes a list of route ids
 # uses getV3 to request real-time vehicle data for a given route id
 # returns list of all vehicles
@@ -142,8 +172,8 @@ async def vehicle_data_for_routes(route_ids: list[str]):
     # intialize empty list of vehicles to display
     vehicles_to_display = []
 
-    holiday_train_cars = os.environ.get("HOLIDAY_TRAIN_CARS", "").split(',')
-    pride_train_cars = os.environ.get("PRIDE_TRAIN_CARS", "").split(',')
+    holiday_train_cars = os.environ.get("HOLIDAY_TRAIN_CARS", "").split(",")
+    pride_train_cars = os.environ.get("PRIDE_TRAIN_CARS", "").split(",")
 
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
@@ -160,6 +190,10 @@ async def vehicle_data_for_routes(route_ids: list[str]):
 
             is_pride_car = any(carriage.get("label") in pride_train_cars for carriage in vehicle["carriages"])
             is_holiday_car = any(carriage.get("label") in holiday_train_cars for carriage in vehicle["carriages"])
+
+            # get oldest car in the set and define set age as age of the oldest car
+            oldestCarriageLabel = min((int(carriage.get("label")) for carriage in vehicle["carriages"]))
+            yearBuilt = determineVehicleYearBuilt(oldestCarriageLabel)
 
             vehicles_to_display.append(
                 {
@@ -179,6 +213,7 @@ async def vehicle_data_for_routes(route_ids: list[str]):
                     "isPrideCar": is_pride_car,
                     "isHolidayCar": is_holiday_car,
                     "speed": vehicle["speed"],
+                    "yearBuilt": yearBuilt,
                 }
             )
 

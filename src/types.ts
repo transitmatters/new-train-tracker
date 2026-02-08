@@ -78,6 +78,7 @@ export interface Train {
     isPrideCar: boolean;
     isHolidayCar: boolean;
     speed: number | null;
+    yearBuilt: string;
 }
 
 export interface Station {
