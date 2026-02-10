@@ -26,18 +26,17 @@ from chalicelib.routes import (
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 CARRIAGE_AGES = {
-    "0700-0793": "2007-09",
-    "1400-1551": "2018-25",
-    "1500-1651": "1969-70",
-    "1700-1757": "1987-89",
-    "1800-1885": "1993-94",
-    "1900-2151": "2019-27",
-    "3072-3265": "1945-46",
-    "3600-3649": "1986-87",
-    "3650-3699": "1987-88",
-    "3700-3719": "1997",
-    "3800-3894": "1999-07",
-    "3900-3923": "2018-20",
+    "Blue": {"0700-0793": "2007-09"},
+    "Orange": {"1400-1551": "2018-25"},
+    "Red": {"1500-1651": "1969-70", "1700-1757": "1987-89", "1800-1885": "1993-94", "1900-2151": "2019-27"},
+    "Green": {
+        "3600-3649": "1986-87",
+        "3650-3699": "1987-88",
+        "3700-3719": "1997",
+        "3800-3894": "1999-07",
+        "3900-3923": "2018-20",
+    },
+    "Mattapan": {"3072-3265": "1945-46"},
 }
 
 # Simple in-memory cache: {key: (data, expiry_time)}
@@ -134,17 +133,17 @@ async def trip_departure_predictions(trip_id: str, stop_id: str):
         return {"departure_time": "null"}
 
 
-# takes a carriage label (as a string)
+# takes a carriage label and line (as a string)
 # calculates age based on data from http://roster.transithistory.org/
 # returns year vehicle was built or "N/A" if it cannot be found
-def determineVehicleYearBuilt(vehicleId: str) -> str:
+def determineVehicleYearBuilt(vehicleId: str, line: str) -> str:
     vehicleYearBuilt = "N/A"
 
-    for k in CARRIAGE_AGES:
+    for k in CARRIAGE_AGES[line]:
         first_car = k.split("-")[0]
         last_car = k.split("-")[1]
         if int(first_car) <= int(vehicleId) <= int(last_car):
-            vehicleYearBuilt = CARRIAGE_AGES[k]
+            vehicleYearBuilt = CARRIAGE_AGES[line][k]
             break
 
     return vehicleYearBuilt
@@ -193,7 +192,7 @@ async def vehicle_data_for_routes(route_ids: list[str]):
 
             # get oldest car in the set and define set age as age of the oldest car
             oldestCarriageLabel = min((int(carriage.get("label")) for carriage in vehicle["carriages"]))
-            yearBuilt = determineVehicleYearBuilt(oldestCarriageLabel)
+            yearBuilt = determineVehicleYearBuilt(oldestCarriageLabel, custom_route.split("-")[0])
 
             vehicles_to_display.append(
                 {
