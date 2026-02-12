@@ -46,6 +46,13 @@ const getVehicleSpeed = (vehicleSpeed: number | null) => {
     return '';
 };
 
+const getVehicleYearBuilt = (yearBuilt: string) => {
+    if (yearBuilt) {
+        return `Oldest car built in: ${yearBuilt}`;
+    }
+    return '';
+};
+
 const getStationNameAndStatusForTrain = (train: Train, route: Route) => {
     const { stations } = route;
     const nearStation = stations?.find((st) => st.id === train.stationId);
@@ -95,12 +102,14 @@ const renderDetailsLabel = (train: Train, prediction: Prediction | null) => {
     );
     const lastUpdated = getLastUpdatedAt(new Date(train.updatedAt));
     const speed = getVehicleSpeed(train.speed);
+    const yearBuilt = getVehicleYearBuilt(train.yearBuilt);
 
     return (
         <div className="details">
             <p>{departurePrediction}</p>
             <p>{lastUpdated}</p>
             <p>{speed}</p>
+            <p>{yearBuilt}</p>
         </div>
     );
 };

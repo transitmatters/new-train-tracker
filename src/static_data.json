@@ -30,7 +30,8 @@
         "totalInactive": 3
     },
     "Sources": {
-        "fleet_numbers": "http://roster.transithistory.org/"
+        "fleet_numbers": "http://roster.transithistory.org/",
+        "carriage_ages": "http://roster.transithistory.org/"
     },
     "Updated": "2025-12-23"
 }
