@@ -17,6 +17,7 @@ interface LineStatsTableProps {
         totalOldInactive?: number;
         totalActive?: number;
         totalInactive?: number;
+        programLink?: string;
     };
 }
 
@@ -77,6 +78,13 @@ export const LineStatsTable: React.FC<LineStatsTableProps> = ({ line, stats }) =
                         </td>
                         <td className="stat-count">{stats.totalType7Inactive}</td>
                     </tr>
+                    {stats.programLink !== undefined && (
+                        <tr>
+                            <td className="program-link">
+                                Read more about the program <a href={stats.programLink}>here</a>
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         );
@@ -120,6 +128,13 @@ export const LineStatsTable: React.FC<LineStatsTableProps> = ({ line, stats }) =
                     <tr>
                         <td>Old Train Cars Inactive:</td>
                         <td className="stat-count">{stats.totalOldInactive}</td>
+                    </tr>
+                )}
+                {stats.programLink !== undefined && (
+                    <tr>
+                        <td className="program-link">
+                            Read more about the program <a href={stats.programLink}>here</a>
+                        </td>
                     </tr>
                 )}
             </tbody>
