@@ -1,73 +1,73 @@
 {
-    "name": "new-train-tracker",
-    "version": "2.5.0",
-    "description": "New Train Tracker by TransitMatters",
-    "main": "index.tsx",
-    "scripts": {
-        "build": "tsc && vite build",
-        "lint": "npm run lint-frontend && npm run lint-backend",
-        "dev": "vite",
-        "lint-frontend": "eslint src && tsc --noEmit",
-        "lint-backend": "cd server && uv run ruff check .",
-        "postinstall": "uv sync && uv run pre-commit install --install-hooks || true",
-        "start-prod": "npm run build && NODE_ENV=production npm run start-python",
-        "start-python": "cd server && uv run chalice local --port=5555",
-        "start": "concurrently npm:start-python npm:dev",
-        "test-frontend": "jest"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/transitmatters/new-train-tracker.git"
-    },
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/transitmatters/new-train-tracker/issues"
-    },
-    "engines": {
-        "node": ">=22.5.0",
-        "npm": ">=10.0.0"
-    },
-    "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
-    "dependencies": {
-        "@ariakit/react": "^0.4.16",
-        "@tanstack/react-query": "^5.72.1",
-        "bezier-js": "^6.1.4",
-        "classnames": "^2.5.1",
-        "dayjs": "^1.11.19",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "react-favicon": "2.0.7",
-        "react-loading-indicators": "^1.0.1",
-        "react-router-dom": "^7.5.3",
-        "react-spring": "^8.0.27",
-        "seamless-scroll-polyfill": "^2.3.4"
-    },
-    "devDependencies": {
-        "@testing-library/jest-dom": "^6.9.1",
-        "@testing-library/react": "^16.3.0",
-        "@testing-library/user-event": "^14.6.1",
-        "@types/bezier-js": "^4.1.3",
-        "@types/jest": "^30.0.0",
-        "@types/node": "^22.15.0",
-        "@types/react": "^18.3.13",
-        "@types/react-dom": "^18.3.1",
-        "@typescript-eslint/eslint-plugin": "^8.48.1",
-        "@typescript-eslint/parser": "^8.48.1",
-        "@vitejs/plugin-react": "^4.3.4",
-        "autoprefixer": "^10.4.22",
-        "concurrently": "^9.2.1",
-        "eslint": "^8.57.0",
-        "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-prettier": "^5.4.1",
-        "eslint-plugin-react": "^7.37.5",
-        "eslint-plugin-react-hooks": "^5.2.0",
-        "jest": "^30.2.0",
-        "jest-environment-jsdom": "^30.2.0",
-        "prettier": "^3.7.4",
-        "ts-jest": "^29.4.6",
-        "typescript": "^5.9.3",
-        "vite": "^7.2.6"
-    }
+  "name": "new-train-tracker",
+  "version": "2.5.0",
+  "description": "New Train Tracker by TransitMatters",
+  "main": "index.tsx",
+  "scripts": {
+    "build": "tsc && vite build",
+    "lint": "npm run lint-frontend && npm run lint-backend",
+    "dev": "vite",
+    "lint-frontend": "eslint src && tsc --noEmit",
+    "lint-backend": "cd server && uv run ruff check .",
+    "postinstall": "uv sync && uv run pre-commit install --install-hooks || true",
+    "start-prod": "npm run build && NODE_ENV=production npm run start-python",
+    "start-python": "cd server && uv run chalice local --port=5555",
+    "start": "concurrently npm:start-python npm:dev",
+    "test-frontend": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/transitmatters/new-train-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/transitmatters/new-train-tracker/issues"
+  },
+  "engines": {
+    "node": ">=22.5.0",
+    "npm": ">=10.0.0"
+  },
+  "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
+  "dependencies": {
+    "@ariakit/react": "^0.4.16",
+    "@tanstack/react-query": "^5.72.1",
+    "bezier-js": "^6.1.4",
+    "classnames": "^2.5.1",
+    "dayjs": "^1.11.19",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-favicon": "2.0.7",
+    "react-loading-indicators": "^1.0.1",
+    "react-router-dom": "^7.5.3",
+    "react-spring": "^8.0.27",
+    "seamless-scroll-polyfill": "^2.3.4"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/bezier-js": "^4.1.3",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.15.0",
+    "@types/react": "^18.3.13",
+    "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.22",
+    "concurrently": "^9.2.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6",
+    "typescript": "~6.0",
+    "vite": "^7.2.6"
+  }
 }
