@@ -49,6 +49,30 @@ a {
     flex-direction: column;
 }
 
+.action-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f5c518;
+    color: #1a1a1a;
+    font-weight: bold;
+    font-size: 0.9em;
+    text-align: center;
+    text-decoration: none;
+    z-index: 2;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.action-banner:hover {
+    background: #e6b800;
+    color: #1a1a1a;
+}
+
+
 .header {
     padding: 1rem 0;
     z-index: 1;

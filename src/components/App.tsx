@@ -7,6 +7,7 @@ import { useMbtaApi } from '../hooks/useMbtaApi';
 import { Line } from './Line';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { ActionBanner } from './ActionBanner';
 import { LineTabPicker } from './LineTabPicker';
 import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
@@ -92,6 +93,7 @@ export const App: React.FC = () => {
     return (
         <>
             <Favicon url={favicon} />
+            <ActionBanner />
             <Header controls={renderControls()} />
             {api.isReady ? (
                 <Line key={selectedLine?.name} line={selectedLine} api={api} age={ageSearchParam} />
