@@ -5,12 +5,14 @@ import { useCategorySearchParam } from '../hooks/searchParams';
 
 type TrainCategory = { key: VehicleCategory; label: string };
 
+const isDecember = new Date().getMonth() === 11;
+
 const trainTypes: TrainCategory[] = [
     { key: 'old_vehicles', label: 'Old' },
     { key: 'new_vehicles', label: 'New' },
     { key: 'vehicles', label: 'All' },
     { key: 'pride', label: 'Pride' },
-    { key: 'holiday', label: 'Holiday' },
+    ...(isDecember ? [{ key: 'holiday' as VehicleCategory, label: 'Holiday' }] : []),
 ];
 
 interface CategoryTabPickerProps {
