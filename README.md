@@ -9,10 +9,11 @@ Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 
 ## Install & Run
 Dependencies:
-- `node 22.x` (with `npm 10.x`)
 - `python 3.13`
 - [`uv`](https://docs.astral.sh/uv/)
   - Ensure `uv` is using the correct Python version by running `uv venv --python 3.13`
+- `node 22.x` (with `npm 10.x`)
+  - If you are using `nvm` ensure it is using the correct Node version by running `nvm version`
 
 Run:
 - `$ npm install`
