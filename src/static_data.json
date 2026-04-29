@@ -31,6 +31,8 @@
     "Mattapan": {
         "totalActive": 7,
         "totalInactive": 3,
+        "totalNewDelivered": 0,
+        "totalNewUndelivered": 24,
         "programLink": "https://www.mbta.com/projects/mattapan-line-program"
     },
     "Sources": {
