@@ -15,7 +15,7 @@ jobs:
       MBTA_V3_API_KEY: ${{ secrets.TM_NTT_CERT_ARN }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
