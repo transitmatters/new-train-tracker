@@ -7,7 +7,10 @@ jobs:
   label:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/labeler@v6
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Label PR
+      uses: actions/labeler@v6
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         sync-labels: true
