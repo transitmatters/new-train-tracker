@@ -12,7 +12,7 @@ dependencies = [
     "pytz~=2025.2",
     "schedule==1.2.2",
     "datadog_lambda~=8.120.0",
-    "tzdata~=2025.2",
+    "tzdata>=2025.2,<2027.0",
 ]
 
 [dependency-groups]
