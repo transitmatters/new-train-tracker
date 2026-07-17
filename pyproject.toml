@@ -11,7 +11,7 @@ dependencies = [
     "json-api-doc==0.15.0",
     "pytz~=2025.2",
     "schedule==1.2.2",
-    "datadog_lambda>=8.120,<8.127",
+    "datadog_lambda>=8.126.0,<8.127",
     "tzdata>=2025.2,<2027.0",
 ]
 
