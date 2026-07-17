@@ -7,7 +7,7 @@ requires-python = ">=3.13,<3.14"
 license = "MIT"
 dependencies = [
     "aiohttp>=3.13.2,<3.15.0",
-    "boto3~=1.38.26",
+    "boto3>=1.38.26,<1.44.0",
     "json-api-doc==0.15.0",
     "pytz~=2025.2",
     "schedule==1.2.2",
