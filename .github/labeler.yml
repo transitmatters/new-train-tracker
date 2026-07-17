@@ -1,28 +1,40 @@
 ci/cd:
-- .github/**/*
-- deploy.sh
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**/*'
+      - 'deploy.sh'
 
 dependencies:
-- package.json
-- package-lock.json
-- uv.lock
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'uv.lock'
 
 backend:
-- '**/*.py'
-- server/**/*
-- ruff.toml
-- pyproject.toml
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.py'
+      - 'server/**/*'
+      - 'ruff.toml'
+      - 'pyproject.toml'
 
 frontend:
-- '**/*.js'
-- '**/*.jsx'
-- '**/*.ts'
-- '**/*.tsx'
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.js'
+      - '**/*.jsx'
+      - '**/*.ts'
+      - '**/*.tsx'
 
 documentation:
-- README.md
-- LICENSE
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'README.md'
+      - 'LICENSE'
 
 infrastructure:
-- Containerfile
-- server/cloudformation.json
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'Containerfile'
+      - 'server/cloudformation.json'
