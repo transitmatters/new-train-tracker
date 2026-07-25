@@ -19,7 +19,7 @@ dependencies = [
 dev = [
     "chalice==1.33.0",
     "ruff>=0.16.0",
-    "pre-commit>=4.6.0",
+    "pre-commit>=4.6.1",
 ]
 
 [tool.uv]
