@@ -224,7 +224,7 @@ wheels = [
 
 [[package]]
 name = "datadog-lambda"
-version = "8.126.0"
+version = "8.127.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "datadog" },
@@ -233,9 +233,9 @@ dependencies = [
     { name = "urllib3" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/23/a1/3009dd48774c91aa722e94399b3b4edff9818e99f088cad1013651f687f1/datadog_lambda-8.126.0.tar.gz", hash = "sha256:0105321b28c2973c86edc30a72de340b2b21f529bb579d25595fd63dccfe5c61", size = 50151, upload-time = "2026-07-13T18:23:08.398Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/d1/04b71f8373baebac118ee21bedcd9af9de07d6d95dd7ea1a5d7c413814c9/datadog_lambda-8.127.0.tar.gz", hash = "sha256:20b9183eb0cd989df29a1de2cf104a8d95c4f48f2f5d6fc2d994a8c69504e2dc", size = 51196, upload-time = "2026-08-03T18:56:51.102Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cc/bb/15c432ce33c0724dad15b5e5f80517ccfbafa7cd75147a2cc6fae286860a/datadog_lambda-8.126.0-py3-none-any.whl", hash = "sha256:d45e3b5edf52ce51d166c0ffc454aff4f88e47413eab4e0e050b22fb1c3d5d08", size = 59137, upload-time = "2026-07-13T18:23:09.416Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/6d/5a95b72b41301b7f79d239c581de7b64798292b783b865796e6c14f9aff1/datadog_lambda-8.127.0-py3-none-any.whl", hash = "sha256:9c0c6ea02184e68a87957888efe1a3abc7b12cd06235faa32924a880e9eece84", size = 59061, upload-time = "2026-08-03T18:56:50.082Z" },
 ]
 
 [[package]]
@@ -391,7 +391,7 @@ name = "jinxed"
 version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ansicon", marker = "sys_platform == 'win32'" },
+    { name = "ansicon" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/20/d0/59b2b80e7a52d255f9e0ad040d2e826342d05580c4b1d7d7747cfb8db731/jinxed-1.3.0.tar.gz", hash = "sha256:1593124b18a41b7a3da3b078471442e51dbad3d77b4d4f2b0c26ab6f7d660dbf", size = 80981, upload-time = "2024-07-31T22:39:18.854Z" }
 wheels = [
@@ -486,7 +486,7 @@ dev = [
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.14.3,<3.15.0" },
     { name = "boto3", specifier = ">=1.43.58,<1.44.0" },
-    { name = "datadog-lambda", specifier = ">=8.126.0,<8.127" },
+    { name = "datadog-lambda", specifier = ">=8.127.0,<8.128" },
     { name = "json-api-doc", specifier = "==0.15.0" },
     { name = "pytz", specifier = ">=2026.3.post1,<2027.0" },
     { name = "schedule", specifier = "==1.2.2" },
