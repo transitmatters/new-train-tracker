@@ -13,7 +13,10 @@
         "start-prod": "npm run build && NODE_ENV=production npm run start-python",
         "start-python": "cd server && uv run chalice local --port=5555",
         "start": "concurrently npm:start-python npm:dev",
-        "test-frontend": "jest"
+        "test-frontend": "jest --ci",
+        "test": "npm run test-frontend && npm run test-backend",
+        "test-frontend-coverage": "jest --ci --coverage",
+        "test-backend": "uv run pytest server/tests -v"
     },
     "repository": {
         "type": "git",
