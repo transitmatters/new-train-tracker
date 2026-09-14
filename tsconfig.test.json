@@ -1,0 +1,26 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        /* ts-jest emits CommonJS. Without this, `import dayjs from 'dayjs'` becomes
+           dayjs_1.default (undefined) and dayjs.extend() throws. Vite/esbuild is
+           interop-by-default, so the app build never sees this. */
+        "esModuleInterop": true,
+        "types": ["jest", "node"],
+        "noEmit": true
+    },
+    /* The base config excludes test files and src/testing from the APP program.
+       exclude is inherited and beats include, so it must be reset here or this
+       program resolves to zero files and typechecks nothing. */
+    "exclude": ["**/node_modules/**", "**/dist/**"],
+    /* src/setupTests.ts MUST be included: without it in the same program, every
+       .toBeInTheDocument() call is a type error. */
+    "include": [
+        "src/setupTests.ts",
+        "src/testing/**/*",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "src/**/*.spec.ts",
+        "src/**/*.spec.tsx",
+        "src/**/__tests__/**/*"
+    ]
+}
