@@ -8,11 +8,19 @@ const FRONTEND_TO_BACKEND_MAP: { [key in string]: string } = {
     [LOCAL]: 'http://localhost:5555',
 };
 
+/*
+Which backend a given frontend host talks to. Exported as a function because
+jsdom will not let a test redefine window.location, and a typo in the map above
+is otherwise invisible: every request would resolve against the page origin and
+404 with no build or type error.
+*/
+export const resolveApiBasePath = (hostname: string) => FRONTEND_TO_BACKEND_MAP[hostname] || '';
+
 let domain = '';
 if (typeof window !== 'undefined') {
     domain = window.location.hostname;
 }
-export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP[domain] || '';
+export const APP_DATA_BASE_PATH = resolveApiBasePath(domain);
 
 // Time in milliseconds
 export const ONE_DAY = 24 * 60 * 60 * 1000;
