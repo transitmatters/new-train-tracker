@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  frontend:
+  test-frontend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,7 +34,7 @@ jobs:
           npm ci
           npm run test-frontend-coverage
 
-  backend:
+  test-backend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
