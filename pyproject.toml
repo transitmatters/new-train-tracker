@@ -20,10 +20,20 @@ dev = [
     "chalice==1.33.0",
     "ruff>=0.16.2",
     "pre-commit>=4.6.2",
+    "pytest>=9.0,<10.0",
+    "pytest-asyncio>=1.2,<2.0",
 ]
 
 [tool.uv]
 package = false
+
+[tool.pytest.ini_options]
+testpaths = ["server/tests"]
+# chalicelib/ has no __init__.py, so server/ must be importable for
+# `from chalicelib.routes import ...` to resolve. Relative to rootdir.
+pythonpath = ["server"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [build-system]
 requires = ["hatchling"]

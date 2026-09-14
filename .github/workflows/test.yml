@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  frontend:
+  test-frontend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,4 +32,23 @@ jobs:
       - name: Test frontend code with Jest
         run: |
           npm ci
-          npm run test-frontend
+          npm run test-frontend-coverage
+
+  test-backend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.13']
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install dependencies
+        run: uv sync --group dev
+      - name: Test backend code with pytest
+        run: uv run pytest server/tests -v

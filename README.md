@@ -32,6 +32,13 @@ docker run --net=host -e MBTA_V3_API_KEY=your_key_here new-train-tracker
 
 The app will be available at [http://localhost:5173/](http://localhost:5173/)
 
+### Testing
+To run all tests, run `$ npm test` in the root directory
+
+To run just frontend tests (Jest), run `$ npm run test-frontend`, or `$ npm run test-frontend-coverage` for a coverage report
+
+To run just backend tests (pytest), run `$ npm run test-backend`, or `$ uv run pytest server/tests -v`
+
 ### Linting
 To lint frontend and backend code, run `$ npm run lint` in the root directory
 

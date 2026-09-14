@@ -139,7 +139,7 @@ async def trip_departure_predictions(trip_id: str, stop_id: str):
 def determineVehicleYearBuilt(vehicleId: str, line: str) -> str:
     vehicleYearBuilt = "N/A"
 
-    for k in CARRIAGE_AGES[line]:
+    for k in CARRIAGE_AGES.get(line, {}):
         first_car = k.split("-")[0]
         last_car = k.split("-")[1]
         if int(first_car) <= int(vehicleId) <= int(last_car):
@@ -159,7 +159,7 @@ async def vehicle_data_for_routes(route_ids: list[str]):
         vehicles = await getV3(
             "vehicles",
             {
-                "filter[route]": ",".join(route_ids),
+                "filter[route]": ",".join(sorted(route_ids)),
                 "include": "stop,trip.route_pattern.name",
             },
             cache_ttl=10,
@@ -171,8 +171,8 @@ async def vehicle_data_for_routes(route_ids: list[str]):
     # intialize empty list of vehicles to display
     vehicles_to_display = []
 
-    holiday_train_cars = os.environ.get("HOLIDAY_TRAIN_CARS", "").split(",")
-    pride_train_cars = os.environ.get("PRIDE_TRAIN_CARS", "").split(",")
+    holiday_train_cars = [car for car in os.environ.get("HOLIDAY_TRAIN_CARS", "").split(",") if car]
+    pride_train_cars = [car for car in os.environ.get("PRIDE_TRAIN_CARS", "").split(",") if car]
 
     # iterate over all vehicles fetched from V3 API
     for vehicle in vehicles:
@@ -191,8 +191,17 @@ async def vehicle_data_for_routes(route_ids: list[str]):
             is_holiday_car = any(carriage.get("label") in holiday_train_cars for carriage in vehicle["carriages"])
 
             # get oldest car in the set and define set age as age of the oldest car
-            oldestCarriageLabel = min((int(carriage.get("label")) for carriage in vehicle["carriages"]))
-            yearBuilt = determineVehicleYearBuilt(oldestCarriageLabel, custom_route.split("-")[0])
+            # Skip labels that aren't numeric: the whole vehicle is dropped by the
+            # except below if this raises, so a single odd label would blank a train.
+            carriage_numbers = [
+                int(carriage["label"]) for carriage in vehicle["carriages"] if str(carriage.get("label", "")).isdigit()
+            ]
+            oldestCarriageLabel = min(carriage_numbers) if carriage_numbers else None
+            yearBuilt = (
+                determineVehicleYearBuilt(oldestCarriageLabel, custom_route.split("-")[0])
+                if oldestCarriageLabel is not None
+                else "N/A"
+            )
 
             vehicles_to_display.append(
                 {
@@ -273,7 +282,7 @@ async def routes_info(route_ids):
         custom_route_names = [s.strip() for s in route_ids]
         routes_info = await getV3(
             "routes",
-            {"filter[id]": ",".join(normalize_custom_route_ids(custom_route_names))},
+            {"filter[id]": ",".join(sorted(normalize_custom_route_ids(custom_route_names)))},
             cache_ttl=3600,
         )
         for custom_route_name in custom_route_names:
