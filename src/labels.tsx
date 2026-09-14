@@ -57,7 +57,7 @@ const getStationNameAndStatusForTrain = (train: Train, route: Route) => {
     const { stations } = route;
     const nearStation = stations?.find((st) => st.id === train.stationId);
     if (!nearStation) {
-        return { stationName: null, status: null };
+        return { stationName: null, statusLabel: null };
     }
     const stationName = abbreviateStationName(nearStation.name);
     const statusLabel = getReadableStatusLabel(train.currentStatus);
