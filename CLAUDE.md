@@ -61,6 +61,10 @@ Pride and holiday cars are configured by the `PRIDE_TRAIN_CARS` / `HOLIDAY_TRAIN
 
 `./deploy.sh` (add `-p` for production, `-c` in CI) builds the frontend, exports `requirements.txt` from uv, runs `chalice package --merge-template server/cloudformation.json`, deploys the CloudFormation stack, syncs `dist/` to the frontend S3 bucket and invalidates CloudFront. Backend/frontend hostnames are set in both `deploy.sh` and `server/.chalice/config.json` and must stay in sync. Pushing to `main` deploys to production via GitHub Actions. The footer version string comes from `GIT_ABR_VERSION` (a git tag) injected by Vite's `define`.
 
+## Hosting costs
+
+TransitMatters is a nonprofit, so hosting cost is a serious design constraint — it's why this stack is Chalice + S3 + CloudFront (and DynamoDB elsewhere in the org) rather than anything with an always-on bill. Avoid changes that dramatically increase hosting costs: don't add persistent compute, don't shorten the `Cache-Control` headers in `server/app.py` or raise the frontend's 15s train poll, and don't increase the frequency of the scheduled `last_seen` job without reason. If a change will incur a cost difference, include an estimate in a code comment, the commit description, or the PR.
+
 ## Conventions
 
 - Frontend: Prettier — 4-space indent, single quotes, 100 cols, es5 trailing commas. `no-console` is an error; `import/no-default-export` and `@typescript-eslint/no-explicit-any` are warnings. TS is strict with `noUnusedLocals`/`noUnusedParameters`.
