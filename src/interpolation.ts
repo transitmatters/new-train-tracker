@@ -45,9 +45,7 @@ export const interpolateTrainOffset = (train: Train, stations: Station[] | undef
 
             const trainDistanceFraction = getTrainDistanceFraction(fromStation, toStation, train);
 
-            return offsetDistance > 0
-                ? fromOffset + trainDistanceFraction * offsetDistance
-                : toOffset - trainDistanceFraction * offsetDistance;
+            return fromOffset + trainDistanceFraction * offsetDistance;
         }
     }
     return toStation.offset;
@@ -60,7 +58,7 @@ export const createInterpolatorForSegments = (segments: Segment[]) => {
         while (accumulatedLength <= partialLength) {
             accumulatedLength += segments[ptr].length;
             if (accumulatedLength < partialLength) {
-                if (ptr < segments.length) {
+                if (ptr < segments.length - 1) {
                     ++ptr;
                 } else {
                     throw new Error('Ran out of track while mapping position to segment!');
