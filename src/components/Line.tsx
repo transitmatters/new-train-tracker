@@ -10,7 +10,13 @@ import { useLastSightingByLine } from '../hooks/useLastSighting';
 import { MBTAApiReady } from '../hooks/useMbtaApi';
 import { Color, Pair, StationPositions, Line as TLine, VehicleCategory } from '../types';
 import { TrainDisplay } from './TrainDisplay';
-import { PopoverContainerContext, getTrainRoutePairsForLine, setCssVariable } from './util';
+import {
+    PopoverContainerContext,
+    abbreviateStationNameForMap,
+    getRouteColor,
+    getTrainRoutePairsForLine,
+    setCssVariable,
+} from './util';
 
 const AGE_WORD_MAP = new Map<VehicleCategory, string>([
     ['new_vehicles', ' new '],
@@ -27,12 +33,6 @@ interface LineProps {
 }
 
 dayjs.extend(relativeTime);
-
-const abbreviateStationName = (station: string) =>
-    station
-        .replace('Boston College', 'B.C.')
-        .replace('Hynes Convention Center', 'Hynes')
-        .replace('Heath Street', 'Heath');
 
 const sortTrainRoutePairsByDistance = (pairs: Pair[], stationPositions: StationPositions) => {
     const distanceMap = new Map(
@@ -67,16 +67,6 @@ const EmptyNoticeForLine: React.FC<{ line: string; age: VehicleCategory }> = ({ 
         return <>{`A new ${line} Line train (#${car}) was last seen ${ago}.`}</>;
     }
     return <>{`No new trains on the ${line} Line right now.`}</>;
-};
-
-const getRouteColor = (
-    colors: Color,
-    routeId: string,
-    focusedRouteId: string | null | undefined
-) => {
-    return routeId === focusedRouteId || focusedRouteId === null || focusedRouteId === undefined
-        ? colors.route
-        : colors.unfocusedRoute;
 };
 
 export const Line: React.FC<LineProps> = ({ api, line, age }) => {
@@ -184,7 +174,7 @@ export const Line: React.FC<LineProps> = ({ api, line, age }) => {
                     isRouteFocused,
                 });
                 const stationName =
-                    stations[stationId] && abbreviateStationName(stations[stationId].name);
+                    stations[stationId] && abbreviateStationNameForMap(stations[stationId].name);
                 if (labelPosition && stationName) {
                     renderedStationLabelIds.add(stationId);
                     return (

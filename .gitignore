@@ -28,3 +28,4 @@ server/.chalice/deployments/*
 *.sw?
 .envrc
 .cursor
+coverage/

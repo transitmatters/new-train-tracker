@@ -1,0 +1,371 @@
+{
+  "data": [
+    {
+      "id": "place-alfcl",
+      "type": "stop",
+      "attributes": {
+        "name": "Alewife",
+        "latitude": 42.395428,
+        "longitude": -71.142483
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-portr",
+      "type": "stop",
+      "attributes": {
+        "name": "Porter",
+        "latitude": 42.3884,
+        "longitude": -71.119149
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-harsq",
+      "type": "stop",
+      "attributes": {
+        "name": "Harvard",
+        "latitude": 42.373362,
+        "longitude": -71.118956
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-cntsq",
+      "type": "stop",
+      "attributes": {
+        "name": "Central",
+        "latitude": 42.365486,
+        "longitude": -71.103802
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-knncl",
+      "type": "stop",
+      "attributes": {
+        "name": "Kendall/MIT",
+        "latitude": 42.362491,
+        "longitude": -71.086176
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-chmnl",
+      "type": "stop",
+      "attributes": {
+        "name": "Charles/MGH",
+        "latitude": 42.361166,
+        "longitude": -71.070628
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-pktrm",
+      "type": "stop",
+      "attributes": {
+        "name": "Park Street",
+        "latitude": 42.356395,
+        "longitude": -71.062424
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-dwnxg",
+      "type": "stop",
+      "attributes": {
+        "name": "Downtown Crossing",
+        "latitude": 42.355518,
+        "longitude": -71.060225
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-sstat",
+      "type": "stop",
+      "attributes": {
+        "name": "South Station",
+        "latitude": 42.352271,
+        "longitude": -71.055242
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-brdwy",
+      "type": "stop",
+      "attributes": {
+        "name": "Broadway",
+        "latitude": 42.342622,
+        "longitude": -71.056967
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-andrw",
+      "type": "stop",
+      "attributes": {
+        "name": "Andrew",
+        "latitude": 42.330154,
+        "longitude": -71.057655
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-jfk",
+      "type": "stop",
+      "attributes": {
+        "name": "JFK/UMass",
+        "latitude": 42.320685,
+        "longitude": -71.052391
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-shmnl",
+      "type": "stop",
+      "attributes": {
+        "name": "Savin Hill",
+        "latitude": 42.31129,
+        "longitude": -71.053331
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-fldcr",
+      "type": "stop",
+      "attributes": {
+        "name": "Fields Corner",
+        "latitude": 42.300093,
+        "longitude": -71.061667
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-smmnl",
+      "type": "stop",
+      "attributes": {
+        "name": "Shawmut",
+        "latitude": 42.293126,
+        "longitude": -71.065738
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-asmnl",
+      "type": "stop",
+      "attributes": {
+        "name": "Ashmont",
+        "latitude": 42.284652,
+        "longitude": -71.06448
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-nqncy",
+      "type": "stop",
+      "attributes": {
+        "name": "North Quincy",
+        "latitude": 42.275275,
+        "longitude": -71.029583
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-wlsta",
+      "type": "stop",
+      "attributes": {
+        "name": "Wollaston",
+        "latitude": 42.2665139,
+        "longitude": -71.0203369
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-qnctr",
+      "type": "stop",
+      "attributes": {
+        "name": "Quincy Center",
+        "latitude": 42.251809,
+        "longitude": -71.005409
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-qamnl",
+      "type": "stop",
+      "attributes": {
+        "name": "Quincy Adams",
+        "latitude": 42.233391,
+        "longitude": -71.007153
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-brntn",
+      "type": "stop",
+      "attributes": {
+        "name": "Braintree",
+        "latitude": 42.2078543,
+        "longitude": -71.0011385
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "Red",
+      "type": "route",
+      "attributes": {
+        "long_name": "Red Line",
+        "type": 1
+      }
+    }
+  ]
+}

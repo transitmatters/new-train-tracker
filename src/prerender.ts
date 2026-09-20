@@ -7,6 +7,7 @@ const createPathBuilder = () => {
         add: (nextPath: string) => {
             if (path.length === 0) {
                 path = nextPath;
+                return;
             }
             path = path + ' ' + nextPath;
         },
