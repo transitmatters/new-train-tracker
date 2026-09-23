@@ -3,7 +3,7 @@ fleet.py provides functions used to determine information about vehicles
 
 "new" encompasses
 - CRRC-built trainsets for the Orange and Red Lines
-- CAF-built (Type-9) trainsets for the Green Line
+- CAF-built (Type-9 and Type-10) trainsets for the Green Line
 - BEBs (Battery Electric Buses) for the Silver Line
 
 """
@@ -11,7 +11,7 @@ fleet.py provides functions used to determine information about vehicles
 from chalicelib.routes import GREEN_ROUTE_IDS, SILVER_ROUTE_IDS
 
 red_is_new = lambda x: int(x) >= 1900 and int(x) <= 2151
-green_is_new = lambda x: int(x) >= 3900 and int(x) <= 3924
+green_is_new = lambda x: 3900 <= int(x) <= 3923 or 4001 <= int(x) <= 4102  # Type 9, Type 10
 orange_is_new = lambda x: int(x) >= 1400 and int(x) <= 1551
 silver_is_new = lambda x: int(x) >= 1294 and int(x) <= 1299
 blue_is_new = lambda _: False
