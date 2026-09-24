@@ -35,8 +35,10 @@ CARRIAGE_AGES = {
         "3700-3719": "1997",
         "3800-3894": "1999-07",
         "3900-3923": "2018-20",
+        "4001-4102": "2026-31",
     },
-    "Mattapan": {"3072-3265": "1945-46"},
+    # 3268 is in service alongside the rest of the PCC block, per the roster PDF
+    "Mattapan": {"3072-3268": "1945-46"},
 }
 
 # Simple in-memory cache: {key: (data, expiry_time)}
