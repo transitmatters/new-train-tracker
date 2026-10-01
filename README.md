@@ -44,6 +44,7 @@ To lint just backend code, run `$ npm run lint-backend`
 2. Make sure these environment variables are set up in your shell (ask a Labs member for values if needed):
   - `TM_NTT_CERT_ARN` (for production)
   - `TM_LABS_WILDCARD_CERT_ARN` (for beta & production)
+  - `DD_RUM_APPLICATION_ID` and `DD_RUM_CLIENT_TOKEN` (beta only, optional) enable Datadog RUM. Production builds ignore them.
 3. A key named `transitmatters-ntt` needs to be available in your AWS account and copied to `~/.ssh/transitmatters-ntt.pem`.
 4. Run `./deploy.sh` (add `-p` for production) to deploy.
 5. You're all set! Visit:
