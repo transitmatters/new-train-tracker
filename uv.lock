@@ -224,7 +224,7 @@ wheels = [
 
 [[package]]
 name = "datadog-lambda"
-version = "8.127.0"
+version = "8.128.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "datadog" },
@@ -233,9 +233,9 @@ dependencies = [
     { name = "urllib3" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/d1/04b71f8373baebac118ee21bedcd9af9de07d6d95dd7ea1a5d7c413814c9/datadog_lambda-8.127.0.tar.gz", hash = "sha256:20b9183eb0cd989df29a1de2cf104a8d95c4f48f2f5d6fc2d994a8c69504e2dc", size = 51196, upload-time = "2026-08-03T18:56:51.102Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/17/1c/89d2576bfd0037e8f5f6e7b00cc14e8cc57ec82b4a0044d0915a973f795d/datadog_lambda-8.128.0.tar.gz", hash = "sha256:19238c0e80a493ec56d3ea9f0970c2aebe23540ccc4bf796223efa48ef90d012", size = 51543, upload-time = "2026-09-25T16:58:21.137Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9f/6d/5a95b72b41301b7f79d239c581de7b64798292b783b865796e6c14f9aff1/datadog_lambda-8.127.0-py3-none-any.whl", hash = "sha256:9c0c6ea02184e68a87957888efe1a3abc7b12cd06235faa32924a880e9eece84", size = 59061, upload-time = "2026-08-03T18:56:50.082Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/05/bbce633203431ce749295a74c22544dd2984d6c02ee5c48e6539d28a015d/datadog_lambda-8.128.0-py3-none-any.whl", hash = "sha256:631a280f9071218c7e72d7fb80a7dcc801d981b4352d222b353d5943c239c372", size = 59361, upload-time = "2026-09-25T16:58:20.177Z" },
 ]
 
 [[package]]
@@ -486,7 +486,7 @@ dev = [
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.14.3,<3.15.0" },
     { name = "boto3", specifier = ">=1.43.70,<1.44.0" },
-    { name = "datadog-lambda", specifier = ">=8.127.0,<8.128" },
+    { name = "datadog-lambda", specifier = ">=8.127.0,<8.129" },
     { name = "json-api-doc", specifier = "==0.15.0" },
     { name = "pytz", specifier = ">=2026.3.post1,<2027.0" },
     { name = "schedule", specifier = "==1.2.2" },
