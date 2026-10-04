@@ -31,6 +31,7 @@
     "homepage": "https://github.com/transitmatters/new-train-tracker#readme",
     "dependencies": {
         "@ariakit/react": "^0.4.16",
+        "@datadog/browser-rum": "^7.15.0",
         "@tanstack/react-query": "^5.72.1",
         "bezier-js": "^6.1.4",
         "classnames": "^2.5.1",

@@ -68,7 +68,17 @@ echo "Deploying version $GIT_VERSION | $GIT_SHA"
 # Adding some datadog tags to get better data
 DD_TAGS="git.commit.sha:$GIT_SHA,git.repository_url:github.com/transitmatters/new-train-tracker"
 
-npm run build
+# Datadog RUM is beta only, so prod builds never get the RUM IDs
+if $PRODUCTION; then
+    DD_RUM_APPLICATION_ID=""
+    DD_RUM_CLIENT_TOKEN=""
+elif [[ -z "$DD_RUM_APPLICATION_ID" || -z "$DD_RUM_CLIENT_TOKEN" ]]; then
+    echo "DD_RUM_APPLICATION_ID or DD_RUM_CLIENT_TOKEN not set; beta will deploy without RUM" 1>&2
+fi
+
+DD_RUM_APPLICATION_ID=$DD_RUM_APPLICATION_ID \
+DD_RUM_CLIENT_TOKEN=$DD_RUM_CLIENT_TOKEN \
+    npm run build
 
 echo "Deploying Train Tracker CloudFormation stack from $HOSTNAME..."
 echo "View stack log here: https://$AWS_REGION.console.aws.amazon.com/cloudformation/home?region=$AWS_REGION"

@@ -16,9 +16,19 @@ app = Chalice(app_name="new-train-tracker")
 localhost = "localhost:5173"
 TM_CORS_HOST = os.environ.get("TM_CORS_HOST", localhost)
 
+# Beta RUM adds these headers to link browser requests to backend traces.
+DD_TRACE_HEADERS = [
+    "x-datadog-trace-id",
+    "x-datadog-parent-id",
+    "x-datadog-origin",
+    "x-datadog-sampling-priority",
+    "traceparent",
+    "tracestate",
+]
+
 if localhost not in TM_CORS_HOST:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
-    cors_config = CORSConfig(allow_origin=f"https://{TM_CORS_HOST}", max_age=3600)
+    cors_config = CORSConfig(allow_origin=f"https://{TM_CORS_HOST}", allow_headers=DD_TRACE_HEADERS, max_age=3600)
 else:
     cors_config = CORSConfig(allow_origin="*", max_age=3600)
 
