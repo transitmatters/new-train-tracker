@@ -47,11 +47,23 @@ _cache = {}
 _stale_cache = {}
 
 
+# Bound each MBTA call well under the Lambda timeout so a hung request fails fast
+# and the next frontend poll can recover
+MBTA_REQUEST_TIMEOUT = aiohttp.ClientTimeout(total=8)
+
+
 # wrapper around MBTA V3 API
 # used to simplify API calls
 # returns JSON of requested data
 async def getV3(command, params={}, session=None, cache_ttl=None):
     """Make a GET request against the MBTA v3 API"""
+    result, _ = await getV3_with_expiry(command, params, session, cache_ttl)
+    return result
+
+
+# same as getV3, but also returns the epoch time at which the cached result expires
+# (None when cache_ttl is unset), so responses can be shared-cached for no longer than this
+async def getV3_with_expiry(command, params={}, session=None, cache_ttl=None):
     url = BASE_URL_V3.format(command=command, parameters=urlencode(params))
     api_key = os.environ.get("MBTA_V3_API_KEY", "") or secrets.MBTA_V3_API_KEY
     headers = {"x-api-key": api_key} if api_key else {}
@@ -62,7 +74,7 @@ async def getV3(command, params={}, session=None, cache_ttl=None):
         if cache_key in _cache:
             data, expiry = _cache[cache_key]
             if time.time() < expiry:
-                return data
+                return data, expiry
 
     async def inner(some_session):
         async with some_session.get(url, headers=headers) as response:
@@ -81,16 +93,18 @@ async def getV3(command, params={}, session=None, cache_ttl=None):
                 raise e
 
     if session is None:
-        async with aiohttp.ClientSession() as local_session:
+        async with aiohttp.ClientSession(timeout=MBTA_REQUEST_TIMEOUT) as local_session:
             result = await inner(local_session)
     else:
         result = await inner(session)
 
     # Store in cache
+    expiry = None
     if cache_ttl:
-        _cache[cache_key] = (result, time.time() + cache_ttl)
+        expiry = time.time() + cache_ttl
+        _cache[cache_key] = (result, expiry)
 
-    return result
+    return result, expiry
 
 
 # ensures stops are in expected order specified in maybe_reverse()
@@ -121,18 +135,19 @@ def maybe_reverse(stops, route):
     return stops
 
 
+# returns (prediction, expiry); expiry is None when the MBTA request failed
 async def trip_departure_predictions(trip_id: str, stop_id: str):
     try:
-        prediction = await getV3(
+        prediction, expiry = await getV3_with_expiry(
             "predictions",
             {"filter[trip]": trip_id, "filter[stop]": stop_id},
             cache_ttl=10,
         )
 
-        return {"departure_time": prediction[0]["departure_time"]}
+        return {"departure_time": prediction[0]["departure_time"]}, expiry
     except Exception as e:
         print(f"Error getting predictions for trip: {e}")
-        return {"departure_time": "null"}
+        return {"departure_time": "null"}, None
 
 
 # takes a carriage label and line (as a string)
@@ -155,10 +170,17 @@ def determineVehicleYearBuilt(vehicleId: str, line: str) -> str:
 # uses getV3 to request real-time vehicle data for a given route id
 # returns list of all vehicles
 async def vehicle_data_for_routes(route_ids: list[str]):
+    vehicles_to_display, _ = await vehicle_data_with_expiry_for_routes(route_ids)
+    return vehicles_to_display
+
+
+# same as vehicle_data_for_routes, but returns (vehicles, expiry) where expiry is when the
+# underlying MBTA data leaves the in-memory cache, or None when the MBTA request failed
+async def vehicle_data_with_expiry_for_routes(route_ids: list[str]):
     route_ids = normalize_custom_route_ids(route_ids)
 
     try:
-        vehicles = await getV3(
+        vehicles, expiry = await getV3_with_expiry(
             "vehicles",
             {
                 "filter[route]": ",".join(route_ids),
@@ -168,7 +190,7 @@ async def vehicle_data_for_routes(route_ids: list[str]):
         )
     except Exception as e:
         print(f"[vehicle_data_for_routes] API error, returning empty list: {e}")
-        return []
+        return [], None
 
     # intialize empty list of vehicles to display
     vehicles_to_display = []
@@ -225,7 +247,7 @@ async def vehicle_data_for_routes(route_ids: list[str]):
             traceback.print_exc()
             continue
 
-    return vehicles_to_display
+    return vehicles_to_display, expiry
 
 
 # returns list of dicts for every stop in a given route, based on route_id

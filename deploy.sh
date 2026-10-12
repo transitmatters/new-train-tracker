@@ -50,6 +50,11 @@ if [[ -z "$DD_API_KEY" ]]; then
     exit 1
 fi
 
+if [[ -z "$MBTA_V3_API_KEY" ]]; then
+    echo "Must provide MBTA_V3_API_KEY in environment to deploy" 1>&2
+    exit 1
+fi
+
 # Fetch repository tags
 # Run unshallow if deploying in CI
 
@@ -103,3 +108,7 @@ aws s3 cp dist/index.html s3://$FRONTEND_HOSTNAME/index.html \
 # Grab the cloudfront ID and invalidate its cache
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+
+# Drop cached API responses (stops/routes are cached for days) so backend changes are live immediately
+BACKEND_CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$BACKEND_HOSTNAME')].Id | [0]" --output text)
+aws cloudfront create-invalidation --distribution-id $BACKEND_CLOUDFRONT_ID --paths "/*"
