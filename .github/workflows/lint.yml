@@ -9,21 +9,11 @@ on:
 jobs:
   frontend:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['22']
-        python-version: ['3.13']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Set up Node ${{ matrix.node-version }}.x
-        uses: actions/setup-node@v7
-        with:
-            node-version: ${{ matrix.node-version }}
+      - name: Set up Node/Python via mise
+        uses: jdx/mise-action@v5
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
@@ -36,21 +26,11 @@ jobs:
 
   backend:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['22']
-        python-version: ['3.13']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Set up Node ${{ matrix.node-version }}.x
-        uses: actions/setup-node@v7
-        with:
-            node-version: ${{ matrix.node-version }}
+      - name: Set up Node/Python via mise
+        uses: jdx/mise-action@v5
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
