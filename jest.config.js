@@ -5,6 +5,9 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
+  moduleNameMapper: {
+    '\\.css$': '<rootDir>/src/__mocks__/styleMock.js',
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.(ts|tsx|js)',

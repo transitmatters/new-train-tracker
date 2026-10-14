@@ -107,6 +107,88 @@ a {
     overflow: hidden;
 }
 
+/* Donate card: in the page flow under the map on narrow screens, pinned in the empty left-hand
+   margin beside the map on wide ones (see the min-width query below). */
+.donate-card {
+    position: relative;
+    box-sizing: border-box;
+    width: calc(100% - 2rem);
+    max-width: 22rem;
+    margin: 1.5rem auto 0;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: #111;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+    color: white;
+    text-align: center;
+    animation: donate-card-in 400ms ease-out both;
+}
+
+.donate-card-heading {
+    margin: 0.25rem 0 0.75rem;
+    font-size: inherit;
+    line-height: 0;
+}
+
+.donate-card-body {
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.donate-card-button.star-border {
+    padding: 0.5rem 1.5rem;
+    font-weight: bold;
+}
+
+/* A small badge hanging off the top-right corner, so the flip board can use the full width. */
+.donate-card-close {
+    position: absolute;
+    top: -0.6rem;
+    right: -0.6rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 100px;
+    background: #111;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.donate-card-close:hover {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+@keyframes donate-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .donate-card {
+        animation: none;
+    }
+}
+
+@media screen and (min-width: 1100px) {
+    .donate-card {
+        position: fixed;
+        left: 1.5rem;
+        bottom: 1.5rem;
+        z-index: 2;
+        width: 17rem;
+        margin: 0;
+    }
+}
+
 .header .title {
     font-size: 1.5em;
 }

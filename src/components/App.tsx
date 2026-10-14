@@ -8,6 +8,7 @@ import { Line } from './Line';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { ActionBanner } from './ActionBanner';
+import { DonateCard } from './DonateCard';
 import { LineTabPicker } from './LineTabPicker';
 import { LineStats } from './LineStats/LineStats';
 import { setCssVariable } from './util';
@@ -102,6 +103,7 @@ export const App: React.FC = () => {
                     <TrophySpin color={selectedLine.color} size="large" text="Loading Trains" />
                 </div>
             )}
+            <DonateCard line={selectedLine.name} />
             <LineStats line={selectedLine?.name} />
             <Footer version={process.env.GIT_ABR_VERSION} />
         </>
