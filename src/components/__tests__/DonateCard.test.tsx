@@ -5,8 +5,6 @@ import { DonateCard } from '../DonateCard';
 describe('DonateCard', () => {
     beforeEach(() => {
         window.localStorage.clear();
-        // jsdom has no canvas; StarBorder bails out when getContext returns null.
-        jest.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
     });
 
     afterEach(() => {
@@ -15,7 +13,7 @@ describe('DonateCard', () => {
     });
 
     test('links to the donate page in a new tab', () => {
-        render(<DonateCard line="Green" />);
+        render(<DonateCard />);
         const link = screen.getByRole('link', { name: /donate/i });
         expect(link).toHaveAttribute(
             'href',
@@ -28,7 +26,7 @@ describe('DonateCard', () => {
     test('closing hides the card and keeps it hidden on the next visit', async () => {
         const count = jest.fn();
         window.goatcounter = { count };
-        const { unmount } = render(<DonateCard line="Green" />);
+        const { unmount } = render(<DonateCard />);
 
         await userEvent.click(screen.getByRole('button', { name: 'Dismiss donation request' }));
         expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
@@ -37,18 +35,18 @@ describe('DonateCard', () => {
         );
 
         unmount();
-        render(<DonateCard line="Green" />);
+        render(<DonateCard />);
         expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
     });
 
     test('donating keeps the card for now, thanks the user, and stops future asks', async () => {
-        const { unmount } = render(<DonateCard line="Green" />);
+        const { unmount } = render(<DonateCard />);
 
         await userEvent.click(screen.getByRole('link', { name: /donate/i }));
         expect(screen.getByRole('heading')).toHaveTextContent('Thank you!');
 
         unmount();
-        render(<DonateCard line="Green" />);
+        render(<DonateCard />);
         expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
     });
 });

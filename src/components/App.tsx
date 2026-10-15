@@ -103,7 +103,7 @@ export const App: React.FC = () => {
                     <TrophySpin color={selectedLine.color} size="large" text="Loading Trains" />
                 </div>
             )}
-            <DonateCard line={selectedLine.name} />
+            <DonateCard />
             <LineStats line={selectedLine?.name} />
             <Footer version={process.env.GIT_ABR_VERSION} />
         </>
