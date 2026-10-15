@@ -11,6 +11,11 @@
   "stages": {
     "production": {
       "api_gateway_stage": "production",
+      "lambda_functions": {
+        "api_handler": {
+          "lambda_timeout": 10
+        }
+      },
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
@@ -35,8 +40,13 @@
     },
     "beta": {
       "api_gateway_stage": "beta",
+      "lambda_functions": {
+        "api_handler": {
+          "lambda_timeout": 10
+        }
+      },
       "autogen_policy": false,
-      "iam_policy_file": "policy.json",
+      "iam_policy_file": "policy-beta.json",
       "environment_variables": {
         "DD_LAMBDA_HANDLER": "app.app",
         "DD_SERVICE": "new-train-tracker",
@@ -44,7 +54,7 @@
         "DD_TRACE_ENABLED": "true",
         "DD_PROFILING_ENABLED": "true",
         "DD_ENV": "beta",
-        "TM_FRONTEND_HOST": "ntt-beta.labs.transitmatters.org",
+        "TM_CORS_HOST": "ntt-beta.labs.transitmatters.org",
         "PRIDE_TRAIN_CARS": "3706"
       },
       "tags": {
