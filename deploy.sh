@@ -80,7 +80,7 @@ aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUC
 aws cloudformation deploy --stack-name $STACK_NAME \
     --template-file cfn/packaged.yaml \
     --capabilities CAPABILITY_NAMED_IAM \
-    --tags service=new-train-tracker env=$ENV_TAG \
+    --tags service=new-train-tracker env=$ENV_TAG team=tm-labs \
     --no-fail-on-empty-changeset \
     --parameter-overrides \
     TMFrontendHostname=$FRONTEND_HOSTNAME \
