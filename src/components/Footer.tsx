@@ -1,3 +1,5 @@
+import { isBetaHost } from '../constants';
+
 export const Footer: React.FC<{ version?: string }> = ({ version }) => {
     return (
         <div className="footer">
@@ -10,6 +12,7 @@ export const Footer: React.FC<{ version?: string }> = ({ version }) => {
                 </a>{' '}
                 | {version ? `v${version}` : 'dev'}
             </p>
+            {isBetaHost() && <p>Beta: usage data collected via Datadog</p>}
         </div>
     );
 };
