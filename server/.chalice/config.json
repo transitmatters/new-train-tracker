@@ -21,6 +21,7 @@
       "environment_variables": {
         "DD_LAMBDA_HANDLER": "app.app",
         "DD_SERVICE": "new-train-tracker",
+        "DD_SERVICE_MAPPING": "lambda_api_gateway:new-train-tracker",
         "DD_SITE": "datadoghq.com",
         "DD_TRACE_ENABLED": "true",
         "DD_PROFILING_ENABLED": "true",
@@ -50,6 +51,7 @@
       "environment_variables": {
         "DD_LAMBDA_HANDLER": "app.app",
         "DD_SERVICE": "new-train-tracker",
+        "DD_SERVICE_MAPPING": "lambda_api_gateway:new-train-tracker",
         "DD_SITE": "datadoghq.com",
         "DD_TRACE_ENABLED": "true",
         "DD_PROFILING_ENABLED": "true",
