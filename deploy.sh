@@ -50,6 +50,11 @@ if [[ -z "$DD_API_KEY" ]]; then
     exit 1
 fi
 
+if [[ -z "$MBTA_V3_API_KEY" ]]; then
+    echo "Must provide MBTA_V3_API_KEY in environment to deploy" 1>&2
+    exit 1
+fi
+
 # Fetch repository tags
 # Run unshallow if deploying in CI
 
@@ -68,7 +73,17 @@ echo "Deploying version $GIT_VERSION | $GIT_SHA"
 # Adding some datadog tags to get better data
 DD_TAGS="git.commit.sha:$GIT_SHA,git.repository_url:github.com/transitmatters/new-train-tracker"
 
-npm run build
+# Datadog RUM is beta only, so prod builds never get the RUM IDs
+if $PRODUCTION; then
+    DD_RUM_APPLICATION_ID=""
+    DD_RUM_CLIENT_TOKEN=""
+elif [[ -z "$DD_RUM_APPLICATION_ID" || -z "$DD_RUM_CLIENT_TOKEN" ]]; then
+    echo "DD_RUM_APPLICATION_ID or DD_RUM_CLIENT_TOKEN not set; beta will deploy without RUM" 1>&2
+fi
+
+DD_RUM_APPLICATION_ID=$DD_RUM_APPLICATION_ID \
+DD_RUM_CLIENT_TOKEN=$DD_RUM_CLIENT_TOKEN \
+    npm run build
 
 echo "Deploying Train Tracker CloudFormation stack from $HOSTNAME..."
 echo "View stack log here: https://$AWS_REGION.console.aws.amazon.com/cloudformation/home?region=$AWS_REGION"
@@ -80,7 +95,7 @@ aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUC
 aws cloudformation deploy --stack-name $STACK_NAME \
     --template-file cfn/packaged.yaml \
     --capabilities CAPABILITY_NAMED_IAM \
-    --tags service=new-train-tracker env=$ENV_TAG \
+    --tags service=new-train-tracker env=$ENV_TAG team=tm-labs \
     --no-fail-on-empty-changeset \
     --parameter-overrides \
     TMFrontendHostname=$FRONTEND_HOSTNAME \
@@ -103,3 +118,7 @@ aws s3 cp dist/index.html s3://$FRONTEND_HOSTNAME/index.html \
 # Grab the cloudfront ID and invalidate its cache
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+
+# Drop cached API responses (stops/routes are cached for days) so backend changes are live immediately
+BACKEND_CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$BACKEND_HOSTNAME')].Id | [0]" --output text)
+aws cloudfront create-invalidation --distribution-id $BACKEND_CLOUDFRONT_ID --paths "/*"

@@ -9,11 +9,9 @@ Shows new MBTA Orange, Red, and Green Line trains as they come into service.
 
 ## Install & Run
 Dependencies:
-- `python 3.13`
+- `python 3.13` and `node 22.x` (with `npm 10.x`)
+  - With [mise](https://mise.jdx.dev) installed, run `mise trust && mise install` (versions are pinned in `.nvmrc` / `.python-version`)
 - [`uv`](https://docs.astral.sh/uv/)
-  - Ensure `uv` is using the correct Python version by running `uv venv --python 3.13`
-- `node 22.x` (with `npm 10.x`)
-  - If you are using `nvm` ensure it is using the correct Node version by running `nvm version`
 
 Run:
 - `$ npm install`
@@ -44,6 +42,7 @@ To lint just backend code, run `$ npm run lint-backend`
 2. Make sure these environment variables are set up in your shell (ask a Labs member for values if needed):
   - `TM_NTT_CERT_ARN` (for production)
   - `TM_LABS_WILDCARD_CERT_ARN` (for beta & production)
+  - `DD_RUM_APPLICATION_ID` and `DD_RUM_CLIENT_TOKEN` (beta only, optional) enable Datadog RUM. Production builds ignore them.
 3. A key named `transitmatters-ntt` needs to be available in your AWS account and copied to `~/.ssh/transitmatters-ntt.pem`.
 4. Run `./deploy.sh` (add `-p` for production) to deploy.
 5. You're all set! Visit:

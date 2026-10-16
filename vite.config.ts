@@ -9,6 +9,8 @@ export default defineConfig({
     define: {
         'process.env': {
             GIT_ABR_VERSION: process.env.GIT_ABR_VERSION,
+            DD_RUM_APPLICATION_ID: process.env.DD_RUM_APPLICATION_ID,
+            DD_RUM_CLIENT_TOKEN: process.env.DD_RUM_CLIENT_TOKEN,
         },
     },
     plugins: [react()],

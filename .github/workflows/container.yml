@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      MBTA_V3_API_KEY: ${{ secrets.TM_NTT_CERT_ARN }}
+      MBTA_V3_API_KEY: ${{ secrets.MBTA_V3_API_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7

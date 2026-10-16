@@ -47,7 +47,7 @@ This is the least obvious part of the codebase and spans four files:
 
 ### Backend
 
-`server/app.py` holds all Chalice routes — `/trains/{route_ids}`, `/stops/{route_id}`, `/routes/{route_ids}`, `/predictions/{trip_id}/{stop_id}`, `/healthcheck` — each returning an explicit `Cache-Control` header (5s for trains, 7 days for stops/routes); those headers are the cost-control mechanism for API Gateway and should be preserved. A `@app.schedule(Cron(...))` job runs `last_seen.update_recent_sightings()` every 10 minutes.
+`server/app.py` holds all Chalice routes — `/trains/{route_ids}`, `/stops/{route_id}`, `/routes/{route_ids}`, `/predictions/{trip_id}/{stop_id}`, `/healthcheck` — each returning an explicit `Cache-Control` header. Those headers drive the `BackendCloudFront` edge cache in `server/cloudformation.json`, which is the main cost control: every client polls the same `/trains` URL, so one Lambda invocation serves everyone. `/stops` and `/routes` are cached for 7 days. `/trains` and `/predictions` use `realtime_cache_control()`, whose `s-maxage` is the time left on the in-memory MBTA cache entry (`getV3_with_expiry`), so the edge never serves data older than a warm Lambda would. Failed MBTA fetches are `no-store`. Keep that invariant: this is a real-time tracker, and cost fixes must not make data staler. A `@app.schedule(Cron(...))` job runs `last_seen.update_recent_sightings()` every 10 minutes.
 
 `server/chalicelib/`:
 - `mbta_api.py` — async `aiohttp` wrapper over the MBTA V3 API with an in-memory TTL cache plus a never-expiring stale cache used as a fallback for stations/routes. Flattens JSON:API responses (`json_api_doc`) into the `Train` shape consumed by the frontend, and holds `CARRIAGE_AGES` (car-number range → build years shown in the popover).
@@ -59,11 +59,11 @@ Pride and holiday cars are configured by the `PRIDE_TRAIN_CARS` / `HOLIDAY_TRAIN
 
 ## Deployment
 
-`./deploy.sh` (add `-p` for production, `-c` in CI) builds the frontend, exports `requirements.txt` from uv, runs `chalice package --merge-template server/cloudformation.json`, deploys the CloudFormation stack, syncs `dist/` to the frontend S3 bucket and invalidates CloudFront. Backend/frontend hostnames are set in both `deploy.sh` and `server/.chalice/config.json` and must stay in sync. Pushing to `main` deploys to production via GitHub Actions. The footer version string comes from `GIT_ABR_VERSION` (a git tag) injected by Vite's `define`.
+`./deploy.sh` (add `-p` for production, `-c` in CI) builds the frontend, exports `requirements.txt` from uv, runs `chalice package --merge-template server/cloudformation.json`, deploys the CloudFormation stack, syncs `dist/` to the frontend S3 bucket and invalidates both CloudFront distributions. The API hostname points at `BackendCloudFront`, which runs a viewer-request function that rejects requests whose Origin/Referer isn't the frontend. Backend/frontend hostnames are set in both `deploy.sh` and `server/.chalice/config.json` and must stay in sync. Pushing to `main` deploys to production via GitHub Actions. The footer version string comes from `GIT_ABR_VERSION` (a git tag) injected by Vite's `define`.
 
 ## Hosting costs
 
-TransitMatters is a nonprofit, so hosting cost is a serious design constraint — it's why this stack is Chalice + S3 + CloudFront (and DynamoDB elsewhere in the org) rather than anything with an always-on bill. Avoid changes that dramatically increase hosting costs: don't add persistent compute, don't shorten the `Cache-Control` headers in `server/app.py` or raise the frontend's 15s train poll, and don't increase the frequency of the scheduled `last_seen` job without reason. If a change will incur a cost difference, include an estimate in a code comment, the commit description, or the PR.
+TransitMatters is a nonprofit, so hosting cost is a serious design constraint — it's why this stack is Chalice + S3 + CloudFront (and DynamoDB elsewhere in the org) rather than anything with an always-on bill. Avoid changes that dramatically increase hosting costs: don't add persistent compute, don't shorten the `Cache-Control` headers in `server/app.py`, bypass `BackendCloudFront`, or raise the frontend's 15s train poll, and don't increase the frequency of the scheduled `last_seen` job without reason. If a change will incur a cost difference, include an estimate in a code comment, the commit description, or the PR.
 
 ## Conventions
 

@@ -80,6 +80,39 @@ a {
     color: #1a1a1a;
 }
 
+.beta-rum-notice {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 3;
+    max-width: 36rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #f5c518;
+    color: #1a1a1a;
+    font-size: 0.9em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.beta-rum-notice p {
+    flex: 1;
+    margin: 0;
+}
+
+.beta-rum-notice button {
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 1.25em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+}
 
 .header {
     padding: var(--space-lg) 0 1rem;
@@ -269,6 +302,14 @@ a {
                 var(--space-md) + env(safe-area-inset-bottom, 0px)
         );
     }
+
+    /* Stack the beta-only Datadog notice above the bar rather than on top of it. */
+    .donate-card ~ .beta-rum-notice {
+        bottom: calc(
+            2 * var(--donate-bar-offset) + 2 * var(--donate-bar-padding) +
+                var(--donate-bar-button) + env(safe-area-inset-bottom, 0px)
+        );
+    }
 }
 
 @media screen and (min-width: 1100px) {
@@ -279,6 +320,11 @@ a {
         z-index: 2;
         width: 17rem;
         margin: 0;
+    }
+
+    /* Keep the beta-only Datadog notice to the right of the card rather than over it. */
+    .donate-card ~ .beta-rum-notice {
+        left: calc(1.5rem + 17rem + 16px);
     }
 }
 
