@@ -1,0 +1,99 @@
+.flap-board {
+    --flap-bg: #2e2e2e;
+    --flap-radius: 0.18em;
+    display: inline-flex;
+    gap: 0.12em;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1;
+    color: white;
+    white-space: pre;
+    user-select: none;
+}
+
+.flap-tile {
+    position: relative;
+    width: 0.84em;
+    height: 1.15em;
+    perspective: 20em;
+}
+
+/* Each half clips the same full-height glyph, so the two halves join into one letter. */
+.flap-half {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50%;
+    overflow: hidden;
+    background: var(--flap-bg);
+    backface-visibility: hidden;
+}
+
+.flap-top {
+    top: 0;
+    border-radius: var(--flap-radius) var(--flap-radius) 0 0;
+    transform-origin: bottom;
+}
+
+.flap-bottom {
+    bottom: 0;
+    border-radius: 0 0 var(--flap-radius) var(--flap-radius);
+    transform-origin: top;
+}
+
+.flap-glyph {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 200%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flap-top .flap-glyph {
+    top: 0;
+}
+
+.flap-bottom .flap-glyph {
+    bottom: 0;
+}
+
+/* The hinge. */
+.flap-tile::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50% - 0.5px);
+    height: 1px;
+    background: black;
+    z-index: 2;
+}
+
+/* Old top falls away, then the new bottom drops into place. */
+.flap-top.flap-moving {
+    z-index: 1;
+    animation: flap-fall var(--flap-half-ms) ease-in both;
+}
+
+.flap-bottom.flap-moving {
+    z-index: 1;
+    animation: flap-land var(--flap-half-ms) var(--flap-half-ms) ease-out both;
+    transform: rotateX(90deg);
+}
+
+@keyframes flap-fall {
+    to {
+        transform: rotateX(-90deg);
+    }
+}
+
+@keyframes flap-land {
+    from {
+        transform: rotateX(90deg);
+    }
+    to {
+        transform: rotateX(0);
+    }
+}

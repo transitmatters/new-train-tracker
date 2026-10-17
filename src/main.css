@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400..800&display=swap');
 
 :root {
     --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
@@ -7,6 +7,14 @@
     --line-centering: 47vw;
     --popover-font-size-basis: 5px;
     --line-scale-basis: 3.5px;
+
+    /* Spacing scale for page-level gaps; these follow the root font size. */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --gutter: var(--space-md);
 }
 
 html,
@@ -107,7 +115,7 @@ a {
 }
 
 .header {
-    padding: 1rem 0;
+    padding: var(--space-lg) 0 1rem;
     z-index: 1;
     position: sticky;
     top: 0;
@@ -121,7 +129,9 @@ a {
 }
 
 .footer {
+    box-sizing: border-box;
     width: 100%;
+    padding-inline: var(--gutter);
     display: flex;
     color: white;
     flex-direction: column;
@@ -131,6 +141,11 @@ a {
     background: linear-gradient(var(--line-color) 0 100%, var(--line-color-transparent) 100%);
 }
 
+.footer p {
+    margin: var(--space-md) 0;
+    text-align: center;
+}
+
 .screenreader-only {
     position: absolute;
     left: -10000px;
@@ -138,6 +153,179 @@ a {
     width: 1px;
     height: 1px;
     overflow: hidden;
+}
+
+/* Donate card: in the page flow under the map on narrow screens, pinned in the empty left-hand
+   margin beside the map on wide ones (see the min-width query below). Styled like the rest of the
+   app: black chips, white Nunito, the global soft shadow. */
+.donate-card {
+    position: relative;
+    box-sizing: border-box;
+    width: calc(100% - 2rem);
+    max-width: 22rem;
+    margin: 1.5rem auto 0;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: black;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.25);
+    color: white;
+    text-align: center;
+    animation: donate-card-in 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.donate-card-heading {
+    margin: 0.25rem 0 0.75rem;
+    font-size: inherit;
+    line-height: 0;
+}
+
+.donate-card-body {
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-wrap: balance;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* The same white pill the line tabs use for their selected state. */
+.donate-card-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 2.75rem;
+    border-radius: 100px;
+    background: white;
+    color: black;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background-color 150ms ease-out;
+}
+
+.donate-card-button:hover {
+    background: #e4e4e4;
+}
+
+.donate-card-button:focus-visible,
+.donate-card-close:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
+}
+
+/* A small badge hanging off the top-right corner, so the flip board can use the full width. The
+   ::after pseudo-element pads the hit area out to 44px. */
+.donate-card-close {
+    position: absolute;
+    top: -0.6rem;
+    right: -0.6rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 100px;
+    background: black;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.donate-card-close::after {
+    content: '';
+    position: absolute;
+    inset: -0.6rem;
+}
+
+.donate-card-close:hover {
+    color: white;
+    border-color: white;
+}
+
+@keyframes donate-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .donate-card {
+        animation: none;
+    }
+}
+
+/* Below 1100px the card is a slim bar pinned to the bottom of the viewport: the map is long, so a
+   card in the page flow would sit out of sight. Board and button share one row and the body copy
+   is dropped (the heading still reads out for screen readers). */
+@media screen and (max-width: 1099px) {
+    :root {
+        --donate-bar-offset: 0.5rem;
+        --donate-bar-padding: 0.6rem;
+        --donate-bar-button: 2.5rem;
+    }
+
+    .donate-card {
+        position: fixed;
+        left: var(--donate-bar-offset);
+        right: var(--donate-bar-offset);
+        bottom: calc(var(--donate-bar-offset) + env(safe-area-inset-bottom, 0px));
+        z-index: 3;
+        width: auto;
+        max-width: 26rem;
+        margin: 0 auto;
+        padding: var(--donate-bar-padding) 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .donate-card-heading {
+        margin: 0;
+    }
+
+    .donate-card-body {
+        display: none;
+    }
+
+    .donate-card-button {
+        flex: 0 0 auto;
+        min-height: var(--donate-bar-button);
+        padding: 0 1rem;
+    }
+
+    /* Keep the end of the page (footer links) clear of the bar. */
+    .donate-card ~ .footer {
+        padding-bottom: calc(
+            var(--donate-bar-offset) + 2 * var(--donate-bar-padding) + var(--donate-bar-button) +
+                var(--space-md) + env(safe-area-inset-bottom, 0px)
+        );
+    }
+
+    /* Stack the beta-only Datadog notice above the bar rather than on top of it. */
+    .donate-card ~ .beta-rum-notice {
+        bottom: calc(
+            2 * var(--donate-bar-offset) + 2 * var(--donate-bar-padding) +
+                var(--donate-bar-button) + env(safe-area-inset-bottom, 0px)
+        );
+    }
+}
+
+@media screen and (min-width: 1100px) {
+    .donate-card {
+        position: fixed;
+        left: 1.5rem;
+        bottom: 1.5rem;
+        z-index: 2;
+        width: 17rem;
+        margin: 0;
+    }
+
+    /* Keep the beta-only Datadog notice to the right of the card rather than over it. */
+    .donate-card ~ .beta-rum-notice {
+        left: calc(1.5rem + 17rem + 16px);
+    }
 }
 
 .header .title {
@@ -155,20 +343,34 @@ a {
 
 @media screen and (max-width: 750px) {
     :root {
-        font-size: 4vw;
+        /* Scales with the phone's width but stops at the desktop size, so tablets and landscape
+           phones don't get oversized text and spacing (it used to reach 30px at 750px). */
+        font-size: clamp(13px, 4vw, 16px);
         --line-centering: 40vw;
         --popover-font-size-basis: 1vw;
         --line-scale-basis: 1vw;
     }
 
     .header {
-        padding-top: 10px;
+        padding-top: var(--space-lg);
         padding-bottom: 10px;
     }
 
+    /* The pills are only ~19px tall on a phone. Pad each tab's hit area out to ~28px (the most the
+       row spacing allows without neighbouring rows overlapping) without changing how they look. */
+    .tab-picker > .tab {
+        position: relative;
+    }
+
+    .tab-picker > .tab::after {
+        content: '';
+        position: absolute;
+        inset: -0.3rem -0.2rem;
+    }
+
     .line-pane {
-        padding-top: 5px;
-        padding-bottom: 15px;
+        padding-top: var(--space-xs);
+        padding-bottom: var(--space-md);
     }
 
     .label-trains-text {
