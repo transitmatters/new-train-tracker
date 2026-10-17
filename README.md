@@ -37,6 +37,33 @@ To lint just frontend code, run `$ npm run lint-frontend`
 
 To lint just backend code, run `$ npm run lint-backend`
 
+### Testing
+To run frontend tests, run `$ npm run test-frontend`. There are no backend tests.
+
+Test files are excluded from `tsconfig.json` and `.eslintrc.js`, so type errors in tests only show up when Jest runs.
+
+## Project Structure
+```
+src/
+  paths.ts          # Turtle-graphics DSL (line, curve, wiggle) for drawing line shapes
+  lines.ts          # Shape of every line and branch; layout changes (new stations or branches) go here
+  prerender.ts      # Turns shapes into an SVG path and evenly spaced station positions
+  interpolation.ts  # Places a train between its previous and next station
+  components/       # React components (Line.tsx renders a line, its stations, and trains)
+  hooks/            # Data fetching (useMbtaApi.ts) and URL search param state
+  constants.ts      # Maps the frontend hostname to its backend URL
+server/
+  app.py            # Chalice routes and the scheduled last-seen job
+  chalicelib/       # MBTA V3 API client, custom routes (Red-A/Red-B), fleet definitions, S3 access
+  cloudformation.json  # S3 bucket, CloudFront distributions, and DNS merged into the Chalice stack
+```
+
+The backend proxies the MBTA V3 API and returns explicit `Cache-Control` headers. A CloudFront distribution in front of the API caches those responses, so every client polling `/trains` is served by one Lambda invocation. Real-time responses are cached only as long as the backend's in-memory MBTA cache entry is valid, so the edge never serves staler data than the Lambda would. A scheduled job writes `last_seen.json` to the frontend's S3 bucket every 10 minutes, and the frontend fetches it as a static file.
+
+`Red-A` and `Red-B` (Ashmont and Braintree) aren't real MBTA route IDs; `server/chalicelib/routes.py` derives them per vehicle and maps them back to `Red` for API calls. To add a new fleet, update the car number ranges in `server/chalicelib/fleet.py`, `CARRIAGE_AGES` in `server/chalicelib/mbta_api.py`, and the counts in `src/static_data.json`. Pride and holiday cars are set with the comma-separated `PRIDE_TRAIN_CARS` / `HOLIDAY_TRAIN_CARS` environment variables in `server/.chalice/config.json`.
+
+There's no Vite proxy: add any new deployment hostname to `src/constants.ts`, and keep the hostnames in `deploy.sh` and `server/.chalice/config.json` in sync.
+
 ## AWS Deployment
 1. Make sure AWS CLI is set up and working — i.e. `aws cloudformation describe-stacks | wc -l` should work
 2. Make sure these environment variables are set up in your shell (ask a Labs member for values if needed):
