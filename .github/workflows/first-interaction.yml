@@ -1,0 +1,37 @@
+name: first-contribution
+
+on:
+  issues:
+    types: [opened]
+  # pull_request_target so the greeting can be posted on PRs from forks
+  pull_request_target:
+    branches: [main]
+    types: [opened]
+
+jobs:
+  check:
+    # Only greet real outside people: skip bots and org members/collaborators
+    if: >-
+      github.event.sender.type != 'Bot' &&
+      !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
+        github.event.pull_request.author_association || github.event.issue.author_association)
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@v3
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
+            Hello! Thank you for your contribution.
+
+            TransitMatters is a volunteer-run organization, so if you haven't yet we'd appreciate you filling out our volunteer form: https://transitmatters.org/volunteer
+
+            If you have already filled out the form, but have not yet heard back please let us know on this issue and we'll follow up with you!
+          pr_message: |
+            Hello! Thank you for your contribution.
+
+            TransitMatters is a volunteer-run organization, so if you haven't yet we'd appreciate you filling out our volunteer form: https://transitmatters.org/volunteer
+
+            If you have already filled out the form, but have not yet heard back please let us know on this PR and we'll follow up with you!
