@@ -37,17 +37,14 @@ To run just frontend tests (Jest), run `$ npm run test-frontend`, or `$ npm run 
 
 To run just backend tests (pytest), run `$ npm run test-backend`, or `$ uv run pytest server/tests -v`
 
+Test files are typechecked through `tsconfig.test.json` (run as part of `npm run lint-frontend`) rather than the app's `tsconfig.json`, so Jest globals can't leak into app code.
+
 ### Linting
 To lint frontend and backend code, run `$ npm run lint` in the root directory
 
 To lint just frontend code, run `$ npm run lint-frontend`
 
 To lint just backend code, run `$ npm run lint-backend`
-
-### Testing
-To run frontend tests, run `$ npm run test-frontend`. There are no backend tests.
-
-Test files are excluded from `tsconfig.json` and `.eslintrc.js`, so type errors in tests only show up when Jest runs.
 
 ## Project Structure
 ```
