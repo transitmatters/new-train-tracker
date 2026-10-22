@@ -30,17 +30,21 @@ docker run --net=host -e MBTA_V3_API_KEY=your_key_here new-train-tracker
 
 The app will be available at [http://localhost:5173/](http://localhost:5173/)
 
+### Testing
+To run all tests, run `$ npm test` in the root directory
+
+To run just frontend tests (Jest), run `$ npm run test-frontend`, or `$ npm run test-frontend-coverage` for a coverage report
+
+To run just backend tests (pytest), run `$ npm run test-backend`, or `$ uv run pytest server/tests -v`
+
+Test files are typechecked through `tsconfig.test.json` (run as part of `npm run lint-frontend`) rather than the app's `tsconfig.json`, so Jest globals can't leak into app code.
+
 ### Linting
 To lint frontend and backend code, run `$ npm run lint` in the root directory
 
 To lint just frontend code, run `$ npm run lint-frontend`
 
 To lint just backend code, run `$ npm run lint-backend`
-
-### Testing
-To run frontend tests, run `$ npm run test-frontend`. There are no backend tests.
-
-Test files are excluded from `tsconfig.json` and `.eslintrc.js`, so type errors in tests only show up when Jest runs.
 
 ## Project Structure
 ```

@@ -55,7 +55,7 @@ export type OccupancyStatus =
     | 'FULL'
     | 'NOT_ACCEPTING_PASSENGERS';
 
-interface Carriage {
+export interface Carriage {
     label: string;
     occupancy_status: OccupancyStatus;
     occupancy_percentage: number | null;

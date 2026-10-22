@@ -1,0 +1,49 @@
+{
+  "data": [
+    {
+      "id": "Red",
+      "type": "route",
+      "attributes": {
+        "direction_names": [
+          "South",
+          "North"
+        ],
+        "direction_destinations": [
+          "Ashmont/Braintree",
+          "Alewife"
+        ],
+        "long_name": "Red Line"
+      }
+    },
+    {
+      "id": "Orange",
+      "type": "route",
+      "attributes": {
+        "direction_names": [
+          "South",
+          "North"
+        ],
+        "direction_destinations": [
+          "Forest Hills",
+          "Oak Grove"
+        ],
+        "long_name": "Orange Line"
+      }
+    },
+    {
+      "id": "Green-B",
+      "type": "route",
+      "attributes": {
+        "direction_names": [
+          "West",
+          "East"
+        ],
+        "direction_destinations": [
+          "Boston College",
+          "Government Center"
+        ],
+        "long_name": "Green Line B"
+      }
+    }
+  ]
+}

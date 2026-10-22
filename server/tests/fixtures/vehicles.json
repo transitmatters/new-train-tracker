@@ -1,0 +1,398 @@
+{
+  "data": [
+    {
+      "id": "R-5470E3F1",
+      "type": "vehicle",
+      "attributes": {
+        "label": "1900-1901",
+        "direction_id": 0,
+        "latitude": 42.1,
+        "longitude": -71.1,
+        "current_status": "STOPPED_AT",
+        "updated_at": "2026-01-15T09:30:00-05:00",
+        "speed": 0.0,
+        "carriages": [
+          {
+            "label": "1900",
+            "occupancy_status": "MANY_SEATS_AVAILABLE",
+            "occupancy_percentage": 20
+          },
+          {
+            "label": "1901",
+            "occupancy_status": "FEW_SEATS_AVAILABLE",
+            "occupancy_percentage": 60
+          }
+        ]
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Red",
+            "type": "route"
+          }
+        },
+        "stop": {
+          "data": {
+            "id": "70095",
+            "type": "stop"
+          }
+        },
+        "trip": {
+          "data": {
+            "id": "trip-red-1",
+            "type": "trip"
+          }
+        }
+      }
+    },
+    {
+      "id": "G-10040",
+      "type": "vehicle",
+      "attributes": {
+        "label": "3900",
+        "direction_id": 1,
+        "latitude": 42.34,
+        "longitude": -71.16,
+        "current_status": "IN_TRANSIT_TO",
+        "updated_at": "2026-01-15T09:30:00-05:00",
+        "speed": 8.9408,
+        "carriages": [
+          {
+            "label": "3900",
+            "occupancy_status": "NO_DATA_AVAILABLE",
+            "occupancy_percentage": null
+          },
+          {
+            "label": "3901",
+            "occupancy_status": "NO_DATA_AVAILABLE",
+            "occupancy_percentage": null
+          }
+        ]
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Green-B",
+            "type": "route"
+          }
+        },
+        "stop": {
+          "data": {
+            "id": "70106",
+            "type": "stop"
+          }
+        },
+        "trip": {
+          "data": {
+            "id": "trip-green-1",
+            "type": "trip"
+          }
+        }
+      }
+    },
+    {
+      "id": "O-547",
+      "type": "vehicle",
+      "attributes": {
+        "label": "1400",
+        "direction_id": 1,
+        "latitude": 42.43,
+        "longitude": -71.07,
+        "current_status": "INCOMING_AT",
+        "updated_at": "2026-01-15T09:30:00-05:00",
+        "speed": null,
+        "carriages": [
+          {
+            "label": "1400",
+            "occupancy_status": "NO_DATA_AVAILABLE",
+            "occupancy_percentage": null
+          },
+          {
+            "label": "1401",
+            "occupancy_status": "NO_DATA_AVAILABLE",
+            "occupancy_percentage": null
+          },
+          {
+            "label": "1402",
+            "occupancy_status": "NO_DATA_AVAILABLE",
+            "occupancy_percentage": null
+          },
+          {
+            "label": "1403",
+            "occupancy_status": "NO_DATA_AVAILABLE",
+            "occupancy_percentage": null
+          }
+        ]
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Orange",
+            "type": "route"
+          }
+        },
+        "stop": {
+          "data": {
+            "id": "70036",
+            "type": "stop"
+          }
+        },
+        "trip": {
+          "data": {
+            "id": "trip-orange-1",
+            "type": "trip"
+          }
+        }
+      }
+    },
+    {
+      "id": "G-NOSTOP",
+      "type": "vehicle",
+      "attributes": {
+        "label": "3650",
+        "direction_id": 0,
+        "latitude": 42.1,
+        "longitude": -71.1,
+        "current_status": "IN_TRANSIT_TO",
+        "updated_at": "2026-01-15T09:30:00-05:00",
+        "speed": null,
+        "carriages": [
+          {
+            "label": "3650",
+            "occupancy_status": "NO_DATA_AVAILABLE",
+            "occupancy_percentage": null
+          }
+        ]
+      },
+      "relationships": {
+        "route": {
+          "data": {
+            "id": "Green-C",
+            "type": "route"
+          }
+        },
+        "stop": {
+          "data": null
+        },
+        "trip": {
+          "data": {
+            "id": "trip-green-2",
+            "type": "trip"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "Red",
+      "type": "route",
+      "attributes": {
+        "direction_names": [
+          "South",
+          "North"
+        ],
+        "direction_destinations": [
+          "Ashmont/Braintree",
+          "Alewife"
+        ]
+      }
+    },
+    {
+      "id": "Green-B",
+      "type": "route",
+      "attributes": {
+        "direction_names": [
+          "West",
+          "East"
+        ],
+        "direction_destinations": [
+          "Boston College",
+          "Government Center"
+        ]
+      }
+    },
+    {
+      "id": "Green-C",
+      "type": "route",
+      "attributes": {
+        "direction_names": [
+          "West",
+          "East"
+        ],
+        "direction_destinations": [
+          "Cleveland Circle",
+          "Government Center"
+        ]
+      }
+    },
+    {
+      "id": "Orange",
+      "type": "route",
+      "attributes": {
+        "direction_names": [
+          "South",
+          "North"
+        ],
+        "direction_destinations": [
+          "Forest Hills",
+          "Oak Grove"
+        ]
+      }
+    },
+    {
+      "id": "70095",
+      "type": "stop",
+      "attributes": {
+        "name": "Quincy Adams"
+      },
+      "relationships": {
+        "parent_station": {
+          "data": {
+            "id": "place-qamnl",
+            "type": "stop"
+          }
+        }
+      }
+    },
+    {
+      "id": "70106",
+      "type": "stop",
+      "attributes": {
+        "name": "Boston College"
+      },
+      "relationships": {
+        "parent_station": {
+          "data": {
+            "id": "place-lake",
+            "type": "stop"
+          }
+        }
+      }
+    },
+    {
+      "id": "70036",
+      "type": "stop",
+      "attributes": {
+        "name": "Oak Grove"
+      },
+      "relationships": {
+        "parent_station": {
+          "data": {
+            "id": "place-ogmnl",
+            "type": "stop"
+          }
+        }
+      }
+    },
+    {
+      "id": "place-qamnl",
+      "type": "stop",
+      "attributes": {
+        "name": "Quincy Adams"
+      }
+    },
+    {
+      "id": "place-lake",
+      "type": "stop",
+      "attributes": {
+        "name": "Boston College"
+      }
+    },
+    {
+      "id": "place-ogmnl",
+      "type": "stop",
+      "attributes": {
+        "name": "Oak Grove"
+      }
+    },
+    {
+      "id": "trip-red-1",
+      "type": "trip",
+      "attributes": {
+        "headsign": "Braintree"
+      },
+      "relationships": {
+        "route_pattern": {
+          "data": {
+            "id": "rp-red-braintree",
+            "type": "route_pattern"
+          }
+        }
+      }
+    },
+    {
+      "id": "trip-green-1",
+      "type": "trip",
+      "attributes": {
+        "headsign": "Boston College"
+      },
+      "relationships": {
+        "route_pattern": {
+          "data": {
+            "id": "rp-green-b",
+            "type": "route_pattern"
+          }
+        }
+      }
+    },
+    {
+      "id": "trip-orange-1",
+      "type": "trip",
+      "attributes": {
+        "headsign": "Forest Hills"
+      },
+      "relationships": {
+        "route_pattern": {
+          "data": {
+            "id": "rp-orange",
+            "type": "route_pattern"
+          }
+        }
+      }
+    },
+    {
+      "id": "trip-green-2",
+      "type": "trip",
+      "attributes": {
+        "headsign": "Cleveland Circle"
+      },
+      "relationships": {
+        "route_pattern": {
+          "data": {
+            "id": "rp-green-c",
+            "type": "route_pattern"
+          }
+        }
+      }
+    },
+    {
+      "id": "rp-red-braintree",
+      "type": "route_pattern",
+      "attributes": {
+        "name": "Alewife - Braintree"
+      }
+    },
+    {
+      "id": "rp-green-b",
+      "type": "route_pattern",
+      "attributes": {
+        "name": "Boston College - Government Center"
+      }
+    },
+    {
+      "id": "rp-green-c",
+      "type": "route_pattern",
+      "attributes": {
+        "name": "Cleveland Circle - Government Center"
+      }
+    },
+    {
+      "id": "rp-orange",
+      "type": "route_pattern",
+      "attributes": {
+        "name": "Forest Hills - Oak Grove"
+      }
+    }
+  ]
+}
