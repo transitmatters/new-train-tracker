@@ -5,7 +5,6 @@ const d2r = (degrees: number) => degrees * (Math.PI / 180);
 const r2d = (radians: number) => radians * (180 / Math.PI);
 const sind = (theta: number) => Math.sin(d2r(theta));
 const cosd = (theta: number) => Math.cos(d2r(theta));
-const tand = (theta: number) => Math.tan(d2r(theta));
 const round = (x: number, n = 2) => Math.round(x * Math.pow(10, n)) / Math.pow(10, n);
 
 const bezierParameterizedPosition = (bezier: Bezier) => (frac: number) => {
@@ -55,39 +54,6 @@ export const line =
             },
         };
     };
-
-export const curve = (length: number, angle: number) => (turtle: Turtle) => {
-    const { x: x1, y: y1, theta } = turtle;
-    const nextTheta = theta + angle;
-    const x2 = x1 + length * cosd(theta + angle / 2);
-    const y2 = y1 + length * sind(theta + angle / 2);
-    // Slope of tangent passing through turtle
-    const m1 = tand(theta);
-    // Slope of tangent passing through output point
-    const m2 = tand(nextTheta);
-    // Calculate control point, which is the intersection of these two tangent lines
-    let xc, yc;
-    if (Math.abs(theta % 360) === 90) {
-        // tan(theta) = infinity, so the line through (x1, y1) is vertical, and xc = x1
-        xc = x1;
-        yc = m2 * (xc - x2) + y2;
-    } else {
-        xc = (y1 - x1 * m1 - y2 + x2 * m2) / (m2 - m1);
-        yc = m1 * (xc - x1) + y1;
-    }
-    const bezier = new Bezier([
-        { x: x1, y: y1 },
-        { x: xc, y: yc },
-        { x: x2, y: y2 },
-    ]);
-    return {
-        type: 'curve',
-        path: path`M ${x1} ${y1} Q ${xc} ${yc} ${x2} ${y2}`,
-        turtle: { x: x2, y: y2, theta: nextTheta },
-        length: bezier.length(),
-        get: bezierParameterizedPosition(bezier),
-    };
-};
 
 export const wiggle =
     (length: number, width: number, angle = 0) =>

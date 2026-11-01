@@ -5,14 +5,19 @@ module.exports = {
         amd: true,
         node: true,
     },
-    ignorePatterns: [
-        '**/*.test.ts',
-        '**/*.test.tsx',
-        '**/*.spec.ts',
-        '**/*.spec.tsx',
-        '**/__tests__/**',
-        '**/node_modules/**',
-        '**/dist/**',
+    ignorePatterns: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
+    overrides: [
+        {
+            files: [
+                '**/*.test.ts',
+                '**/*.test.tsx',
+                '**/*.spec.ts',
+                '**/*.spec.tsx',
+                '**/__tests__/**',
+                'src/testing/**',
+            ],
+            env: { jest: true },
+        },
     ],
     extends: [
         'eslint:recommended',
