@@ -1,5 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
 import { Line, LineName, VehicleCategory } from '../types';
+import { isCategoryInSeason } from '../seasons';
+
+const DEFAULT_CATEGORY: VehicleCategory = 'new_vehicles';
 
 // Read and update line ID search parameters
 export const useLineSearchParam = (): [LineName, (newLine: Line) => void] => {
@@ -19,12 +22,14 @@ export const useLineSearchParam = (): [LineName, (newLine: Line) => void] => {
 export const useCategorySearchParam = (): [VehicleCategory, (newAge: VehicleCategory) => void] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const age = searchParams.get('category') || 'new_vehicles';
+    const requested = (searchParams.get('category') || DEFAULT_CATEGORY) as VehicleCategory;
+    // Without this, a bookmarked ?category=holiday in June shows an empty map with no tab selected
+    const age = isCategoryInSeason(requested) ? requested : DEFAULT_CATEGORY;
 
     const setAge = (newAge: VehicleCategory) => {
         searchParams.set('category', newAge);
         setSearchParams(searchParams);
     };
 
-    return [age as VehicleCategory, setAge];
+    return [age, setAge];
 };

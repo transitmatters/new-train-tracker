@@ -48,20 +48,37 @@ describe('useCategorySearchParam', () => {
         expect(result.current[0]).toBe('new_vehicles');
     });
 
-    it('reads the category out of the query string', () => {
-        const { result } = renderHookWithProviders(() => useCategorySearchParam(), {
-            route: '/?category=pride',
+    describe('seasonal categories', () => {
+        afterEach(() => {
+            jest.useRealTimers();
         });
 
-        expect(result.current[0]).toBe('pride');
-    });
+        it('reads an in-season category out of the query string', () => {
+            jest.useFakeTimers({ now: new Date(2026, 5, 15) });
+            const { result } = renderHookWithProviders(() => useCategorySearchParam(), {
+                route: '/?category=pride',
+            });
 
-    it('writes the selected category back to the query string', () => {
-        const { result } = renderHookWithProviders(() => useCategorySearchParam());
+            expect(result.current[0]).toBe('pride');
+        });
 
-        act(() => result.current[1]('holiday'));
+        it('falls back to new vehicles for an out-of-season category', () => {
+            jest.useFakeTimers({ now: new Date(2026, 5, 15) });
+            const { result } = renderHookWithProviders(() => useCategorySearchParam(), {
+                route: '/?category=holiday',
+            });
 
-        expect(result.current[0]).toBe('holiday');
+            expect(result.current[0]).toBe('new_vehicles');
+        });
+
+        it('writes the selected category back to the query string', () => {
+            jest.useFakeTimers({ now: new Date(2026, 11, 15) });
+            const { result } = renderHookWithProviders(() => useCategorySearchParam());
+
+            act(() => result.current[1]('holiday'));
+
+            expect(result.current[0]).toBe('holiday');
+        });
     });
 
     it('preserves the line when changing category', () => {
