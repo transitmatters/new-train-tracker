@@ -7,6 +7,7 @@ import { interpolateTrainOffset } from '../interpolation';
 import { PopoverContainerContext, prefersReducedMotion } from './util';
 import { TrainPopover } from './TrainPopover';
 import { Color, Route, Train } from '../types';
+import { isHolidaySeason, isPrideSeason } from '../seasons';
 
 const getSpringConfig = () => {
     if (prefersReducedMotion()) {
@@ -55,7 +56,10 @@ export const TrainDisplay = ({
     onFocus: () => void;
     onBlur: () => void;
 }) => {
-    const { direction, isPrideCar, isHolidayCar } = train;
+    const { direction } = train;
+    // Wraps come off after the season, so only decorate cars while it's in season
+    const isPrideCar = train.isPrideCar && isPrideSeason();
+    const isHolidayCar = train.isHolidayCar && isHolidaySeason();
 
     const { pathInterpolator, stations } = route;
 

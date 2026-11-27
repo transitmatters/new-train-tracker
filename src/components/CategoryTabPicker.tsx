@@ -2,17 +2,16 @@ import { useRef, useLayoutEffect } from 'react';
 import { TabList, Tab, TabProvider } from '@ariakit/react';
 import { VehicleCategory } from '../types';
 import { useCategorySearchParam } from '../hooks/searchParams';
+import { isCategoryInSeason } from '../seasons';
 
 type TrainCategory = { key: VehicleCategory; label: string };
 
-const isDecember = new Date().getMonth() === 11;
-
-const trainTypes: TrainCategory[] = [
+const allTrainTypes: TrainCategory[] = [
     { key: 'old_vehicles', label: 'Old' },
     { key: 'new_vehicles', label: 'New' },
     { key: 'vehicles', label: 'All' },
     { key: 'pride', label: 'Pride' },
-    ...(isDecember ? [{ key: 'holiday' as VehicleCategory, label: 'Holiday' }] : []),
+    { key: 'holiday', label: 'Holiday' },
 ];
 
 interface CategoryTabPickerProps {
@@ -22,6 +21,7 @@ interface CategoryTabPickerProps {
 export const CategoryTabPicker: React.FC<CategoryTabPickerProps> = ({ tabColor }) => {
     // Get train age ID from serach params
     const [categorySearchParam, setCategorySearchParam] = useCategorySearchParam();
+    const trainTypes = allTrainTypes.filter((trainType) => isCategoryInSeason(trainType.key));
 
     const wrapperRef = useRef<HTMLDivElement>(null);
     const selectedIndicatorRef = useRef<HTMLDivElement>(null);
